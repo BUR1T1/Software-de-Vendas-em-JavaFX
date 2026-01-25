@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane fx:id="mainPane" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.app.controller.MainController">
+
+    <stylesheets>
+        <URL value="org.example.css.style" />
+    </stylesheets>
+
+    <left>
+        <VBox fx:id="sideMenu" prefWidth="220.0" styleClass="sidebar" spacing="5">
+            <padding>
+                <Insets top="15" right="0" bottom="15" left="0"/>
+            </padding>
+
+            <Button fx:id="btnToggle" onAction="#toggleMenu" styleClass="menu-button" text="☰  MENU">
+                <VBox.margin>
+                    <Insets bottom="20" left="10"/>
+                </VBox.margin>
+            </Button>
+
+            <Separator opacity="0.1" />
+
+            <Button fx:id="btnVendas" onAction="#showVendas" text="🛒  Vendas" styleClass="menu-button" maxWidth="Infinity"/>
+            <Button fx:id="btnProdutos" onAction="#showProdutos" text="📦  Produtos" styleClass="menu-button" maxWidth="Infinity"/>
+            <Button fx:id="btnClientes" onAction="#showClientes" text="👥  Clientes" styleClass="menu-button" maxWidth="Infinity"/>
+            <Button fx:id="btnVendedores" onAction="#showVendedores" text="👔  Vendedores" styleClass="menu-button" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Separator opacity="0.1" />
+            <Button onAction="#showUsuarios" text="⚙  Configurações" styleClass="menu-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+            <children>
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="SISTEMA DE GESTÃO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Selecione uma opção no menu lateral para começar." style="-fx-text-fill: #bdc3c7; -fx-font-size: 14px;"/>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

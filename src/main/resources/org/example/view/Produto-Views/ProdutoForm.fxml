@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="0.0" prefWidth="450.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #e2e8f0; -fx-border-width: 1;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.app.controller.Produto.ProdutoFormController">
+
+    <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: #2563eb; -fx-background-radius: 15 15 0 0;">
+        <padding><Insets left="25.0" right="25.0" /></padding>
+        <children>
+            <Label fx:id="lblTitulo" text="CADASTRO DE PRODUTO" textFill="WHITE" style="-fx-font-weight: bold; -fx-font-size: 18px;" />
+        </children>
+    </HBox>
+
+    <VBox spacing="20.0" style="-fx-padding: 30;">
+        <children>
+            <VBox spacing="8.0">
+                <Label text="DESCRIÇÃO / NOME DO ITEM" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+                <TextField fx:id="txtNome" prefHeight="45.0" promptText="Ex: Coca-Cola 2L"
+                           style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15;" />
+            </VBox>
+
+            <HBox spacing="20.0">
+                <children>
+                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                        <Label text="PREÇO DE VENDA (R$)" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+                        <TextField fx:id="txtPreco" prefHeight="45.0" promptText="0,00"
+                                   style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15; -fx-font-weight: bold; -fx-text-fill: #2563eb;" />
+                    </VBox>
+
+                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+                        <Label text="ESTOQUE ATUAL" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+                        <TextField fx:id="txtEstoque" prefHeight="45.0" promptText="0"
+                                   style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15;" />
+                    </VBox>
+                </children>
+            </HBox>
+
+            <Separator prefWidth="200.0" style="-fx-padding: 10 0;" />
+
+            <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                <children>
+                    <Button onAction="#cancelar" prefHeight="45.0" prefWidth="120.0" text="CANCELAR"
+                            style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" />
+
+                    <Button onAction="#salvar" prefHeight="45.0" prefWidth="160.0" text="SALVAR DADOS"
+                            style="-fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.2), 10, 0, 0, 4);" />
+                </children>
+            </HBox>
+        </children>
+    </VBox>
+</VBox>

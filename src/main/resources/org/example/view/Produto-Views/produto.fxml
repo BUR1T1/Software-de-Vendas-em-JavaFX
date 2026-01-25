@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.app.controller.Produto.ProdutoController"
+            style="-fx-background-color: #f8fafc;">
+    <top>
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20;">
+            <children>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <VBox>
+                            <Label text="GESTÃO DE PRODUTOS" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #1e293b;"/>
+                            <Label text="Visualize, adicione ou edite os itens do seu estoque" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#abrirNovo" text="+ NOVO PRODUTO"
+                                style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    </children>
+                </HBox>
+
+                <Separator />
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <children>
+                        <TextField fx:id="txtPesquisar" prefWidth="300.0" promptText="Pesquisar por nome ou ID..."
+                                   style="-fx-background-radius: 5; -fx-padding: 8;"/>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#abrirEdicao" text="EDITAR"
+                                style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        <Button onAction="#excluir" text="EXCLUIR"
+                                style="-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 0 20 20 20;">
+            <children>
+                <TableView fx:id="tabelaProdutos" VBox.vgrow="ALWAYS"
+                           style="-fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-radius: 10;">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="60" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colNome" text="NOME DO PRODUTO" prefWidth="300"/>
+                        <TableColumn fx:id="colPreco" text="PREÇO UNIT." prefWidth="120" style="-fx-alignment: CENTER-RIGHT;"/>
+                        <TableColumn fx:id="colEstoque" text="ESTOQUE" prefWidth="100" style="-fx-alignment: CENTER;"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>

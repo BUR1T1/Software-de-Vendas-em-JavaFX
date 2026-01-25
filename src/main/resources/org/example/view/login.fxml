@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane prefHeight="650.0" prefWidth="900.0"
+           style="-fx-background-color: #F1F5F9;"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.app.controller.LoginController">
+
+    <children>
+        <VBox alignment="CENTER" maxHeight="500.0" maxWidth="420.0" spacing="0.0"
+              style="-fx-background-color: #0F172A;
+                     -fx-background-radius: 30;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 40, 0, 0, 20);">
+
+            <children>
+                <VBox alignment="CENTER" prefHeight="120.0" spacing="8.0"
+                      style="-fx-background-color: #2563EB; -fx-background-radius: 30 30 0 0;">
+                    <children>
+                        <Label text="SISTEMA DE GESTÃO" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <Label text="Área de Acesso Restrito" textFill="#DBEAFE">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <VBox spacing="25.0">
+                    <padding>
+                        <Insets bottom="50.0" left="45.0" right="45.0" top="40.0" />
+                    </padding>
+                    <children>
+
+                        <VBox spacing="10.0">
+                            <children>
+                                <Label text="USUÁRIO" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
+                                <TextField fx:id="txtUsuario" prefHeight="55.0" promptText="Nome de usuário"
+                                           style="-fx-background-color: #FFFFFF;
+                                                  -fx-text-fill: #0F172A;
+                                                  -fx-background-radius: 12;
+                                                  -fx-padding: 0 15;
+                                                  -fx-font-size: 15px;
+                                                  -fx-border-color: #3B82F6;
+                                                  -fx-border-width: 0 0 0 5;
+                                                  -fx-border-radius: 12 0 0 12;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="10.0">
+                            <children>
+                                <Label text="SENHA" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
+                                <PasswordField fx:id="txtSenha" prefHeight="55.0" promptText="••••••••"
+                                               style="-fx-background-color: #FFFFFF;
+                                                      -fx-text-fill: #0F172A;
+                                                      -fx-background-radius: 12;
+                                                      -fx-padding: 0 15;
+                                                      -fx-font-size: 15px;
+                                                      -fx-border-color: #3B82F6;
+                                                      -fx-border-width: 0 0 0 5;
+                                                      -fx-border-radius: 12 0 0 12;" />
+                            </children>
+                        </VBox>
+
+                        <Region prefHeight="10" />
+
+                        <Button maxWidth="Infinity" onAction="#entrar" prefHeight="55.0"
+                                style="-fx-background-color: linear-gradient(to right, #2563EB, #1D4ED8);
+                                       -fx-text-fill: white;
+                                       -fx-font-weight: bold;
+                                       -fx-font-size: 16px;
+                                       -fx-background-radius: 12;
+                                       -fx-cursor: hand;
+                                       -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.3), 15, 0, 0, 8);"
+                                text="ENTRAR AGORA" />
+
+                        <Label fx:id="lblMensagem" alignment="CENTER" maxWidth="Infinity" textFill="#F87171" wrapText="true">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

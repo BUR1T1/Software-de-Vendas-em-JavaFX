@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainPane" prefHeight="750.0" prefWidth="1200.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #e0eafc, #cfdef3);"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.app.controller.MainController">
+
+    <left>
+        <VBox fx:id="sideMenu" prefWidth="240.0" spacing="8.0"
+              style="-fx-background-color: rgba(30, 41, 59, 0.85); -fx-background-radius: 0 40 40 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 30, 0, 10, 0);">
+            <padding>
+                <Insets bottom="30.0" left="20.0" right="20.0" top="30.0" />
+            </padding>
+            <children>
+                <Button fx:id="btnToggle" maxWidth="Infinity" onAction="#toggleMenu"
+                        style="-fx-background-color: rgba(255,255,255,0.1); -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 20; -fx-padding: 15;"
+                        text="☰  OCULTAR MENU">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin>
+                </Button>
+
+                <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Button maxWidth="Infinity" onAction="#showVendas"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                                text="🛒   Vendas" />
+                        <Button maxWidth="Infinity" onAction="#showProdutos"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                                text="📦   Produtos" />
+                        <Button maxWidth="Infinity" onAction="#showClientes"
+                                style="-fx-background-color: rgba(59, 130, 246, 0.6); -fx-text-fill: white; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.5), 15, 0, 0, 0);"
+                                text="👥   Clientes" />
+                        <Button maxWidth="Infinity" onAction="#showVendedores"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                                text="👔   Vendedores" />
+                        <Button maxWidth="Infinity" onAction="#showHistoricoVendas"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                                text="📊   Histórico" />
+
+                    </children>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <Button maxWidth="Infinity" onAction="#showUsuarios"
+                        style="-fx-background-color: rgba(255,255,255,0.1); -fx-text-fill: white; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                        text="⚙   Configurações" />
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox>
+            <children>
+                <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="10.0" />
+                    </padding>
+                    <children>
+                        <VBox alignment="CENTER" spacing="20.0"
+                              style="-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 30, 0, 0, 15); -fx-border-color: rgba(255,255,255,0.8); -fx-border-radius: 40; -fx-border-width: 2;">
+                            <children>
+                                <Label text="Sistema de Gestão Moderno" textFill="#1e293b">
+                                    <font>
+                                        <Font name="System Bold" size="36.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Utilize o menu lateral para navegar entre as funções." textFill="#475569">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                                <Button prefHeight="50" prefWidth="200" text="COMEÇAR AGORA"
+                                        style="-fx-background-color: #1e293b; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-weight: bold; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);" />
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
