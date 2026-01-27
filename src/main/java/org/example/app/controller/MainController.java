@@ -22,17 +22,17 @@ public class MainController {
 
     // Mapa de rotas: chave -> caminho completo do FXML
     private static final Map<String, String> rotas = Map.ofEntries(
-            entry("clientes", "/org/example/view/Cliente-Views/Cliente.fxml"),
+            entry("clientes",    "/org/example/view/Cliente-Views/Cliente.fxml"),
             entry("clienteForm", "/org/example/view/Cliente-Views/ClienteForm.fxml"),
-            entry("produtos", "/org/example/view/Produto-Views/produto.fxml"),
-            entry("usuarios", "/org/example/view/usuario.fxml"),
-            entry("vendas", "/org/example/view/venda.fxml"),
-            entry("vendedores", "/org/example/view/Vendedor/vendedor.fxml"),
-            entry("vendedorForm", "/org/example/view/Vendedor/VendedorForm.fxml"),
-            entry("principal", "/org/example/view/principal.fxml"),
-            entry("login", "/org/example/view/login.fxml"),
-            entry("mainShell", "/org/example/view/main_shell.fxml"),
-            entry("historico", "/org/example/view/Venda/venda-historico.fxml")
+            entry("produtos",    "/org/example/view/Produto-Views/produto.fxml"),
+            entry("usuarios",    "/org/example/view/usuario.fxml"),
+            entry("vendas",      "/org/example/view/Venda-Views/venda.fxml"),
+            entry("vendedores",  "/org/example/view/Vendedor/vendedor.fxml"),
+            entry("vendedorForm","/org/example/view/Vendedor/VendedorForm.fxml"),
+            entry("principal",   "/org/example/view/principal.fxml"),
+            entry("login",       "/org/example/view/login.fxml"),
+            entry("mainShell",   "/org/example/view/main_shell.fxml"),
+            entry("historico",   "/org/example/view/Venda-Views/venda-historico.fxml")
     );
 
 

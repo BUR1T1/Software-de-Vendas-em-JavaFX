@@ -37,7 +37,7 @@
                                 style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
                                 text="📦   Produtos" />
                         <Button maxWidth="Infinity" onAction="#showClientes"
-                                style="-fx-background-color: rgba(59, 130, 246, 0.6); -fx-text-fill: white; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.5), 15, 0, 0, 0);"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.5), 15, 0, 0, 0);"
                                 text="👥   Clientes" />
                         <Button maxWidth="Infinity" onAction="#showVendedores"
                                 style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"

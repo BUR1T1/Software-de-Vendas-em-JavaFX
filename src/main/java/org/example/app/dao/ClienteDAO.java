@@ -25,6 +25,9 @@ public class ClienteDAO {
         }
     }
 
+    //=======================================
+    // METHODO PARA INATIVAR O REATIVAR CLIENTES.
+    //=======================================
     public void inativar(int id) {
         String sql = "UPDATE cliente SET status = 2 WHERE id = ?";
 
@@ -34,7 +37,7 @@ public class ClienteDAO {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cliente inativado com sucesso !!!!");
         }
     }
 
@@ -51,7 +54,7 @@ public class ClienteDAO {
             ps.executeBatch();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Cliente reativado com sucesso !!!");
         }
     }
 
@@ -80,7 +83,7 @@ public class ClienteDAO {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(" Nenhum cliente foi cadastrado !!!");
         }
 
         return lista;
@@ -100,20 +103,6 @@ public class ClienteDAO {
             ps.setString(2, cliente.getCpf());
             ps.setString(3, cliente.getTelefone());
             ps.setInt(4, cliente.getId());
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void excluir(int id) {
-        String sql = "DELETE FROM cliente WHERE id = ?";
-
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
             ps.executeUpdate();
 
         } catch (Exception e) {

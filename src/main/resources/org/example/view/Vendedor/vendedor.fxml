@@ -5,7 +5,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="20" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.app.controller.Vendedor.VendedorController">
+<VBox spacing="20" style="-fx-background-color: #f8fafc;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.app.controller.Vendedor.VendedorController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -35,14 +37,20 @@
             </padding>
             <children>
                 <HBox spacing="10">
-                    <Button onAction="#abrirEdicao" text="Editar Selecionado" style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand;" />
-                    <Button onAction="#excluir" text="Excluir" style="-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-cursor: hand;" />
+                    <children>
+                        <Button onAction="#abrirEdicao" text="Editar Selecionado"
+                                style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 5; -fx-padding: 8 15;" />
+
+                        <Button onAction="#inativarVendedor" text="Inativar Vendedor"
+                                style="-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 5; -fx-padding: 8 15;" />
+                    </children>
                 </HBox>
 
                 <TableView fx:id="tabelaVendedores" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
                     <columns>
                         <TableColumn fx:id="colId" prefWidth="80.0" text="ID" />
-                        <TableColumn fx:id="colNome" prefWidth="400.0" text="Nome do Colaborador" />
+                        <TableColumn fx:id="colNome" prefWidth="300.0" text="Nome do Colaborador" />
+                        <TableColumn fx:id="colCpf" prefWidth="200.0" text="CPF" />
                         <TableColumn fx:id="colComissao" prefWidth="150.0" text="Comissão (%)" />
                     </columns>
                     <columnResizePolicy>

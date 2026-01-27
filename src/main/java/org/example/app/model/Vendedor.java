@@ -5,14 +5,37 @@ public class Vendedor {
     private int id;
     private String nome;
     private double comissao;
+    private int status;
+    private int CPF;
+
 
     public Vendedor() {
     }
 
-    public Vendedor(int id, String nome, double comissao) {
+    public Vendedor(int id, String nome, double comissao, int CPF,int status) {
         this.id = id;
         this.nome = nome;
         this.comissao = comissao;
+        this.CPF = CPF;
+        this.status = status;
+
+    }
+
+
+    public int getCPF() {
+        return CPF;
+    }
+
+    public void setCPF(int CPF) {
+        this.CPF = CPF;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getId() {

@@ -17,8 +17,6 @@ public class ItemVenda {
         return produto.getPreco() * quantidade;
     }
 
-    public void setQuantidade(int i) {
-
-    }
+    public void setQuantidade(int i) { }
 }
 

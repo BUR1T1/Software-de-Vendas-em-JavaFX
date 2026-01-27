@@ -32,6 +32,8 @@ public class DatabaseInit {
             CREATE TABLE IF NOT EXISTS vendedor (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 usuario_id INTEGER NOT NULL,
+                cpf TEXT NOT NULL UNIQUE,
+                status INTEGER NOT NULL DEFAULT 1,
                 comissao REAL NOT NULL CHECK (comissao >= 0),
                 FOREIGN KEY (usuario_id) REFERENCES usuario(id)
             );
@@ -68,17 +70,16 @@ public class DatabaseInit {
         // =========================
         String sqlVenda = """
             CREATE TABLE IF NOT EXISTS venda (
-               id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               cliente_id INTEGER NOT NULL,
-                               vendedor_id INTEGER NOT NULL,               
-                               total REAL NOT NULL CHECK (total >= 0),
-                               FOREIGN KEY (cliente_id) REFERENCES cliente(id),
-                               FOREIGN KEY (vendedor_id) REFERENCES vendedor(id),
-                               data_venda TEXT NOT NULL,
-                               hora_venda TEXT NOT NULL,  
-                               data_hora_insercao DATETIME DEFAULT CURRENT_TIMESTAMP 
-                        
-            );
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       cliente_id INTEGER NOT NULL,
+                       vendedor_id INTEGER NOT NULL,   
+                       total REAL NOT NULL CHECK (total >= 0),
+                       data_venda TEXT NOT NULL,
+                       hora_venda TEXT NOT NULL, 
+                       data_hora_insercao DATETIME DEFAULT CURRENT_TIMESTAMP,
+                       FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+                       FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
+                    );
         """;
 
         // =========================
