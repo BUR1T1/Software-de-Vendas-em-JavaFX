@@ -3,11 +3,6 @@ package org.example.app.database;
 import java.sql.Connection;
 import java.sql.Statement;
 
-/**
- * Classe responsável por inicializar o banco SQLite
- * Cria todas as tabelas necessárias para o sistema
- * Deve ser chamada uma única vez na inicialização do sistema
- */
 public class DatabaseInit {
 
     public static void inicializar() {
@@ -44,13 +39,13 @@ public class DatabaseInit {
         // =========================
         String sqlCliente = """
             CREATE TABLE IF NOT EXISTS cliente (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        nome TEXT NOT NULL,
-                        cpf TEXT NOT NULL UNIQUE,
-                        telefone TEXT,
-                        status INTEGER NOT NULL DEFAULT 1
-                    );
-                    
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cpf TEXT NOT NULL UNIQUE,
+                nome TEXT,
+                telefone TEXT,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL
+            );
         """;
 
         // =========================
@@ -70,16 +65,16 @@ public class DatabaseInit {
         // =========================
         String sqlVenda = """
             CREATE TABLE IF NOT EXISTS venda (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       cliente_id INTEGER NOT NULL,
-                       vendedor_id INTEGER NOT NULL,   
-                       total REAL NOT NULL CHECK (total >= 0),
-                       data_venda TEXT NOT NULL,
-                       hora_venda TEXT NOT NULL, 
-                       data_hora_insercao DATETIME DEFAULT CURRENT_TIMESTAMP,
-                       FOREIGN KEY (cliente_id) REFERENCES cliente(id),
-                       FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
-                    );
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cliente_id INTEGER NOT NULL,
+                vendedor_id INTEGER NOT NULL,
+                total REAL NOT NULL CHECK (total >= 0),
+                data_venda TEXT NOT NULL,
+                hora_venda TEXT NOT NULL,
+                data_hora_insercao DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+                FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
+            );
         """;
 
         // =========================
@@ -88,15 +83,12 @@ public class DatabaseInit {
         String sqlItemVenda = """
             CREATE TABLE IF NOT EXISTS item_venda (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            cliente_id INTEGER NOT NULL,
-                            vendedor_id INTEGER NOT NULL,
-                            data TEXT NOT NULL,
-                            valor_bruto REAL NOT NULL,    
-                            desconto REAL DEFAULT 0,     
-                            acrescimo REAL DEFAULT 0,    
-                            total REAL NOT NULL,        
-                            FOREIGN KEY (cliente_id) REFERENCES cliente(id),
-                            FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
+                venda_id INTEGER NOT NULL,
+                produto_id INTEGER NOT NULL,
+                quantidade INTEGER NOT NULL,
+                preco_unitario REAL NOT NULL,
+                FOREIGN KEY (venda_id) REFERENCES venda(id),
+                FOREIGN KEY (produto_id) REFERENCES produto(id)
             );
         """;
 
@@ -106,10 +98,8 @@ public class DatabaseInit {
         try (Connection conn = ConexaoSQLite.conectar();
              Statement stmt = conn.createStatement()) {
 
-            // Importante para SQLite respeitar FK
             stmt.execute("PRAGMA foreign_keys = ON");
 
-            // Ordem correta de criação
             stmt.execute(sqlUsuario);
             stmt.execute(sqlVendedor);
             stmt.execute(sqlCliente);

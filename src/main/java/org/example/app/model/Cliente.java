@@ -1,15 +1,16 @@
 package org.example.app.model;
 
-public class Cliente {
+import org.example.app.BaseEntity;
 
-    private int id;
+public class Cliente extends BaseEntity {
+
     private String nome;
     private String cpf;
     private String telefone;
     private int status; // 1 = ativo | 2 = inativo
 
-    public Cliente(int id, String nome, String cpf, String telefone, int status) {
-        this.id = id;
+    public Cliente(String nome, String cpf, String telefone, int status) {
+        super();
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
@@ -17,16 +18,6 @@ public class Cliente {
     }
 
     public Cliente() {
-
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {

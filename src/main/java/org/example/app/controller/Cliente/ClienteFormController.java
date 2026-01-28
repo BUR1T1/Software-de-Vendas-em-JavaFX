@@ -9,6 +9,7 @@ import org.example.app.model.Cliente;
 
 public class ClienteFormController {
 
+    @FXML private TextField txtId;
     @FXML private TextField txtNome;
     @FXML private TextField txtCpf;
     @FXML private TextField txtTelefone;
@@ -24,7 +25,7 @@ public class ClienteFormController {
         }
 
         if (clienteSelecionado == null) {
-            Cliente c = new Cliente(0, txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), 1);
+            Cliente c = new Cliente( txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), 1);
             clienteDAO.salvar(c);
         } else {
             clienteSelecionado.setNome(txtNome.getText());

@@ -21,7 +21,7 @@ public class ClienteController {
     @FXML private TextField txtTelefone;
 
     @FXML private TableView<Cliente> tabelaClientes;
-    @FXML private TableColumn<Cliente, Integer> colId;
+    @FXML private TableColumn<Cliente, Long> colId;
     @FXML private TableColumn<Cliente, String> colNome;
     @FXML private TableColumn<Cliente, String> colCpf;
     @FXML private TableColumn<Cliente, String> colTelefone;
@@ -44,6 +44,7 @@ public class ClienteController {
     }
 
 
+
     @FXML
     private void salvar() {
         if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()) {
@@ -52,18 +53,24 @@ public class ClienteController {
         }
 
         if (clienteSelecionado == null) {
+            // NOVO CLIENTE
             Cliente c = new Cliente(
-                    0,
                     txtNome.getText(),
                     txtCpf.getText(),
                     txtTelefone.getText(),
                     1
             );
+            // O createdAt já é gerado no construtor da BaseEntity automaticamente
             clienteDAO.salvar(c);
         } else {
+            // ATUALIZAÇÃO DE CLIENTE EXISTENTE
             clienteSelecionado.setNome(txtNome.getText());
             clienteSelecionado.setCpf(txtCpf.getText());
             clienteSelecionado.setTelefone(txtTelefone.getText());
+
+            // REGRA NOVA: Atualiza o timestamp de updatedAt
+            clienteSelecionado.markAsUpdated();
+
             clienteDAO.atualizar(clienteSelecionado);
         }
 
@@ -92,7 +99,6 @@ public class ClienteController {
                     getClass().getResource("/org/example/view/Cliente-Views/ClienteForm.fxml")
             );
             Parent root = loader.load();
-
 
             Stage stage = new Stage();
             stage.setTitle("Novo Cliente");
@@ -130,15 +136,17 @@ public class ClienteController {
 
     @FXML
     private void reativar() {
-        List<Integer> ids = tabelaInativos.getSelectionModel()
+        // Corrigido de String para Long
+        List<Long> ids = tabelaInativos.getSelectionModel()
                 .getSelectedItems()
                 .stream()
                 .map(Cliente::getId)
                 .toList();
 
         if (!ids.isEmpty()) {
+            // Certifique-se que o clienteDAO.reativar aceite List<Long>
             clienteDAO.reativar(ids);
-            tabelaInativos.getItems().removeAll(tabelaInativos.getSelectionModel().getSelectedItems());
+            carregarTabela(); // Recarrega para ver os reativados
         } else {
             alerta("Seleção", "Selecione ao menos um cliente para reativar.");
         }

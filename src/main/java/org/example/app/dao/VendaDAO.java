@@ -15,15 +15,21 @@ import java.util.List;
 
 public class VendaDAO {
 
-    public void atualizarCliente(int vendaId, int clienteId) {
+    public void atualizarCliente(int vendaId, Long clienteId) {
         String sql = "UPDATE venda SET cliente_id = ? WHERE id = ?";
-        executarUpdate(sql, clienteId, vendaId);
+        try (Connection conn = ConexaoSQLite.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, clienteId);
+            ps.setInt(2, vendaId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void atualizarVendedor(int vendaId, int vendedorId) {
         String sql = "UPDATE venda SET vendedor_id = ? WHERE id = ?";
-        executarUpdate(sql, vendedorId, vendaId);
-    }
+        executarUpdate(sql, vendedorId, vendaId); }
 
     private void executarUpdate(String sql, int fkId, int vendaId) {
         try (Connection conn = ConexaoSQLite.conectar();
@@ -50,7 +56,7 @@ public class VendaDAO {
                 String horaAtual = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
                 String dataHoraCompleta = dataAtual + " " + horaAtual;
 
-                psVenda.setInt(1, venda.getCliente().getId());
+                psVenda.setLong(1, venda.getCliente().getId());
                 psVenda.setInt(2, venda.getVendedor().getId());
                 psVenda.setString(3, dataHoraCompleta);
                 psVenda.setDouble(4, venda.getTotal());
@@ -116,7 +122,6 @@ public class VendaDAO {
                 // Ou apenas ler como String se o seu Model suportar
 
                 Cliente c = new Cliente();
-                c.setId(rs.getInt("cliente_id"));
                 c.setNome(rs.getString("nome_cliente"));
                 v.setCliente(c);
 
@@ -133,11 +138,11 @@ public class VendaDAO {
         return lista;
     }
 
-    public void atualizarCadastroVenda(int vendaId, int novoClienteId, int novoVendedorId) {
+    public void atualizarCadastroVenda(int vendaId, Long novoClienteId, int novoVendedorId) {
         String sql = "UPDATE venda SET cliente_id = ?, vendedor_id = ? WHERE id = ?";
         try (Connection conn = ConexaoSQLite.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, novoClienteId);
+            ps.setLong(1, novoClienteId);
             ps.setInt(2, novoVendedorId);
             ps.setInt(3, vendaId);
             ps.executeUpdate();

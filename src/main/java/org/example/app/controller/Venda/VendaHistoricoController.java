@@ -27,7 +27,7 @@ import java.util.List;
 public class VendaHistoricoController {
 
     @FXML private TableView<Venda> tblHistorico;
-    @FXML private TableColumn<Venda, Integer> colId;
+    @FXML private TableColumn<Venda, Long> colId;
     @FXML private TableColumn<Venda, String> colData;
     @FXML private TableColumn<Venda, String> colCliente;
     @FXML private TableColumn<Venda, String> colVendedor;
