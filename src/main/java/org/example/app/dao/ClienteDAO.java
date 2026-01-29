@@ -136,5 +136,27 @@ public class ClienteDAO {
         }
         return lista;
     }
+
+    public List<Cliente> listarInativos() {
+        String sql = "SELECT * FROM cliente WHERE status = 2";
+        List<Cliente> lista = new ArrayList<>();
+        try (Connection conn = ConexaoSQLite.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Cliente c = new Cliente(
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getInt("status")
+                );
+
+                lista.add(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 }
 

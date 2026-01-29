@@ -1,49 +1,31 @@
 package org.example.app.model;
 
-public class Vendedor {
+import org.example.app.BaseEntity;
 
-    private int id;
+public class Vendedor extends BaseEntity {
+
     private String nome;
     private double comissao;
-    private int status;
-    private int CPF;
+    private String CPF;
 
 
     public Vendedor() {
     }
 
-    public Vendedor(int id, String nome, double comissao, int CPF,int status) {
-        this.id = id;
+    public Vendedor(String nome, double comissao, String CPF) {
+        super();
         this.nome = nome;
         this.comissao = comissao;
         this.CPF = CPF;
-        this.status = status;
 
     }
 
-
-    public int getCPF() {
+    public String getCPF() {
         return CPF;
     }
 
-    public void setCPF(int CPF) {
+    public void setCPF(String CPF) {
         this.CPF = CPF;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {

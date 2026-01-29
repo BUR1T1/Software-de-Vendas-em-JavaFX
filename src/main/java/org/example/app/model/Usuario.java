@@ -1,26 +1,22 @@
 package org.example.app.model;
 
 
-public class Usuario {
+import org.example.app.BaseEntity;
 
-    private int id;
+public class Usuario extends BaseEntity {
+
     private String login;
     private String senha;
     private String perfil; // ADMIN / OPERADOR
 
     public Usuario(String login, String senha, String perfil) {
-      this.login =login;
+        super();
+        this.login =login;
       this.senha= senha;
       this.perfil= perfil;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getLogin() {
         return login;

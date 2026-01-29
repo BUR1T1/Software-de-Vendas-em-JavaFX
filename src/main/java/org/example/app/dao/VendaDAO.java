@@ -15,80 +15,69 @@ import java.util.List;
 
 public class VendaDAO {
 
-    public void atualizarCliente(int vendaId, Long clienteId) {
+    public void atualizarCliente(Long vendaId, Long clienteId) {
         String sql = "UPDATE venda SET cliente_id = ? WHERE id = ?";
+        executarUpdate(sql, clienteId, vendaId);
+    }
+
+    public void atualizarVendedor(Long vendaId, Long vendedorId) {
+        String sql = "UPDATE venda SET vendedor_id = ? WHERE id = ?";
+        executarUpdate(sql, vendedorId, vendaId);
+    }
+
+    private void executarUpdate(String sql, Long fkId, Long vendaId) {
         try (Connection conn = ConexaoSQLite.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, clienteId);
-            ps.setInt(2, vendaId);
+            ps.setLong(1, fkId);
+            ps.setLong(2, vendaId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void atualizarVendedor(int vendaId, int vendedorId) {
-        String sql = "UPDATE venda SET vendedor_id = ? WHERE id = ?";
-        executarUpdate(sql, vendedorId, vendaId); }
-
-    private void executarUpdate(String sql, int fkId, int vendaId) {
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, fkId);
-            ps.setInt(2, vendaId);
-            ps.executeUpdate();
-        } catch (SQLException e) { e.printStackTrace(); }
-    }
-
     public void salvarCompleta(Venda venda) {
-        // SQLs alinhados com seu DatabaseInit
-        String sqlVenda = "INSERT INTO venda (cliente_id, vendedor_id, data, total) VALUES (?, ?, ?, ?)";
+        String sqlVenda = "INSERT INTO venda (cliente_id, vendedor_id, data_venda, hora_venda, total) VALUES (?, ?, ?, ?, ?)";
         String sqlItem = "INSERT INTO item_venda (venda_id, produto_id, quantidade, preco_unitario) VALUES (?, ?, ?, ?)";
         String sqlEstoque = "UPDATE produto SET estoque = estoque - ? WHERE id = ?";
 
         try (Connection conn = ConexaoSQLite.conectar()) {
-            conn.setAutoCommit(false); // Inicia Transação para segurança dos dados
+            conn.setAutoCommit(false);
 
             try (PreparedStatement psVenda = conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
-
-                // Formatação de data conforme seu padrão TEXT no banco
                 String dataAtual = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 String horaAtual = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-                String dataHoraCompleta = dataAtual + " " + horaAtual;
 
                 psVenda.setLong(1, venda.getCliente().getId());
-                psVenda.setInt(2, venda.getVendedor().getId());
-                psVenda.setString(3, dataHoraCompleta);
-                psVenda.setDouble(4, venda.getTotal());
+                psVenda.setLong(2, venda.getVendedor().getId());
+                psVenda.setString(3, dataAtual);
+                psVenda.setString(4, horaAtual);
+                psVenda.setDouble(5, venda.getTotal());
                 psVenda.executeUpdate();
 
-                // Recupera o ID da venda gerado agora
                 ResultSet rs = psVenda.getGeneratedKeys();
                 if (rs.next()) {
-                    int vendaId = rs.getInt(1);
+                    Long vendaId = rs.getLong(1);
 
-                    // Salva os itens e baixa o estoque
                     for (ItemVenda item : venda.getItens()) {
-                        // 1. Salva Item
                         try (PreparedStatement psItem = conn.prepareStatement(sqlItem)) {
-                            psItem.setInt(1, vendaId);
-                            psItem.setInt(2, item.getProduto().getId());
+                            psItem.setLong(1, vendaId);
+                            psItem.setLong(2, item.getProduto().getId());
                             psItem.setInt(3, item.getQuantidade());
                             psItem.setDouble(4, item.getProduto().getPreco());
                             psItem.executeUpdate();
                         }
 
-                        // 2. Baixa Estoque
                         try (PreparedStatement psEstoque = conn.prepareStatement(sqlEstoque)) {
                             psEstoque.setInt(1, item.getQuantidade());
-                            psEstoque.setInt(2, item.getProduto().getId());
+                            psEstoque.setLong(2, item.getProduto().getId());
                             psEstoque.executeUpdate();
                         }
                     }
                 }
-                conn.commit(); // Finaliza tudo com sucesso
+                conn.commit();
             } catch (SQLException e) {
-                conn.rollback(); // Se der erro em qualquer parte, desfaz tudo
+                conn.rollback();
                 throw e;
             }
         } catch (SQLException e) {
@@ -96,18 +85,16 @@ public class VendaDAO {
         }
     }
 
-    // No seu VendaDAO.java
     public List<Venda> listarHistorico() {
         List<Venda> lista = new ArrayList<>();
-        // SQL com JOIN para trazer os nomes de cliente e vendedor de uma vez
         String sql = """
-        SELECT v.*, c.nome as nome_cliente, ven.usuario_id, u.nome as nome_vendedor
-        FROM venda v
-        JOIN cliente c ON v.cliente_id = c.id
-        JOIN vendedor ven ON v.vendedor_id = ven.id
-        JOIN usuario u ON ven.usuario_id = u.id
-        ORDER BY v.id DESC
-    """;
+            SELECT v.*, c.nome as nome_cliente, ven.usuario_id, u.nome as nome_vendedor
+            FROM venda v
+            JOIN cliente c ON v.cliente_id = c.id
+            JOIN vendedor ven ON v.vendedor_id = ven.id
+            JOIN usuario u ON ven.usuario_id = u.id
+            ORDER BY v.id DESC
+        """;
 
         try (Connection conn = ConexaoSQLite.conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -115,19 +102,15 @@ public class VendaDAO {
 
             while (rs.next()) {
                 Venda v = new Venda();
-                v.setId(rs.getInt("id"));
+                v.setId(rs.getLong("id")); // corrigido para Long
                 v.setTotal(rs.getDouble("total"));
-
-                // Aqui você precisará tratar a String data para LocalDate/LocalTime se desejar
-                // Ou apenas ler como String se o seu Model suportar
 
                 Cliente c = new Cliente();
                 c.setNome(rs.getString("nome_cliente"));
                 v.setCliente(c);
 
                 Vendedor ven = new Vendedor();
-                ven.setId(rs.getInt("vendedor_id"));
-                // Lógica para setar o nome do vendedor...
+                ven.setId(rs.getLong("vendedor_id")); // corrigido para Long
                 v.setVendedor(ven);
 
                 lista.add(v);
@@ -138,16 +121,95 @@ public class VendaDAO {
         return lista;
     }
 
-    public void atualizarCadastroVenda(int vendaId, Long novoClienteId, int novoVendedorId) {
+    public void atualizarCadastroVenda(Long vendaId, Long novoClienteId, Long novoVendedorId) {
         String sql = "UPDATE venda SET cliente_id = ?, vendedor_id = ? WHERE id = ?";
         try (Connection conn = ConexaoSQLite.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, novoClienteId);
-            ps.setInt(2, novoVendedorId);
-            ps.setInt(3, vendaId);
+            ps.setLong(2, novoVendedorId);
+            ps.setLong(3, vendaId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void alterarStatusVenda(Long vendaId, int status) {
+        String sqlStatus = "UPDATE venda SET status = ? WHERE id = ?";
+        String sqlItens = "SELECT produto_id, quantidade FROM item_venda WHERE venda_id = ?";
+        String sqlEstoque = "UPDATE produto SET estoque = estoque + ? WHERE id = ?";
+
+        try (Connection conn = ConexaoSQLite.conectar()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement psStatus = conn.prepareStatement(sqlStatus)) {
+                psStatus.setInt(1, status);
+                psStatus.setLong(2, vendaId);
+                psStatus.executeUpdate();
+            }
+
+            // Se for cancelada, devolve os itens ao estoque
+            if (status == 2) {
+                try (PreparedStatement psItens = conn.prepareStatement(sqlItens)) {
+                    psItens.setLong(1, vendaId);
+                    ResultSet rs = psItens.executeQuery();
+
+                    while (rs.next()) {
+                        Long produtoId = rs.getLong("produto_id");
+                        int quantidade = rs.getInt("quantidade");
+
+                        try (PreparedStatement psEstoque = conn.prepareStatement(sqlEstoque)) {
+                            psEstoque.setInt(1, quantidade);
+                            psEstoque.setLong(2, produtoId);
+                            psEstoque.executeUpdate();
+                        }
+                    }
+                }
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cancelarVenda(Long vendaId) {
+        String sqlUpdateVenda = "UPDATE venda SET status = 2 WHERE id = ?";
+        String sqlItens = "SELECT produto_id, quantidade FROM item_venda WHERE venda_id = ?";
+        String sqlUpdateProduto = "UPDATE produto SET estoque = estoque + ? WHERE id = ?";
+
+        try (Connection conn = ConexaoSQLite.conectar()) {
+            conn.setAutoCommit(false);
+
+            // 1. Atualiza status da venda
+            try (PreparedStatement psVenda = conn.prepareStatement(sqlUpdateVenda)) {
+                psVenda.setLong(1, vendaId);
+                psVenda.executeUpdate();
+            }
+
+            // 2. Repor estoque dos produtos
+            try (PreparedStatement psItens = conn.prepareStatement(sqlItens);
+                 PreparedStatement psProduto = conn.prepareStatement(sqlUpdateProduto)) {
+
+                psItens.setLong(1, vendaId);
+                ResultSet rs = psItens.executeQuery();
+
+                while (rs.next()) {
+                    Long produtoId = rs.getLong("produto_id");
+                    int quantidade = rs.getInt("quantidade");
+
+                    psProduto.setInt(1, quantidade);
+                    psProduto.setLong(2, produtoId);
+                    psProduto.executeUpdate();
+                }
+            }
+
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

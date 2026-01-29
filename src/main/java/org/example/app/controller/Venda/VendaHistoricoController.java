@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -195,4 +196,32 @@ public class VendaHistoricoController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
+
+    @FXML
+    private TableView<Venda> tabelaVendas;
+
+
+    @FXML
+    private void cancelarVenda() {
+        Venda selecionada = tabelaVendas.getSelectionModel().getSelectedItem();
+        if (selecionada == null) {
+            alerta("Selecione uma venda para cancelar.");
+            return;
+        }
+
+        vendaDAO.cancelarVenda(selecionada.getId()); // só muda status para 2
+        carregarTabela(); // recarrega a lista de vendas
+    }
+
+    private void carregarTabela() {
+        tabelaVendas.setItems(FXCollections.observableArrayList(vendaDAO.listarHistorico()));
+    }
+
+    private void alerta(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
 }

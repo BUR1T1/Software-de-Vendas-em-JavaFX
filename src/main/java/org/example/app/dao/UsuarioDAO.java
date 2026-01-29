@@ -42,7 +42,7 @@ public class UsuarioDAO {
 
             if (rs.next()) {
                 Usuario u = new Usuario(null,null,null);
-                u.setId(rs.getInt("id"));
+
                 u.setLogin(rs.getString("login"));
                 u.setPerfil(rs.getString("perfil"));
                 return u;

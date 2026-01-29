@@ -7,14 +7,12 @@ public class Cliente extends BaseEntity {
     private String nome;
     private String cpf;
     private String telefone;
-    private int status; // 1 = ativo | 2 = inativo
 
     public Cliente(String nome, String cpf, String telefone, int status) {
         super();
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
-        this.status = status;
     }
 
     public Cliente() {

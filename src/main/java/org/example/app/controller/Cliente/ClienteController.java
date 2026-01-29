@@ -134,9 +134,12 @@ public class ClienteController {
         }
     }
 
+    private void carregarTabelas() {
+        tabelaClientes.setItems(FXCollections.observableArrayList(clienteDAO.listarAtivos()));
+        tabelaInativos.setItems(FXCollections.observableArrayList(clienteDAO.listarInativos())); }
+
     @FXML
     private void reativar() {
-        // Corrigido de String para Long
         List<Long> ids = tabelaInativos.getSelectionModel()
                 .getSelectedItems()
                 .stream()
@@ -144,7 +147,6 @@ public class ClienteController {
                 .toList();
 
         if (!ids.isEmpty()) {
-            // Certifique-se que o clienteDAO.reativar aceite List<Long>
             clienteDAO.reativar(ids);
             carregarTabela(); // Recarrega para ver os reativados
         } else {

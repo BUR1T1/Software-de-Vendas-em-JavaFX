@@ -92,7 +92,7 @@ public class VendedorController {
 
 @FXML
 private void reativar() {
-    List<Integer> ids = tabelaInativos.getSelectionModel()
+    List<Long> ids = tabelaInativos.getSelectionModel()
             .getSelectedItems()
             .stream()
             .map(Vendedor::getId)

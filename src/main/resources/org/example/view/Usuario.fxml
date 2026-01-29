@@ -20,7 +20,6 @@
         <TextField fx:id="txtLogin" promptText="joao.silva" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <PasswordField fx:id="txtSenha" dGridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
         <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <Button text="Salvar Novo" onAction="#salvar" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;"/>
