@@ -38,12 +38,12 @@ public class DatabaseInit {
 
         String sqlCliente = """
             CREATE TABLE IF NOT EXISTS cliente (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                cpf TEXT NOT NULL UNIQUE,
-                nome TEXT,
-                telefone TEXT,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                cpf TEXT NOT NULL UNIQUE, 
+                nome TEXT, 
+                telefone TEXT, 
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
                 status INTEGER NOT NULL DEFAULT 1
             );
         """;

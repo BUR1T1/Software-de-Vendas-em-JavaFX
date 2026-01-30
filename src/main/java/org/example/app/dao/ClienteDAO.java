@@ -12,24 +12,35 @@ public class ClienteDAO {
 
     public void salvar(Cliente c) {
         if (c.getId() == null) {
-            String sql = "INSERT INTO cliente (nome, cpf, telefone, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO cliente (cpf, nome, telefone, status) VALUES (?, ?, ?, ?)";
             try (Connection conn = ConexaoSQLite.conectar();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, c.getNome());
-                ps.setString(2, c.getCpf());
+                ps.setString(1, c.getCpf());
+                ps.setString(2, c.getNome());
                 ps.setString(3, c.getTelefone());
-                ps.setInt(4, 1); // Status ativo
-                ps.setTimestamp(5, Timestamp.valueOf(c.getCreatedAt()));
-                ps.setTimestamp(6, Timestamp.valueOf(c.getUpdatedAt()));
+                ps.setInt(4, 1); // status ativo
                 ps.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException("Erro ao inserir cliente. Verifique se o CPF já existe.");
+                throw new RuntimeException("Erro ao inserir cliente: " + e.getMessage(), e);
             }
         } else {
             atualizar(c);
         }
     }
 
+
+    public boolean existeCpf(String cpf) {
+        String sql = "SELECT 1 FROM cliente WHERE cpf = ?";
+        try (Connection conn = ConexaoSQLite.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, cpf);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     //=======================================
     // METHODO PARA INATIVAR O REATIVAR CLIENTES.
     //=======================================
@@ -58,8 +69,9 @@ public class ClienteDAO {
             ps.executeBatch();
 
         } catch (Exception e) {
-            throw new RuntimeException("Cliente reativado com sucesso !!!");
+            throw new RuntimeException("Erro ao reativar cliente", e);
         }
+
     }
 
 
@@ -78,18 +90,17 @@ public class ClienteDAO {
             while (rs.next()) {
                 Cliente c = new Cliente(
                         rs.getString("nome"),
-                        rs.getNString("cpf"),
+                        rs.getString("cpf"),
                         rs.getString("telefone"),
                         rs.getInt("status")
                 );
-                c.setNome(rs.getString("nome"));
-                c.setCpf(rs.getString("cpf"));
-                c.setTelefone(rs.getString("telefone"));
+                c.setId(rs.getLong("id")); // ESSENCIAL
+
                 lista.add(c);
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(" Nenhum cliente foi cadastrado !!!");
+            throw new RuntimeException("Erro ao listar clientes.", e);
         }
 
         return lista;
@@ -128,6 +139,8 @@ public class ClienteDAO {
                         rs.getString("telefone"),
                         rs.getInt("status")
                 );
+                c.setId(rs.getLong("id")); // ← ESSENCIAL
+
 
                 lista.add(c);
             }
@@ -150,6 +163,8 @@ public class ClienteDAO {
                         rs.getString("telefone"),
                         rs.getInt("status")
                 );
+                c.setId(rs.getLong("id")); // ← ESSENCIAL
+
 
                 lista.add(c);
             }

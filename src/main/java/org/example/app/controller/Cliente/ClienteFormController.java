@@ -9,13 +9,20 @@ import org.example.app.model.Cliente;
 
 public class ClienteFormController {
 
-    @FXML private TextField txtId;
     @FXML private TextField txtNome;
     @FXML private TextField txtCpf;
     @FXML private TextField txtTelefone;
 
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private Cliente clienteSelecionado;
+
+    public void setCliente(Cliente cliente) {
+        this.clienteSelecionado = cliente;
+
+        txtNome.setText(cliente.getNome());
+        txtCpf.setText(cliente.getCpf());
+        txtTelefone.setText(cliente.getTelefone());
+    }
 
     @FXML
     private void salvar() {
@@ -24,17 +31,35 @@ public class ClienteFormController {
             return;
         }
 
-        if (clienteSelecionado == null) {
-            Cliente c = new Cliente( txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), 1);
-            clienteDAO.salvar(c);
-        } else {
-            clienteSelecionado.setNome(txtNome.getText());
-            clienteSelecionado.setCpf(txtCpf.getText());
-            clienteSelecionado.setTelefone(txtTelefone.getText());
-            clienteDAO.atualizar(clienteSelecionado);
-        }
+        try {
+            if (clienteSelecionado == null) {
+                if (clienteDAO.existeCpf(txtCpf.getText())) {
+                    alerta("Validação", "Já existe um cliente com este CPF.");
+                    return;
+                }
 
-        fecharFormulario();
+                Cliente c = new Cliente(
+                        txtNome.getText(),
+                        txtCpf.getText(),
+                        txtTelefone.getText(),
+                        1
+                );
+                clienteDAO.salvar(c);
+
+            } else {
+                clienteSelecionado.setNome(txtNome.getText());
+                clienteSelecionado.setCpf(txtCpf.getText());
+                clienteSelecionado.setTelefone(txtTelefone.getText());
+                clienteSelecionado.markAsUpdated();
+
+                clienteDAO.atualizar(clienteSelecionado);
+            }
+
+            fecharFormulario();
+
+        } catch (RuntimeException e) {
+            alerta("Erro", e.getMessage());
+        }
     }
 
     @FXML

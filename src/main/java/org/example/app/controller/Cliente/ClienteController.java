@@ -37,10 +37,7 @@ public class ClienteController {
         colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
 
-        carregarTabela();
-    }
-    private void carregarTabela() {
-        tabelaClientes.setItems( FXCollections.observableArrayList(clienteDAO.listarAtivos()) );
+        carregarTabelas();
     }
 
 
@@ -75,7 +72,7 @@ public class ClienteController {
         }
 
         limpar();
-        carregarTabela();
+        carregarTabelas();
     }
 
     private void alerta(String titulo, String mensagem) {
@@ -106,7 +103,7 @@ public class ClienteController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            carregarTabela();
+            carregarTabelas();
         } catch (Exception e) {
             e.printStackTrace();
             alerta("Erro", "Não foi possível abrir o formulário.");
@@ -116,19 +113,41 @@ public class ClienteController {
     @FXML
     private void editar() {
         Cliente c = tabelaClientes.getSelectionModel().getSelectedItem();
-        if (c != null) {
-            selecionar(c);
-        } else {
+
+        if (c == null) {
             alerta("Seleção", "Selecione um cliente para editar.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/Cliente-Views/ClienteForm.fxml")
+            );
+            Parent root = loader.load();
+
+            ClienteFormController controller = loader.getController();
+            controller.setCliente(c);
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Cliente");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            carregarTabelas();
+        } catch (Exception e) {
+            e.printStackTrace();
+            alerta("Erro", "Não foi possível abrir o formulário.");
         }
     }
+
 
     @FXML
     private void inativarCliente() {
         Cliente c = tabelaClientes.getSelectionModel().getSelectedItem();
         if (c != null) {
             clienteDAO.inativar(c.getId());
-            carregarTabela();
+            carregarTabelas();
         } else {
             alerta("Seleção", "Selecione um cliente para inativar.");
         }
@@ -148,7 +167,7 @@ public class ClienteController {
 
         if (!ids.isEmpty()) {
             clienteDAO.reativar(ids);
-            carregarTabela(); // Recarrega para ver os reativados
+            carregarTabelas(); // Recarrega para ver os reativados
         } else {
             alerta("Seleção", "Selecione ao menos um cliente para reativar.");
         }
