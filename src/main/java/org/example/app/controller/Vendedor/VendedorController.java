@@ -13,21 +13,21 @@ import org.example.app.dao.VendedorDAO;
 import org.example.app.model.Vendedor;
 import java.io.IOException;
 import java.util.List;
+import javafx.scene.control.Alert;
 
 public class VendedorController {
 
-    @FXML
-    private TableView<Vendedor> tabelaVendedores;
-    @FXML
-    private TableColumn<Vendedor, Integer> colId;
-    @FXML
-    private TableColumn<Vendedor, String> colNome;
-    @FXML
-    private TableColumn<Vendedor, Integer> colCpf;
-    @FXML
-    private TableColumn<Vendedor, Double> colComissao;
-    @FXML
-    private TableView<Vendedor> tabelaInativos;
+    @FXML private TableView<Vendedor> tabelaVendedores;
+    @FXML private TableColumn<Vendedor, Long> colId;
+    @FXML private TableColumn<Vendedor, String> colNome;
+    @FXML private TableColumn<Vendedor, String> colCpf;
+    @FXML private TableColumn<Vendedor, Double> colComissao;
+
+    @FXML private TableView<Vendedor> tabelaInativos;
+    @FXML private TableColumn<Vendedor, Long> colIdInativo;
+    @FXML private TableColumn<Vendedor, String> colNomeInativo;
+    @FXML private TableColumn<Vendedor, String> colCpfInativo;
+    @FXML private TableColumn<Vendedor, Double> colComissaoInativo;
 
     private final VendedorDAO vendedorDAO = new VendedorDAO();
 
@@ -37,7 +37,24 @@ public class VendedorController {
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colComissao.setCellValueFactory(new PropertyValueFactory<>("comissao"));
-        carregarTabela();
+
+        colIdInativo.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNomeInativo.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colCpfInativo.setCellValueFactory(new PropertyValueFactory<>("cpf"));
+        colComissaoInativo.setCellValueFactory(new PropertyValueFactory<>("comissao"));
+
+        tabelaInativos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        carregarTabelas();
+    }
+
+    private void carregarTabelas() {
+        tabelaVendedores.setItems(
+                FXCollections.observableArrayList(vendedorDAO.listarAtivos())
+        );
+        tabelaInativos.setItems(
+                FXCollections.observableArrayList(vendedorDAO.listarInativos())
+        );
     }
 
     @FXML
@@ -48,12 +65,18 @@ public class VendedorController {
     @FXML
     private void abrirEdicao() {
         Vendedor selecionado = tabelaVendedores.getSelectionModel().getSelectedItem();
-        if (selecionado != null) exibirFormulario(selecionado);
+        if (selecionado != null) {
+            exibirFormulario(selecionado);
+        } else {
+            alerta("Seleção", "Selecione um vendedor para editar.");
+        }
     }
 
     private void exibirFormulario(Vendedor v) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/view/Vendedor/VendedorForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/Vendedor/VendedorForm.fxml")
+            );
             Parent root = loader.load();
 
             VendedorFormController formCtrl = loader.getController();
@@ -65,17 +88,13 @@ public class VendedorController {
             stage.showAndWait();
 
             if (formCtrl.isSalvo()) {
-                if (v == null) vendedorDAO.salvar(formCtrl.getVendedor());
-                else vendedorDAO.atualizar(formCtrl.getVendedor());
-                carregarTabela();
+                vendedorDAO.salvar(formCtrl.getVendedor());
+                carregarTabelas();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void carregarTabela() {
-        tabelaVendedores.setItems(FXCollections.observableArrayList(vendedorDAO.listar()));
     }
 
     @FXML
@@ -84,27 +103,28 @@ public class VendedorController {
 
         if (v != null) {
             vendedorDAO.inativar(v.getId());
-            carregarTabela();
+            carregarTabelas();
         } else {
             alerta("Seleção", "Selecione um vendedor para inativar.");
         }
     }
 
-@FXML
-private void reativar() {
-    List<Long> ids = tabelaInativos.getSelectionModel()
-            .getSelectedItems()
-            .stream()
-            .map(Vendedor::getId)
-            .toList();
+    @FXML
+    private void reativar() {
+        List<Long> ids = tabelaInativos.getSelectionModel()
+                .getSelectedItems()
+                .stream()
+                .map(Vendedor::getId)
+                .toList();
 
-    if (!ids.isEmpty()) {
-        vendedorDAO.reativar(ids);
-        tabelaInativos.getItems().removeAll(tabelaInativos.getSelectionModel().getSelectedItems());
-    } else {
-        alerta("Seleção", "Selecione ao menos um cliente para reativar.");
+        if (!ids.isEmpty()) {
+            vendedorDAO.reativar(ids);
+            carregarTabelas();
+        } else {
+            alerta("Seleção", "Selecione ao menos um vendedor para reativar.");
+        }
     }
-}
+
     private void alerta(String titulo, String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
@@ -113,4 +133,5 @@ private void reativar() {
         alert.showAndWait();
     }
 }
+
 

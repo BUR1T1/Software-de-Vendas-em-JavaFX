@@ -25,15 +25,14 @@ public class DatabaseInit {
 
         String sqlVendedor = """
             CREATE TABLE IF NOT EXISTS vendedor (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                usuario_id INTEGER NOT NULL,
-                cpf TEXT NOT NULL UNIQUE,
-                comissao REAL NOT NULL CHECK (comissao >= 0),
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                status INTEGER NOT NULL DEFAULT 1,
-                FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-            );
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        nome TEXT NOT NULL,
+                        cpf TEXT NOT NULL UNIQUE,
+                        comissao REAL NOT NULL CHECK (comissao >= 0),
+                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        status INTEGER NOT NULL DEFAULT 1
+                    );
         """;
 
         String sqlCliente = """

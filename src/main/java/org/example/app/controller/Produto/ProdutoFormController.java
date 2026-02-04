@@ -17,12 +17,23 @@ public class ProdutoFormController {
     private boolean salvo = false;
 
     public void setProduto(Produto produto) {
+        this.produto = produto;
+
         if (produto != null) {
-            this.produto = produto;
             txtNome.setText(produto.getNome());
             txtPreco.setText(String.valueOf(produto.getPreco()));
             txtEstoque.setText(String.valueOf(produto.getEstoque()));
         }
+    }
+
+
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public boolean isSalvo() {
+        return salvo;
     }
 
     @FXML
@@ -32,13 +43,14 @@ public class ProdutoFormController {
             double preco = Double.parseDouble(txtPreco.getText());
             int estoque = Integer.parseInt(txtEstoque.getText());
 
-            if (nome.isBlank()) {
+            if (nome == null || nome.isBlank()) {
                 lblMensagem.setText("Nome obrigatório.");
                 return;
             }
 
             if (produto == null) {
                 produto = new Produto(nome, preco, estoque);
+                produto.setStatus(1); // ativo
             } else {
                 produto.setNome(nome);
                 produto.setPreco(preco);
@@ -49,7 +61,7 @@ public class ProdutoFormController {
             fechar();
 
         } catch (NumberFormatException e) {
-            lblMensagem.setText("Valores inválidos.");
+            lblMensagem.setText("Preço ou estoque inválido.");
         }
     }
 
@@ -61,13 +73,5 @@ public class ProdutoFormController {
     private void fechar() {
         Stage stage = (Stage) txtNome.getScene().getWindow();
         stage.close();
-    }
-
-    public boolean isSalvo() {
-        return salvo;
-    }
-
-    public Produto getProduto() {
-        return produto;
     }
 }

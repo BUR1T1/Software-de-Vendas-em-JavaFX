@@ -1,8 +1,12 @@
 package org.example.app;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class BaseEntity {
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     protected Long id;
     protected LocalDateTime createdAt;
@@ -28,6 +32,15 @@ public abstract class BaseEntity {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+
+    public String getCreatedAtFormatted() {
+        return createdAt != null ? createdAt.format(FORMATTER) : "";
+    }
+
+    public String getUpdatedAtFormatted() {
+        return updatedAt != null ? updatedAt.format(FORMATTER) : "";
+    }
 
     public void markAsUpdated() {
         this.updatedAt = LocalDateTime.now();

@@ -10,21 +10,28 @@ import java.util.List;
 public class VendedorDAO {
 
     public void salvar(Vendedor vendedor) {
-        String sql = "INSERT INTO vendedor (nome, cpf, comissao, status) VALUES (?, ?, ?, 1)";
+        if (vendedor.getId() == null) {
+            String sql = "INSERT INTO vendedor (nome, cpf, comissao, status) VALUES (?, ?, ?, ?)";
+            try (Connection conn = ConexaoSQLite.conectar();
+                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, vendedor.getNome());
+                ps.setString(2, vendedor.getCpf());
+                ps.setDouble(3, vendedor.getComissao());
+                ps.setInt(4, 1);
+                ps.executeUpdate();
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, vendedor.getNome());
-            ps.setString(2, vendedor.getCPF()); // CPF como String
-            ps.setDouble(3, vendedor.getComissao());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao salvar vendedor. CPF já cadastrado?", e);
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        vendedor.setId(rs.getLong(1));
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Erro ao salvar vendedor. CPF já cadastrado? " + e.getMessage(), e);
+            }
+        } else {
+            atualizar(vendedor);
         }
     }
-
 
     public void inativar(Long id) {
         String sql = "UPDATE vendedor SET status = 2 WHERE id = ?";
@@ -67,7 +74,8 @@ public class VendedorDAO {
             while (rs.next()) {
                 Vendedor v = new Vendedor();
                 v.setId(rs.getLong("id"));
-                v.setCPF(rs.getString("cpf"));
+                v.setNome(rs.getString("nome"));
+                v.setCpf(rs.getString("cpf"));
                 v.setComissao(rs.getDouble("comissao"));
                 v.setStatus(rs.getInt("status"));
                 lista.add(v);
@@ -81,15 +89,16 @@ public class VendedorDAO {
     }
 
     public void atualizar(Vendedor vendedor) {
-        String sql = "UPDATE vendedor SET cpf = ?, comissao = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE vendedor SET nome = ? ,cpf = ?, comissao = ?, status = ? WHERE id = ?";
 
         try (Connection conn = ConexaoSQLite.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, vendedor.getCPF());
-            ps.setDouble(2, vendedor.getComissao());
-            ps.setInt(3, vendedor.getStatus());
-            ps.setLong(4, vendedor.getId());
+            ps.setString(1,vendedor.getNome());
+            ps.setString(2, vendedor.getCpf());
+            ps.setDouble(3, vendedor.getComissao());
+            ps.setInt(4, vendedor.getStatus());
+            ps.setLong(5, vendedor.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -108,7 +117,8 @@ public class VendedorDAO {
             while (rs.next()) {
                 Vendedor v = new Vendedor();
                 v.setId(rs.getLong("id"));
-                v.setCPF(rs.getString("cpf"));
+                v.setNome(rs.getString("nome"));
+                v.setCpf(rs.getString("cpf"));
                 v.setComissao(rs.getDouble("comissao"));
                 v.setStatus(rs.getInt("status"));
                 list.add(v);
@@ -119,4 +129,29 @@ public class VendedorDAO {
         }
         return list;
     }
+
+    public List<Vendedor> listarInativos() {
+        String sql = "SELECT * FROM vendedor WHERE status = 2";
+        List<Vendedor> list = new ArrayList<>();
+
+        try (Connection conn = ConexaoSQLite.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Vendedor v = new Vendedor();
+                v.setId(rs.getLong("id"));
+                v.setNome(rs.getString("nome"));
+                v.setCpf(rs.getString("cpf"));
+                v.setComissao(rs.getDouble("comissao"));
+                v.setStatus(rs.getInt("status"));
+                list.add(v);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
 }

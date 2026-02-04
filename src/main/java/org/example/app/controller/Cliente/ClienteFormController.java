@@ -3,6 +3,7 @@ package org.example.app.controller.Cliente;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.model.Cliente;
@@ -74,5 +75,19 @@ public class ClienteFormController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    @FXML public void initialize() {
+        txtCpf.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().matches("[0-9]*") && (txtCpf.getText().length() + change.getText().length() <= 11)) {
+                return change;
+            } return null;
+        }));
+          txtTelefone.setTextFormatter(new TextFormatter<>(change -> {
+              if (change.getText().matches("[0-9]*") && (txtTelefone.getText().length() + change.getText().length() <= 11)) {
+                  return change;
+              }
+              return null;
+          }));
     }
 }

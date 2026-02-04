@@ -25,7 +25,7 @@
 
             <VBox spacing="5.0">
                 <Label text="CPF" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
-                <TextField fx:id="txtCpf" prefHeight="40.0" promptText="000.000.000-00"
+                <TextField fx:id="txtCpf" prefHeight="40.0" promptText="Somente números (11 dígitos)"
                            style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8;" />
             </VBox>
 

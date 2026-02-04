@@ -31,7 +31,7 @@ public class ProdutoDAO {
 
     public List<Produto> listar() {
         List<Produto> lista = new ArrayList<>();
-        String sql = "SELECT * FROM produto";
+        String sql = "SELECT * FROM produto WHERE status = f1" ;
 
         try (Connection conn = ConexaoSQLite.conectar();
              Statement st = conn.createStatement();
@@ -51,6 +51,30 @@ public class ProdutoDAO {
             throw new RuntimeException("Erro ao listar produtos", e);
         }
 
+        return lista;
+    }
+
+
+    public List<Produto> listarInativos() {
+        List<Produto> lista = new ArrayList<>();
+        String sql = "SELECT * FROM produto WHERE status = 2";
+
+        try (Connection conn = ConexaoSQLite.conectar();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Produto p = new Produto();
+                p.setId(rs.getLong("id"));
+                p.setNome(rs.getString("nome"));
+                p.setPreco(rs.getDouble("preco"));
+                p.setEstoque(rs.getInt("estoque"));
+                p.setStatus(rs.getInt("status"));
+                lista.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 
@@ -91,6 +115,23 @@ public class ProdutoDAO {
             e.printStackTrace();
         }
 
-
     }
+    public void reativar(List<Long> ids) {
+        String sql = "UPDATE produto SET status = 1 WHERE id = ?";
+
+        try (Connection conn = ConexaoSQLite.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (Long id : ids) {
+                ps.setLong(1, id);
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao reativar produtos", e);
+        }
+    }
+
 }

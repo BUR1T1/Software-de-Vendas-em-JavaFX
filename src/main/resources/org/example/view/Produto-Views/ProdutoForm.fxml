@@ -5,52 +5,67 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="0.0" prefWidth="450.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #e2e8f0; -fx-border-width: 1;"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.app.controller.Produto.ProdutoFormController">
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.app.controller.Produto.ProdutoFormController"
+            prefWidth="420" prefHeight="320"
+            style="-fx-background-color: #f8fafc;">
 
-    <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: #2563eb; -fx-background-radius: 15 15 0 0;">
-        <padding><Insets left="25.0" right="25.0" /></padding>
-        <children>
-            <Label fx:id="lblTitulo" text="CADASTRO DE PRODUTO" textFill="WHITE" style="-fx-font-weight: bold; -fx-font-size: 18px;" />
-        </children>
-    </HBox>
+    <children>
+        <VBox spacing="16" layoutX="20" layoutY="20" prefWidth="380"
+              style="-fx-background-color: white;
+                     -fx-background-radius: 12;
+                     -fx-border-color: #e2e8f0;
+                     -fx-border-radius: 12;
+                     -fx-padding: 20;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 12, 0, 0, 4);">
 
-    <VBox spacing="20.0" style="-fx-padding: 30;">
-        <children>
-            <VBox spacing="8.0">
-                <Label text="DESCRIÇÃO / NOME DO ITEM" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
-                <TextField fx:id="txtNome" prefHeight="45.0" promptText="Ex: Coca-Cola 2L"
-                           style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15;" />
-            </VBox>
+            <children>
+                <!-- Título -->
+                <Label text="Cadastro de Produto"
+                       style="-fx-text-fill: #1e293b; -fx-font-weight: bold;">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
 
-            <HBox spacing="20.0">
-                <children>
-                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                        <Label text="PREÇO DE VENDA (R$)" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
-                        <TextField fx:id="txtPreco" prefHeight="45.0" promptText="0,00"
-                                   style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15; -fx-font-weight: bold; -fx-text-fill: #2563eb;" />
-                    </VBox>
+                <!-- Campos -->
+                <TextField fx:id="txtNome"
+                           promptText="Nome do produto"
+                           style="-fx-background-radius: 8; -fx-padding: 8;"/>
+                <TextField fx:id="txtPreco"
+                           promptText="Preço"
+                           style="-fx-background-radius: 8; -fx-padding: 8;"/>
+                <TextField fx:id="txtEstoque"
+                           promptText="Estoque"
+                           style="-fx-background-radius: 8; -fx-padding: 8;"/>
 
-                    <VBox spacing="8.0" HBox.hgrow="ALWAYS">
-                        <Label text="ESTOQUE ATUAL" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
-                        <TextField fx:id="txtEstoque" prefHeight="45.0" promptText="0"
-                                   style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 15;" />
-                    </VBox>
-                </children>
-            </HBox>
+                <!-- Mensagem de erro -->
+                <Label fx:id="lblMensagem"
+                       style="-fx-text-fill: #dc2626; -fx-font-size: 12px;"/>
 
-            <Separator prefWidth="200.0" style="-fx-padding: 10 0;" />
-
-            <HBox alignment="CENTER_RIGHT" spacing="15.0">
-                <children>
-                    <Button onAction="#cancelar" prefHeight="45.0" prefWidth="120.0" text="CANCELAR"
-                            style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;" />
-
-                    <Button onAction="#salvar" prefHeight="45.0" prefWidth="160.0" text="SALVAR DADOS"
-                            style="-fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.2), 10, 0, 0, 4);" />
-                </children>
-            </HBox>
-        </children>
-    </VBox>
-</VBox>
+                <!-- Botões -->
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <children>
+                        <Button text="Cancelar"
+                                onAction="#cancelar"
+                                style="-fx-background-color: #f1f5f9;
+                                       -fx-text-fill: #475569;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 8;
+                                       -fx-padding: 8 16;
+                                       -fx-cursor: hand;"/>
+                        <Button text="Salvar"
+                                onAction="#salvar"
+                                style="-fx-background-color: #2563eb;
+                                       -fx-text-fill: white;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 8;
+                                       -fx-padding: 8 20;
+                                       -fx-cursor: hand;"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
