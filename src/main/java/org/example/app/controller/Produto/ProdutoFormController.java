@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.example.app.dao.ProdutoDAO;
 import org.example.app.model.Produto;
+import org.example.app.util.Alerta;
 
 public class ProdutoFormController {
 
@@ -36,34 +38,49 @@ public class ProdutoFormController {
         return salvo;
     }
 
+
+    private final ProdutoDAO produtoDAO = new ProdutoDAO();
+
     @FXML
     private void salvar() {
+
         try {
             String nome = txtNome.getText();
             double preco = Double.parseDouble(txtPreco.getText());
             int estoque = Integer.parseInt(txtEstoque.getText());
 
             if (nome == null || nome.isBlank()) {
-                lblMensagem.setText("Nome obrigatório.");
+                Alerta.warning("Aviso", "Nome do produto obrigatório");
                 return;
             }
 
             if (produto == null) {
+
                 produto = new Produto(nome, preco, estoque);
-                produto.setStatus(1); // ativo
+                produto.setStatus(1);
+
+                produtoDAO.salvar(produto);
+
             } else {
+
                 produto.setNome(nome);
                 produto.setPreco(preco);
                 produto.setEstoque(estoque);
+
+                produtoDAO.atualizar(produto); // 🔥 atualiza no banco
             }
 
             salvo = true;
             fechar();
 
         } catch (NumberFormatException e) {
-            lblMensagem.setText("Preço ou estoque inválido.");
+            Alerta.warning("Preenchimento", "Preço ou estoque inválido");
+        } catch (Exception e) {
+            Alerta.error("Erro", "Erro ao salvar produto");
+            e.printStackTrace();
         }
     }
+
 
     @FXML
     private void cancelar() {

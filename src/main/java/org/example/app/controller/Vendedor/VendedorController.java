@@ -14,6 +14,7 @@ import org.example.app.model.Vendedor;
 import java.io.IOException;
 import java.util.List;
 import javafx.scene.control.Alert;
+import org.example.app.util.Alerta;
 
 public class VendedorController {
 
@@ -68,7 +69,7 @@ public class VendedorController {
         if (selecionado != null) {
             exibirFormulario(selecionado);
         } else {
-            alerta("Seleção", "Selecione um vendedor para editar.");
+            Alerta.info("Seleção", "Selecione um vendedor para editar.");
         }
     }
 
@@ -105,7 +106,7 @@ public class VendedorController {
             vendedorDAO.inativar(v.getId());
             carregarTabelas();
         } else {
-            alerta("Seleção", "Selecione um vendedor para inativar.");
+            Alerta.info("Seleção", "Selecione um vendedor para inativar.");
         }
     }
 
@@ -121,17 +122,11 @@ public class VendedorController {
             vendedorDAO.reativar(ids);
             carregarTabelas();
         } else {
-            alerta("Seleção", "Selecione ao menos um vendedor para reativar.");
+            Alerta.info("Seleção", "Selecione ao menos um vendedor para reativar.");
         }
     }
 
-    private void alerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
+
 }
 
 

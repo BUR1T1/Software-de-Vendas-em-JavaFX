@@ -7,7 +7,7 @@
 <VBox spacing="15" prefWidth="500" prefHeight="400"
       style="-fx-background-color: white; -fx-border-color: #2563eb; -fx-border-width: 2; -fx-background-radius: 10; -fx-border-radius: 10;"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.app.controller.BuscaModalController">
+      fx:controller="org.example.app.util.BuscaModalController">
 
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 

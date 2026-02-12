@@ -1,4 +1,4 @@
-package org.example.app.controller;
+package org.example.app.controller.Login;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import org.example.app.util.Alerta;
 
 public class LoginController {
 
@@ -26,7 +27,7 @@ public class LoginController {
         if (txtUsuario.getText().equals("admin") && txtSenha.getText().equals("123")) {
             abrirTelaPrincipal();
         } else {
-            System.out.println("Login ou senha inválidos!");
+            Alerta.warning("Falha no acesso", "Login ou senha invalidos");
         }
     }
 

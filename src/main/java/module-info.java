@@ -19,4 +19,7 @@ module org.example.app {
     opens org.example.app.controller.Produto to javafx.fxml;
     opens org.example.app.controller.Vendedor to javafx.fxml;
     opens org.example.app.controller.Venda to javafx.fxml;
+    opens org.example.app.util to javafx.fxml;
+    opens org.example.app.controller.Login to javafx.fxml;
+    opens org.example.app.controller.Usuario to javafx.fxml;
 }

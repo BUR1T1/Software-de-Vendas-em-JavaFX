@@ -20,12 +20,64 @@ public class Venda extends BaseEntity {
     private double acrescimo;
     private double total;
 
+    private String formaPagamento;
+    private int parcelas;
+    private double valorParcela;
+
+
     private List<ItemVenda> itens = new ArrayList<>();
 
     public Venda() {
         super();
         this.dataVenda = LocalDate.now();
         this.horaVenda = LocalTime.now();
+    }
+
+    public void calcularTotalFinal() {
+        this.valorBruto = itens.stream()
+                .mapToDouble(ItemVenda::getTotal)
+                .sum();
+
+        this.total = this.valorBruto - this.desconto + this.acrescimo;
+
+        if ("CRÉDITO".equalsIgnoreCase(this.formaPagamento)
+                && this.parcelas > 0) {
+
+            this.valorParcela = this.total / this.parcelas;
+
+        } else {
+            this.parcelas = 1;
+            this.valorParcela = this.total;
+        }
+    }
+
+
+    public void setValorBruto(double valorBruto) {
+        this.valorBruto = valorBruto;
+    }
+
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public int getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(int parcelas) {
+        this.parcelas = parcelas;
+    }
+
+    public double getValorParcela() {
+        return valorParcela;
+    }
+
+    public void setValorParcela(double valorParcela) {
+        this.valorParcela = valorParcela;
     }
 
     // Método para calcular o total geral da venda automaticamente
@@ -58,8 +110,4 @@ public class Venda extends BaseEntity {
     public double getAcrescimo() { return acrescimo; }
     public void setAcrescimo(double acrescimo) { this.acrescimo = acrescimo; }
 
-    public void calcularTotalFinal() {
-        this.valorBruto = itens.stream().mapToDouble(ItemVenda::getTotal).sum();
-        this.total = this.valorBruto - this.desconto + this.acrescimo;
-    }
 }

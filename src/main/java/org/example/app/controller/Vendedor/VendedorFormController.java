@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.app.model.Vendedor;
+import org.example.app.util.Alerta;
 
 public class VendedorFormController {
     @FXML private Label lblTitulo;
@@ -29,12 +30,12 @@ public class VendedorFormController {
     private void salvar() {
         try {
             if (txtNome.getText().isBlank()) {
-                alerta("Validação", "Informe o nome do vendedor.");
+                Alerta.info("Validação", "Informe o nome do vendedor.");
                 return;
             }
 
             if (txtCpf.getText().isBlank()) {
-                alerta("Validação", "Informe o CPF.");
+                Alerta.info("Validação", "Informe o CPF.");
                 return;
             }
 
@@ -48,18 +49,9 @@ public class VendedorFormController {
             fechar();
 
         } catch (NumberFormatException e) {
-            alerta("Erro", "Comissão inválida.");
+            Alerta.error("Erro", "Comissão inválida.");
         }
     }
-
-    private void alerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
 
     @FXML public void initialize() {
         txtCpf.setTextFormatter(new TextFormatter<>(change -> {

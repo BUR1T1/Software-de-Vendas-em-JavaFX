@@ -13,19 +13,27 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory; // Adicionado
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.app.controller.BuscaModalController;
+import org.example.app.dao.VendaDAO;
+import org.example.app.util.Alerta;
+import org.example.app.util.BuscaModalController;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.dao.ProdutoDAO;
 import org.example.app.dao.VendedorDAO; // Adicionado
 import org.example.app.model.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VendaController {
 
+    /* =========================================================
+       FXML - COMPONENTES
+       ========================================================= */
+
     @FXML private TextField txtBuscaProduto;
     @FXML private TextField txtQuantidade;
+
     @FXML private TableView<ItemVenda> tblItens;
     @FXML private TableColumn<ItemVenda, String> colProduto;
     @FXML private TableColumn<ItemVenda, Integer> colQtd;
@@ -33,240 +41,413 @@ public class VendaController {
     @FXML private TableColumn<ItemVenda, Double> colTotal;
 
     @FXML private Label lblValorTotal;
+
     @FXML private TextField txtBuscaRapidaCliente;
     @FXML private Label lblClienteSelecionado;
+
     @FXML private TextField txtBuscaRapidaVendedor;
     @FXML private Label lblVendedorSelecionado;
 
-    // ===== ESTADO DA TELA =====
+    @FXML private ComboBox<String> cbFormaPagamento;
+    @FXML private Spinner<Integer> spParcelas;
+    @FXML private Label lblValorParcela;
+
+
+    /* =========================================================
+       ESTADO DA TELA
+       ========================================================= */
+
     private Cliente clienteSelecionado;
     private Vendedor vendedorSelecionado;
-    private final ObservableList<ItemVenda> itensVenda = FXCollections.observableArrayList();
-    private final ObservableList<Produto> produtos = FXCollections.observableArrayList();
 
-    // Instâncias dos DAOs (Corrigem o erro de static)
+    private final ObservableList<ItemVenda> itensVenda =
+            FXCollections.observableArrayList();
+
+    private final ObservableList<Produto> produtos =
+            FXCollections.observableArrayList();
+
+
+    /* =========================================================
+       DAOs
+       ========================================================= */
+
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private final VendedorDAO vendedorDAO = new VendedorDAO();
+    private final VendaDAO vendaDAO = new VendaDAO();
+
+
+    /* =========================================================
+       INITIALIZE
+       ========================================================= */
 
     @FXML
     public void initialize() {
+
         configurarTabela();
         carregarProdutos();
+
         tblItens.setItems(itensVenda);
+
+        cbFormaPagamento.getItems().addAll(
+                "DINHEIRO",
+                "PIX",
+                "DÉBITO",
+                "CRÉDITO"
+        );
+
+        spParcelas.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, 1)
+        );
+
+        spParcelas.setDisable(true);
+
+        spParcelas.valueProperty().addListener((obs, oldVal, newVal) ->
+                atualizarParcelas()
+        );
+
         atualizarTotal();
     }
 
-    // ===== LÓGICA DE CLIENTE =====
+
+    /* =========================================================
+       CLIENTE
+       ========================================================= */
+
     @FXML
     private void pesquisarClienteEnter() {
-        abrirGridBuscaCliente(txtBuscaRapidaCliente.getText());
+        abrirGridBuscaCliente();
     }
 
     @FXML
     private void abrirBuscaCliente() {
-        abrirGridBuscaCliente("");
+        abrirGridBuscaCliente();
     }
 
-    private void abrirGridBuscaCliente(String filtro) {
+    private void abrirGridBuscaCliente() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/view/BuscaModal.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/BuscaModal.fxml")
+            );
 
+            Parent root = loader.load();
             BuscaModalController<Cliente> controller = loader.getController();
 
-            // Criando colunas para o Grid de Clientes
-            TableColumn<Cliente, String> colNome = new TableColumn<>("Nome");
-            colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+            TableColumn<Cliente, String> colNome =
+                    new TableColumn<>("Nome");
 
-            // Usando a instância 'clienteDAO' para listar (Resolve o erro static)
-            List<Cliente> clientes = clienteDAO.listar();
+            colNome.setCellValueFactory(
+                    new PropertyValueFactory<>("nome")
+            );
 
-            controller.configurar("BUSCAR CLIENTE", clientes, List.of(colNome), cliente -> {
-                setClienteSelecionado(cliente);
-            });
+            controller.configurar(
+                    "BUSCAR CLIENTE",
+                    clienteDAO.listar(),
+                    List.of(colNome),
+                    this::setClienteSelecionado
+            );
 
-            abrirStageModal(root, "Pesquisa de Clientes");
-        } catch (IOException e) {
+            abrirModal(root, "Pesquisa de Clientes");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setClienteSelecionado(Cliente cliente) {
-        this.clienteSelecionado = cliente;
+    private void setClienteSelecionado(Cliente cliente) {
+        clienteSelecionado = cliente;
         lblClienteSelecionado.setText(cliente.getNome());
-        lblClienteSelecionado.setStyle("-fx-text-fill: #2563eb; -fx-font-weight: bold;");
         txtBuscaRapidaCliente.clear();
     }
 
-    // ===== LÓGICA DE VENDEDOR =====
+
+    /* =========================================================
+       VENDEDOR
+       ========================================================= */
+
     @FXML
     private void pesquisarVendedorEnter() {
-        abrirGridBuscaVendedor(txtBuscaRapidaVendedor.getText());
+        abrirGridBuscaVendedor();
     }
 
     @FXML
     private void abrirBuscaVendedor() {
-        abrirGridBuscaVendedor("");
+        abrirGridBuscaVendedor();
     }
 
-    private void abrirGridBuscaVendedor(String filtro) {
+    private void abrirGridBuscaVendedor() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/view/BuscaModal.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/BuscaModal.fxml")
+            );
 
+            Parent root = loader.load();
             BuscaModalController<Vendedor> controller = loader.getController();
 
-            TableColumn<Vendedor, String> colNome = new TableColumn<>("Nome");
-            colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+            TableColumn<Vendedor, String> colNome =
+                    new TableColumn<>("Nome");
 
-            List<Vendedor> vendedores = vendedorDAO.listar();
+            colNome.setCellValueFactory(
+                    new PropertyValueFactory<>("nome")
+            );
 
-            controller.configurar("BUSCAR VENDEDOR", vendedores, List.of(colNome), vendedor -> {
-                setVendedorSelecionado(vendedor);
-            });
+            controller.configurar(
+                    "BUSCAR VENDEDOR",
+                    vendedorDAO.listar(),
+                    List.of(colNome),
+                    this::setVendedorSelecionado
+            );
 
-            abrirStageModal(root, "Pesquisa de Vendedores");
-        } catch (IOException e) {
+            abrirModal(root, "Pesquisa de Vendedores");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setVendedorSelecionado(Vendedor vendedor) {
-        this.vendedorSelecionado = vendedor;
+    private void setVendedorSelecionado(Vendedor vendedor) {
+        vendedorSelecionado = vendedor;
         lblVendedorSelecionado.setText(vendedor.getNome());
-        lblVendedorSelecionado.setStyle("-fx-text-fill: #2563eb; -fx-font-weight: bold;");
         txtBuscaRapidaVendedor.clear();
     }
 
-    // ===== MÉTODO AUXILIAR PARA ABRIR JANELAS =====
-    private void abrirStageModal(Parent root, String titulo) {
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle(titulo);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
+
+    /* =========================================================
+       PRODUTO
+       ========================================================= */
+    @FXML
+    private void abrirBuscaProduto() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/BuscaModal.fxml")
+            );
+
+            Parent root = loader.load();
+            BuscaModalController<Produto> controller =
+                    loader.getController();
+
+            TableColumn<Produto, String> colNome =
+                    new TableColumn<>("Produto");
+
+            colNome.setCellValueFactory(
+                    new PropertyValueFactory<>("nome")
+            );
+
+            controller.configurar(
+                    "SELECIONAR PRODUTO",
+                    produtoDAO.listar(),
+                    List.of(colNome),
+                    produto -> selecionarProduto(produto)
+            );
+
+            abrirModal(root, "Seleção de Produto");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    // [Restante dos métodos: pesquisarProdutoEnter, adicionarItem, finalizarVenda, etc, permanecem iguais]
+
 
     @FXML
     private void pesquisarProdutoEnter() {
+
         String busca = txtBuscaProduto.getText().trim();
         if (busca.isEmpty()) return;
 
         List<Produto> encontrados = produtos.stream()
-                .filter(p -> p.getNome().toLowerCase().contains(busca.toLowerCase()) ||
-                        String.valueOf(p.getId()).equals(busca))
+                .filter(p -> p.getNome().toLowerCase().contains(busca.toLowerCase())
+                        || String.valueOf(p.getId()).equals(busca))
                 .toList();
 
         if (encontrados.size() == 1) {
             selecionarProduto(encontrados.get(0));
-            txtQuantidade.requestFocus();
-        } else if (encontrados.size() > 1) {
-            abrirGridBuscaProduto(encontrados);
         } else {
-            alerta("Não encontrado", "Nenhum produto com o termo: " + busca, Alert.AlertType.WARNING);
-            txtBuscaProduto.selectAll();
+            Alerta.info("Não encontrado",
+                    "Produto não localizado.");
         }
     }
 
     private void selecionarProduto(Produto p) {
         txtBuscaProduto.setUserData(p);
         txtBuscaProduto.setText(p.getNome());
-        txtBuscaProduto.setStyle("-fx-border-color: #22c55e; -fx-border-width: 2; -fx-background-radius: 8;");
-    }
-
-    private void abrirGridBuscaProduto(List<Produto> lista) {
-        // Implementação futura similar à de clientes/vendedores
-        System.out.println("Abrindo grid para escolher entre " + lista.size() + " produtos.");
     }
 
     @FXML
     private void adicionarItem() {
+
         Produto produto = (Produto) txtBuscaProduto.getUserData();
-        if (produto == null) {
-            pesquisarProdutoEnter();
-            produto = (Produto) txtBuscaProduto.getUserData();
-            if (produto == null) return;
-        }
+        if (produto == null) return;
 
         int quantidade;
+
         try {
             quantidade = Integer.parseInt(txtQuantidade.getText());
             if (quantidade <= 0) throw new Exception();
         } catch (Exception e) {
-            alerta("Erro", "Quantidade inválida.", Alert.AlertType.ERROR);
+            Alerta.error("Erro", "Quantidade inválida.");
             return;
         }
 
-        boolean existe = false;
-        for (ItemVenda item : itensVenda) {
-            if (item.getProduto().getId() == produto.getId()) {
-                item.setQuantidade(item.getQuantidade() + quantidade);
-                existe = true;
-                break;
-            }
-        }
+        itensVenda.add(new ItemVenda(produto, quantidade));
 
-        if (!existe) {
-            itensVenda.add(new ItemVenda(produto, quantidade));
-        }
-
-        tblItens.refresh();
         atualizarTotal();
         limparCamposProduto();
-        txtBuscaProduto.requestFocus();
     }
+
+
+    /* =========================================================
+       PAGAMENTO
+       ========================================================= */
+
+    @FXML
+    private void alterarFormaPagamento() {
+
+        if ("CRÉDITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
+            spParcelas.setDisable(false);
+        } else {
+            spParcelas.getValueFactory().setValue(1);
+            spParcelas.setDisable(true);
+        }
+
+        atualizarParcelas();
+    }
+
+    private void atualizarParcelas() {
+
+        double total = calcularTotal();
+
+        if ("CRÉDITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
+
+            int parcelas = spParcelas.getValue();
+            double valorParcela = total / parcelas;
+
+            lblValorParcela.setText(
+                    String.format("R$ %.2f", valorParcela)
+            );
+
+        } else {
+
+            lblValorParcela.setText(
+                    String.format("R$ %.2f", total)
+            );
+        }
+    }
+
+
+    /* =========================================================
+       FINALIZAR VENDA
+       ========================================================= */
 
     @FXML
     private void finalizarVenda() {
-        if (clienteSelecionado == null || vendedorSelecionado == null) {
-            alerta("Venda incompleta", "Selecione cliente e vendedor.", Alert.AlertType.WARNING);
-            return;
-        }
-        if (itensVenda.isEmpty()) {
-            alerta("Venda vazia", "Adicione produtos.", Alert.AlertType.WARNING);
+
+        if (clienteSelecionado == null ||
+                vendedorSelecionado == null) {
+
+            Alerta.info("Venda incompleta",
+                    "Selecione cliente e vendedor.");
             return;
         }
 
-        alerta("Sucesso", "Venda finalizada para " + clienteSelecionado.getNome(), Alert.AlertType.INFORMATION);
-        itensVenda.clear();
-        clienteSelecionado = null;
-        vendedorSelecionado = null;
-        lblClienteSelecionado.setText("Nenhum selecionado");
-        lblVendedorSelecionado.setText("Nenhum selecionado");
-        atualizarTotal();
+        if (itensVenda.isEmpty()) {
+            Alerta.info("Venda vazia",
+                    "Adicione produtos.");
+            return;
+        }
+
+        Venda venda = new Venda();
+        venda.setCliente(clienteSelecionado);
+        venda.setVendedor(vendedorSelecionado);
+        venda.setItens(new ArrayList<>(itensVenda));
+        venda.setFormaPagamento(cbFormaPagamento.getValue());
+
+        vendaDAO.salvarCompleta(venda);
+
+        Alerta.info("Sucesso",
+                "Venda finalizada com sucesso!");
+
+        limparVenda();
     }
 
+
+    /* =========================================================
+       MÉTODOS AUXILIARES
+       ========================================================= */
+
     private void configurarTabela() {
-        colProduto.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getProduto().getNome()));
-        colQtd.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().getQuantidade()).asObject());
-        colPreco.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().getProduto().getPreco()).asObject());
-        colTotal.setCellValueFactory(d -> new SimpleDoubleProperty(d.getValue().getTotal()).asObject());
+
+        colProduto.setCellValueFactory(
+                d -> new SimpleStringProperty(
+                        d.getValue().getProduto().getNome()
+                )
+        );
+
+        colQtd.setCellValueFactory(
+                d -> new SimpleIntegerProperty(
+                        d.getValue().getQuantidade()
+                ).asObject()
+        );
+
+        colPreco.setCellValueFactory(
+                d -> new SimpleDoubleProperty(
+                        d.getValue().getProduto().getPreco()
+                ).asObject()
+        );
+
+        colTotal.setCellValueFactory(
+                d -> new SimpleDoubleProperty(
+                        d.getValue().getTotal()
+                ).asObject()
+        );
     }
 
     private void carregarProdutos() {
         produtos.setAll(produtoDAO.listar());
     }
 
+    private double calcularTotal() {
+        return itensVenda.stream()
+                .mapToDouble(ItemVenda::getTotal)
+                .sum();
+    }
+
     private void atualizarTotal() {
-        double total = itensVenda.stream().mapToDouble(ItemVenda::getTotal).sum();
-        lblValorTotal.setText(String.format("R$ %.2f", total));
+        lblValorTotal.setText(
+                String.format("R$ %.2f", calcularTotal())
+        );
+        atualizarParcelas();
     }
 
     private void limparCamposProduto() {
         txtBuscaProduto.clear();
         txtBuscaProduto.setUserData(null);
-        txtBuscaProduto.setStyle("");
         txtQuantidade.setText("1");
     }
 
-    private void alerta(String titulo, String mensagem, Alert.AlertType tipo) {
-        Alert a = new Alert(tipo);
-        a.setTitle(titulo);
-        a.setHeaderText(null);
-        a.setContentText(mensagem);
-        a.showAndWait();
+    private void limparVenda() {
+
+        itensVenda.clear();
+        clienteSelecionado = null;
+        vendedorSelecionado = null;
+
+        lblClienteSelecionado.setText("Nenhum selecionado");
+        lblVendedorSelecionado.setText("Nenhum selecionado");
+
+        cbFormaPagamento.getSelectionModel().clearSelection();
+        spParcelas.getValueFactory().setValue(1);
+        spParcelas.setDisable(true);
+        lblValorParcela.setText("R$ 0,00");
+
+        atualizarTotal();
+    }
+
+    private void abrirModal(Parent root, String titulo) {
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.setTitle(titulo);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

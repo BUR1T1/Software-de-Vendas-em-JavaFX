@@ -7,6 +7,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.model.Cliente;
+import org.example.app.util.Alerta;
 
 public class ClienteFormController {
 
@@ -28,14 +29,14 @@ public class ClienteFormController {
     @FXML
     private void salvar() {
         if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()) {
-            alerta("Validação", "Nome e CPF são obrigatórios.");
+            Alerta.warning("Validação", "Nome e CPF são obrigatórios.");
             return;
         }
 
         try {
             if (clienteSelecionado == null) {
                 if (clienteDAO.existeCpf(txtCpf.getText())) {
-                    alerta("Validação", "Já existe um cliente com este CPF.");
+                    Alerta.warning("Validação", "Já existe um cliente com este CPF.");
                     return;
                 }
 
@@ -59,7 +60,7 @@ public class ClienteFormController {
             fecharFormulario();
 
         } catch (RuntimeException e) {
-            alerta("Erro", e.getMessage());
+            Alerta.error("Erro", e.getMessage());
         }
     }
 
@@ -67,14 +68,6 @@ public class ClienteFormController {
     private void fecharFormulario() {
         Stage stage = (Stage) txtNome.getScene().getWindow();
         stage.close();
-    }
-
-    private void alerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
     }
 
     @FXML public void initialize() {

@@ -8,7 +8,7 @@
 <StackPane prefHeight="650.0" prefWidth="900.0"
            style="-fx-background-color: #F1F5F9;"
            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.example.app.controller.LoginController">
+           fx:controller="org.example.app.controller.Login.LoginController">
 
     <children>
         <VBox alignment="CENTER" maxHeight="500.0" maxWidth="420.0" spacing="0.0"

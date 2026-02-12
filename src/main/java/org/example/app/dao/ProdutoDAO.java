@@ -31,7 +31,7 @@ public class ProdutoDAO {
 
     public List<Produto> listar() {
         List<Produto> lista = new ArrayList<>();
-        String sql = "SELECT * FROM produto WHERE status = f1" ;
+        String sql = "SELECT * FROM produto WHERE status = 1" ;
 
         try (Connection conn = ConexaoSQLite.conectar();
              Statement st = conn.createStatement();
@@ -39,11 +39,11 @@ public class ProdutoDAO {
 
             while (rs.next()) {
                 Produto p = new Produto();
-                p.setId(rs.getLong("id"));          // agora compatível com BaseEntity
+                p.setId(rs.getLong("id"));
                 p.setNome(rs.getString("nome"));
                 p.setPreco(rs.getDouble("preco"));
                 p.setEstoque(rs.getInt("estoque"));
-                p.setStatus(rs.getInt("status"));   // novo campo status
+                p.setStatus(rs.getInt("status"));
                 lista.add(p);
             }
 

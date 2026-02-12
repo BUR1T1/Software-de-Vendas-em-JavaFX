@@ -13,7 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.example.app.controller.BuscaModalController;
+import org.example.app.util.BuscaModalController;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.dao.VendaDAO;
 import org.example.app.dao.VendedorDAO;

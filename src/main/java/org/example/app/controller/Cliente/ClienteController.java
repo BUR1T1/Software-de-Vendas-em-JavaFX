@@ -11,6 +11,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.model.Cliente;
+import org.example.app.util.Alerta;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ClienteController {
     @FXML
     private void salvar() {
         if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()) {
-            alerta("Validação", "Nome e CPF são obrigatórios.");
+            Alerta.info("Validação", "Nome e CPF são obrigatórios.");
             return;
         }
 
@@ -75,14 +76,6 @@ public class ClienteController {
         carregarTabelas();
     }
 
-    private void alerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
     @FXML
     private void fecharFormulario() {
         Stage stage = (Stage) txtNome.getScene().getWindow();
@@ -106,25 +99,22 @@ public class ClienteController {
             carregarTabelas();
         } catch (Exception e) {
             e.printStackTrace();
-            alerta("Erro", "Não foi possível abrir o formulário.");
+            Alerta.error("Erro", "Não foi possível abrir o formulário.");
         }
     }
 
     @FXML
     private void editar() {
         Cliente c = tabelaClientes.getSelectionModel().getSelectedItem();
-
         if (c == null) {
-            alerta("Seleção", "Selecione um cliente para editar.");
+            Alerta.info("Seleção", "Selecione um cliente para editar.");
             return;
         }
-
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/org/example/view/Cliente-Views/ClienteForm.fxml")
             );
             Parent root = loader.load();
-
             ClienteFormController controller = loader.getController();
             controller.setCliente(c);
 
@@ -133,11 +123,10 @@ public class ClienteController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
-
             carregarTabelas();
         } catch (Exception e) {
             e.printStackTrace();
-            alerta("Erro", "Não foi possível abrir o formulário.");
+            Alerta.error("Erro", "Não foi possível abrir o formulário.");
         }
     }
 
@@ -149,7 +138,7 @@ public class ClienteController {
             clienteDAO.inativar(c.getId());
             carregarTabelas();
         } else {
-            alerta("Seleção", "Selecione um cliente para inativar.");
+            Alerta.info("Seleção", "Selecione um cliente para inativar.");
         }
     }
 
@@ -169,7 +158,7 @@ public class ClienteController {
             clienteDAO.reativar(ids);
             carregarTabelas(); // Recarrega para ver os reativados
         } else {
-            alerta("Seleção", "Selecione ao menos um cliente para reativar.");
+            Alerta.info("Seleção", "Selecione ao menos um cliente para reativar.");
         }
     }
 
