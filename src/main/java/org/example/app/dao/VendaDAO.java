@@ -9,7 +9,6 @@ import org.example.app.model.Vendedor;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class VendaDAO {
             try (PreparedStatement psVenda =
                          conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
 
-                venda.calcularTotalFinal(); // 🔥 garante cálculo correto
+                venda.calcularTotalFinal();
 
                 psVenda.setLong(1, venda.getCliente().getId());
                 psVenda.setLong(2, venda.getVendedor().getId());
@@ -119,17 +118,16 @@ public class VendaDAO {
     }
 
     public List<Venda> listarHistorico() {
-
         List<Venda> lista = new ArrayList<>();
 
+        // Query corrigida: Removido o JOIN desnecessário com 'usuario'
         String sql = """
         SELECT v.*, 
                c.nome AS nome_cliente, 
-               u.nome AS nome_vendedor
+               ven.nome AS nome_vendedor
         FROM venda v
         JOIN cliente c ON v.cliente_id = c.id
         JOIN vendedor ven ON v.vendedor_id = ven.id
-        JOIN usuario u ON ven.usuario_id = u.id
         WHERE v.status = 1
         ORDER BY v.id DESC
     """;
@@ -139,15 +137,12 @@ public class VendaDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-
                 Venda v = new Venda();
-
                 v.setId(rs.getLong("id"));
                 v.setTotal(rs.getDouble("total"));
                 v.setFormaPagamento(rs.getString("forma_pagamento"));
                 v.setParcelas(rs.getInt("parcelas"));
                 v.setValorParcela(rs.getDouble("valor_parcela"));
-
                 v.setDataVenda(LocalDate.parse(rs.getString("data_venda")));
                 v.setHoraVenda(LocalTime.parse(rs.getString("hora_venda")));
 
@@ -161,11 +156,10 @@ public class VendaDAO {
 
                 lista.add(v);
             }
-
         } catch (Exception e) {
+            System.err.println("Erro ao listar histórico de vendas:");
             e.printStackTrace();
         }
-
         return lista;
     }
 

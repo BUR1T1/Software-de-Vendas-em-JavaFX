@@ -9,16 +9,13 @@ import org.example.app.database.DatabaseInit;
 
 public class MainApp extends Application {
 
-    private static Stage primaryStage; // Referência estática para trocar de tela depois
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
 
-        // Inicializa o banco de dados
         DatabaseInit.inicializar();
-
-        // Começa sempre pela tela de Login
         trocarTela("/org/example/view/login.fxml", "Sistema de Loja - Login");
 
         stage.show();

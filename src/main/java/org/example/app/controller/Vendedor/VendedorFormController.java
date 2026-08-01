@@ -53,6 +53,14 @@ public class VendedorFormController {
         }
     }
 
+      /* =========================================================
+       MÉTODOS PRA VALIDAR CAMPOS OBRIGATORIO;
+       ========================================================= */
+
+       /* =========================================================
+       MÉTODOS PRA ATUALIZAR DADOS DO VENDEDOR
+       ========================================================= */
+
     @FXML public void initialize() {
         txtCpf.setTextFormatter(new TextFormatter<>(change -> {
             String novoTexto = change.getControlNewText();

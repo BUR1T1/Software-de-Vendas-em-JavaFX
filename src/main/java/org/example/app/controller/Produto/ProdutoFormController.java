@@ -10,13 +10,26 @@ import org.example.app.util.Alerta;
 
 public class ProdutoFormController {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtPreco;
-    @FXML private TextField txtEstoque;
-    @FXML private Label lblMensagem;
+    @FXML
+    private TextField txtNome;
+
+    @FXML
+    private TextField txtPreco;
+
+    @FXML
+    private TextField txtEstoque;
+
+    @FXML
+    private Label lblMensagem;
+
+    private final ProdutoDAO produtoDAO = new ProdutoDAO();
 
     private Produto produto;
     private boolean salvo = false;
+
+    /* =========================================================
+       GETTERS E SETTERS
+       ========================================================= */
 
     public void setProduto(Produto produto) {
         this.produto = produto;
@@ -28,8 +41,6 @@ public class ProdutoFormController {
         }
     }
 
-
-
     public Produto getProduto() {
         return produto;
     }
@@ -38,54 +49,90 @@ public class ProdutoFormController {
         return salvo;
     }
 
+    /* =========================================================
+       VALIDAÇÕES
+       ========================================================= */
 
-    private final ProdutoDAO produtoDAO = new ProdutoDAO();
+    public void validarNome(String nome) {
+        if (produtoDAO.buscarNome(nome)) {
+            Alerta.warning(
+                    "Nome já utilizado.",
+                    "Adicione alguma especificação ao título."
+            );
+            throw new IllegalArgumentException("Valor inesperado");
+        }
 
-    @FXML
-    private void salvar() {
-
-        try {
-            String nome = txtNome.getText();
-            double preco = Double.parseDouble(txtPreco.getText());
-            int estoque = Integer.parseInt(txtEstoque.getText());
-
-            if (nome == null || nome.isBlank()) {
-                Alerta.warning("Aviso", "Nome do produto obrigatório");
-                return;
-            }
-
-            if (produto == null) {
-
-                produto = new Produto(nome, preco, estoque);
-                produto.setStatus(1);
-
-                produtoDAO.salvar(produto);
-
-            } else {
-
-                produto.setNome(nome);
-                produto.setPreco(preco);
-                produto.setEstoque(estoque);
-
-                produtoDAO.atualizar(produto); // 🔥 atualiza no banco
-            }
-
-            salvo = true;
-            fechar();
-
-        } catch (NumberFormatException e) {
-            Alerta.warning("Preenchimento", "Preço ou estoque inválido");
-        } catch (Exception e) {
-            Alerta.error("Erro", "Erro ao salvar produto");
-            e.printStackTrace();
+        if (nome == null || nome.isBlank()) {
+            Alerta.warning(
+                    "Aviso",
+                    "Nome do produto obrigatório."
+            );
+            throw new IllegalArgumentException("Valor inesperado");
         }
     }
 
+    public void valorPositivo(Double valor) {
+        if (valor <= 0) {
+            Alerta.info(
+                    "Valor imprevisto",
+                    "O valor precisa ser superior a zero."
+            );
+            throw new IllegalArgumentException("Valor imprevisto");
+        }
+    }
+
+    public void quantidadeDeEstoquePositio(Integer quantidade) {
+        if (quantidade <= 0) {
+            Alerta.warning(
+                    "Valor imprevisto",
+                    "O estoque não pode ser menor ou igual a zero."
+            );
+            throw new IllegalArgumentException("Valor imprevisto");
+        }
+    }
+
+    /* =========================================================
+       MONTAGEM DO PRODUTO
+       ========================================================= */
+
+    public Produto montarProduto() {
+        String nome = txtNome.getText();
+        double preco = Double.parseDouble(txtPreco.getText());
+        int estoque = Integer.parseInt(txtEstoque.getText());
+
+        validarNome(nome);
+        valorPositivo(preco);
+        quantidadeDeEstoquePositio(estoque);
+
+        return new Produto(nome, preco, estoque);
+    }
+
+    /* =========================================================
+       EVENTOS DA TELA
+       ========================================================= */
+
+    @FXML
+    private void salvar() {
+        try {
+            produto = montarProduto();
+            produtoDAO.salvar(produto);
+
+            salvo = true;
+            fechar();
+        } catch (Exception e) {
+            Alerta.error("Erro", "Erro ao salvar produto.");
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void cancelar() {
         fechar();
     }
+
+    /* =========================================================
+       MÉTODOS AUXILIARES
+       ========================================================= */
 
     private void fechar() {
         Stage stage = (Stage) txtNome.getScene().getWindow();

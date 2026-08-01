@@ -119,7 +119,6 @@ public class DatabaseInit {
 
             stmt.execute("PRAGMA foreign_keys = ON");
 
-            // Criação principal
             stmt.execute(sqlUsuario);
             stmt.execute(sqlVendedor);
             stmt.execute(sqlCliente);
@@ -131,7 +130,6 @@ public class DatabaseInit {
             // ATUALIZAÇÃO DE SCHEMA (BANCO ANTIGO)
             // =========================
 
-            // venda
             try { stmt.execute("ALTER TABLE venda ADD COLUMN forma_pagamento TEXT"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE venda ADD COLUMN parcelas INTEGER DEFAULT 1"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE venda ADD COLUMN valor_parcela REAL DEFAULT 0"); } catch (Exception ignored) {}

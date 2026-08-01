@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Line?>
 
 <StackPane prefHeight="650.0" prefWidth="900.0"
            style="-fx-background-color: #F1F5F9;"
@@ -11,79 +12,80 @@
            fx:controller="org.example.app.controller.Login.LoginController">
 
     <children>
-        <VBox alignment="CENTER" maxHeight="500.0" maxWidth="420.0" spacing="0.0"
-              style="-fx-background-color: #0F172A;
-                     -fx-background-radius: 30;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 40, 0, 0, 20);">
+        <VBox alignment="CENTER" maxHeight="530.0" maxWidth="410.0" spacing="0.0"
+              style="-fx-background-color: #FFFFFF;
+                     -fx-background-radius: 12;
+                     -fx-border-color: #0F172A;
+                     -fx-border-width: 2.5;
+                     -fx-border-radius: 10;
+                     -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.15), 30, 0, 8, 12);">
 
             <children>
-                <VBox alignment="CENTER" prefHeight="120.0" spacing="8.0"
-                      style="-fx-background-color: #2563EB; -fx-background-radius: 30 30 0 0;">
+                <VBox alignment="CENTER" spacing="12.0">
+                    <padding>
+                        <Insets top="45.0" bottom="30.0" />
+                    </padding>
                     <children>
-                        <Label text="SISTEMA DE GESTÃO" textFill="WHITE">
+                        <Label text="Login" textFill="#0F172A" style="-fx-font-weight: 900; -fx-letter-spacing: 2px;">
                             <font>
-                                <Font name="System Bold" size="24.0" />
+                                <Font name="System" size="22.0" />
                             </font>
                         </Label>
-                        <Label text="Área de Acesso Restrito" textFill="#DBEAFE">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
+                        <Line endX="40.0" stroke="#2563EB" strokeWidth="3.0" />
                     </children>
                 </VBox>
 
-                <VBox spacing="25.0">
+                <VBox spacing="22.0">
                     <padding>
-                        <Insets bottom="50.0" left="45.0" right="45.0" top="40.0" />
+                        <Insets bottom="50.0" left="45.0" right="45.0" top="10.0" />
                     </padding>
                     <children>
 
-                        <VBox spacing="10.0">
+                        <VBox spacing="8.0">
                             <children>
-                                <Label text="USUÁRIO" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
-                                <TextField fx:id="txtUsuario" prefHeight="55.0" promptText="Nome de usuário"
-                                           style="-fx-background-color: #FFFFFF;
-                                                  -fx-text-fill: #0F172A;
-                                                  -fx-background-radius: 12;
+                                <Label text="USUÁRIO" textFill="#64748B" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
+                                <TextField fx:id="txtUsuario" prefHeight="50.0" promptText="Digite seu usuário..."
+                                           style="-fx-background-color: #F8FAFC;
+                                                  -fx-border-color: #CBD5E1;
+                                                  -fx-border-width: 1;
+                                                  -fx-border-radius: 8;
+                                                  -fx-background-radius: 8;
                                                   -fx-padding: 0 15;
-                                                  -fx-font-size: 15px;
-                                                  -fx-border-color: #3B82F6;
-                                                  -fx-border-width: 0 0 0 5;
-                                                  -fx-border-radius: 12 0 0 12;" />
+                                                  -fx-font-size: 14px;
+                                                  -fx-text-fill: #0F172A;" />
                             </children>
                         </VBox>
 
-                        <VBox spacing="10.0">
+                        <VBox spacing="8.0">
                             <children>
-                                <Label text="SENHA" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
-                                <PasswordField fx:id="txtSenha" prefHeight="55.0" promptText="••••••••"
-                                               style="-fx-background-color: #FFFFFF;
-                                                      -fx-text-fill: #0F172A;
-                                                      -fx-background-radius: 12;
+                                <Label text="SENHA" textFill="#64748B" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
+                                <PasswordField fx:id="txtSenha" prefHeight="50.0" promptText="••••••••"
+                                               style="-fx-background-color: #F8FAFC;
+                                                      -fx-border-color: #CBD5E1;
+                                                      -fx-border-width: 1;
+                                                      -fx-border-radius: 8;
+                                                      -fx-background-radius: 8;
                                                       -fx-padding: 0 15;
-                                                      -fx-font-size: 15px;
-                                                      -fx-border-color: #3B82F6;
-                                                      -fx-border-width: 0 0 0 5;
-                                                      -fx-border-radius: 12 0 0 12;" />
+                                                      -fx-font-size: 14px;
+                                                      -fx-text-fill: #0F172A;" />
                             </children>
                         </VBox>
 
-                        <Region prefHeight="10" />
+                        <Region prefHeight="8" />
 
                         <Button maxWidth="Infinity" onAction="#entrar" prefHeight="55.0"
-                                style="-fx-background-color: linear-gradient(to right, #2563EB, #1D4ED8);
+                                style="-fx-background-color: #0F172A;
                                        -fx-text-fill: white;
                                        -fx-font-weight: bold;
-                                       -fx-font-size: 16px;
-                                       -fx-background-radius: 12;
+                                       -fx-font-size: 14px;
+                                       -fx-background-radius: 8;
                                        -fx-cursor: hand;
-                                       -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.3), 15, 0, 0, 8);"
-                                text="ENTRAR AGORA" />
+                                       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 3);"
+                                text="ENTRAR" />
 
-                        <Label fx:id="lblMensagem" alignment="CENTER" maxWidth="Infinity" textFill="#F87171" wrapText="true">
+                        <Label fx:id="lblMensagem" alignment="CENTER" maxWidth="Infinity" textFill="#E11D48" wrapText="true">
                             <font>
-                                <Font name="System Bold" size="13.0" />
+                                <Font name="System Bold" size="12.0" />
                             </font>
                         </Label>
                     </children>

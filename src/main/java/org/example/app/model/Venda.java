@@ -80,9 +80,11 @@ public class Venda extends BaseEntity {
         this.valorParcela = valorParcela;
     }
 
-    // Método para calcular o total geral da venda automaticamente
     public double getTotal() {
-        return itens.stream().mapToDouble(ItemVenda::getTotal).sum();
+        if (this.total == 0 && !itens.isEmpty()) {
+            return itens.stream().mapToDouble(ItemVenda::getTotal).sum();
+        }
+        return this.total;
     }
 
     public void setTotal(double total) {

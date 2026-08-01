@@ -134,4 +134,27 @@ public class ProdutoDAO {
         }
     }
 
+    //=======================================
+    // METHODO PARA VALIDAR A UTILIZAÇÃO DO NOME;
+    //=======================================
+    public boolean buscarNome(String nome){
+        String sql = "SELECT * FROM produto WHERE nome = ? LIMIT 1";
+         try(Connection conn = ConexaoSQLite.conectar();
+         PreparedStatement ps = conn.prepareStatement(sql)){
+
+             ps.setString(1,nome);
+
+             try(ResultSet rs = ps.executeQuery()){
+                 return rs.next();
+             }
+
+         }catch (SQLException e){
+             throw new IllegalArgumentException("Erro imprevisto na execução da query", e);
+         }
+    }
+
+    //=======================================
+    // METHODO PARA VALIDAR EXIATENCIA QUNATIDADE DE ESTOQUE
+    //=======================================
+
 }

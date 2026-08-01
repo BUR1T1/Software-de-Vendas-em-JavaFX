@@ -69,7 +69,7 @@
                         <VBox alignment="CENTER" spacing="20.0"
                               style="-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 30, 0, 0, 15); -fx-border-color: rgba(255,255,255,0.8); -fx-border-radius: 40; -fx-border-width: 2;">
                             <children>
-                                <Label text="Sistema de Gestão Moderno" textFill="#1e293b">
+                                <Label text="Seja bem-vindo!!!" textFill="#1e293b">
                                     <font>
                                         <Font name="System Bold" size="36.0" />
                                     </font>

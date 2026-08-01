@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import static java.util.Map.entry;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -19,6 +20,8 @@ public class MainController {
     @FXML private VBox sideMenu;
     @FXML private StackPane contentArea;
     private boolean menuAberto = true;
+
+    private final Map<String, Parent> paginasCarregadas = new HashMap<>();
 
     // Mapa de rotas: chave -> caminho completo do FXML
     private static final Map<String, String> rotas = Map.ofEntries(
@@ -49,20 +52,28 @@ public class MainController {
         menuAberto = !menuAberto;
     }
 
-    // Função principal que carrega os teus arquivos FXML no centro
     private void carregarPagina(String chave) {
-        try {
+        Parent page = paginasCarregadas.get(chave);
+
+        if (page == null) {
             String caminho = rotas.get(chave);
             if (caminho == null) {
                 System.err.println("Rota não encontrada: " + chave);
                 return;
             }
-            Parent page = FXMLLoader.load(getClass().getResource(caminho));
-            contentArea.getChildren().setAll(page);
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar a página: " + chave);
-            e.printStackTrace();
+            try {
+                page = FXMLLoader.load(getClass().getResource(caminho));
+                paginasCarregadas.put(chave, page);
+            } catch (IOException e) {
+                System.err.println("Erro ao carregar a página: " + chave);
+                e.printStackTrace();
+                return;
+            }
         }
+        contentArea.getChildren().setAll(page);
+    }
+    public void invalidarPagina(String chave) {
+        paginasCarregadas.remove(chave);
     }
 
     // Estas são as funções que os botões do FXML chamam:

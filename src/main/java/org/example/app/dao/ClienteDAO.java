@@ -173,5 +173,14 @@ public class ClienteDAO {
         }
         return lista;
     }
+
+    //=======================================
+    // METHODO VLIDADOR DE CLIENTE EXISTENTE
+    //=======================================
+
+    //=======================================
+    // METHODO VALIDADOR DE CLIENTE ATIVO OU NÂO
+    //=======================================
+
 }
 

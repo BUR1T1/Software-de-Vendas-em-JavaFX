@@ -11,7 +11,7 @@ public abstract class BaseEntity {
     protected Long id;
     protected LocalDateTime createdAt;
     protected LocalDateTime updatedAt;
-    private int status; // 1 = ativo | 2 = inativo
+    private int status;
 
     protected BaseEntity() {
         this.createdAt = LocalDateTime.now();
