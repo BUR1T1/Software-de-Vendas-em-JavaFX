@@ -11,5 +11,6 @@ public class ConexaoSQLite {
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL);
     }
+
 }
 

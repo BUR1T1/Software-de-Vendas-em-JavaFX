@@ -3,6 +3,7 @@ module org.example.app {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires com.rabbitmq.client;
 
     opens org.example.app.model to javafx.base;
 

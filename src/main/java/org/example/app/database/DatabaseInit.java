@@ -111,6 +111,50 @@ public class DatabaseInit {
             );
         """;
 
+
+        // =========================
+        // TABELA Pedido
+        // =========================
+
+        String sqlPedido = """
+            CREATE TABLE IF NOT EXISTS pedido (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cliente_id INTEGER NOT NULL,
+                vendedor_id INTEGER NOT NULL,
+                total REAL NOT NULL CHECK (total >= 0),
+
+                data_pedido TEXT NOT NULL,
+                hora_pedido TEXT NOT NULL,
+
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                status INTEGER NOT NULL DEFAULT 1,
+                
+                FOREIGN KEY (venda_id) REFERENCES venda(id),
+                FOREIGN KEY (cliente_id) REFERENCES cliente(id),
+                FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
+            );
+        """;
+
+        // =========================
+        // TABELA ITEM Pedido
+        // =========================
+        String sqlItemPedido = """
+            CREATE TABLE IF NOT EXISTS item_pedido (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pedido_id INTEGER NOT NULL,
+                produto_id INTEGER NOT NULL,
+                quantidade INTEGER NOT NULL,
+                preco_unitario REAL NOT NULL,
+
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+                FOREIGN KEY (pedido_id) REFERENCES pedido(id),
+                FOREIGN KEY (produto_id) REFERENCES produto(id)
+            );
+        """;
+
         // =========================
         // EXECUÇÃO
         // =========================

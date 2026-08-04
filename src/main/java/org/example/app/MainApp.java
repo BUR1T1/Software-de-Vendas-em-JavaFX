@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.example.app.consumer.PedidoConsumer;
 import org.example.app.database.DatabaseInit;
 
 public class MainApp extends Application {
@@ -13,6 +14,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        new Thread(PedidoConsumer::iniciar).start();
         primaryStage = stage;
 
         DatabaseInit.inicializar();
@@ -24,7 +26,7 @@ public class MainApp extends Application {
     /**
      * Método utilitário para trocar a cena principal do sistema
      * @param fxml Caminho do arquivo FXML
-     * @param titulo Título da janela
+     * @param titulo
      */
     public static void trocarTela(String fxml, String titulo) {
         try {
