@@ -35,7 +35,8 @@ public class MainController {
             entry("principal",   "/org/example/view/principal.fxml"),
             entry("login",       "/org/example/view/login.fxml"),
             entry("mainShell",   "/org/example/view/main_shell.fxml"),
-            entry("historico",   "/org/example/view/Venda-Views/venda-historico.fxml")
+            entry("historico",   "/org/example/view/Venda-Views/venda-historico.fxml"),
+            entry("pedidos",     "/org/example/view/Venda-Views/pedido-historico.fxml")
     );
 
 
@@ -83,4 +84,5 @@ public class MainController {
     @FXML public void showVendedores() { carregarPagina("vendedores"); }
     @FXML public void showUsuarios() { carregarPagina("usuarios"); }
     @FXML public void showHistoricoVendas() { carregarPagina("historico"); }
+@FXML public void showPedidos() { carregarPagina("pedidos"); }
 }

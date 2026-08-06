@@ -42,9 +42,12 @@
                         <Button maxWidth="Infinity" onAction="#showVendedores"
                                 style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
                                 text="👔   Vendedores" />
-                        <Button maxWidth="Infinity" onAction="#showHistoricoVendas"
+<Button maxWidth="Infinity" onAction="#showHistoricoVendas"
                                 style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
                                 text="📊   Histórico" />
+                        <Button maxWidth="Infinity" onAction="#showPedidos"
+                                style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-cursor: hand; -fx-alignment: CENTER_LEFT; -fx-padding: 12 20; -fx-background-radius: 15;"
+                                text="📨   Pedidos" />
 
                     </children>
                 </VBox>

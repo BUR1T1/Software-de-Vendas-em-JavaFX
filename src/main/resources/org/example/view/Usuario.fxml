@@ -4,34 +4,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="20" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.app.controller.Usuario.UsuarioController" style="-fx-background-color: #f4f4f4;">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.app.controller.Usuario.UsuarioController"
+            style="-fx-background-color: transparent;">
+    <content>
+        <VBox spacing="20" style="-fx-background-color: #f4f4f4;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
-    <Label text="Gestão de Usuários" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            <Label text="Gestão de Usuários" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
 
-    <GridPane hgap="10" vgap="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
-        <Label text="Nome Completo:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="txtNome" promptText="Ex: João Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
+            <GridPane hgap="10" vgap="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5;">
+                <Label text="Nome Completo:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="txtNome" promptText="Ex: João Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
 
-        <Label text="Login/Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <TextField fx:id="txtLogin" promptText="joao.silva" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Login/Usuário:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="txtLogin" promptText="joao.silva" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-        <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <PasswordField fx:id="txtSenha" promptText="••••••••" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
-            <Button text="Salvar Novo" onAction="#salvar" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;"/>
-            <Button text="Limpar" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
-        </HBox>
-    </GridPane>
+                <Label text="Perfil:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <ComboBox fx:id="cmbPerfil" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="300"/>
 
-    <TableView fx:id="tblUsuarios" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="colNome" text="Nome" prefWidth="250"/>
-            <TableColumn fx:id="colLogin" text="Usuário" prefWidth="150"/>
-        </columns>
-    </TableView>
-</VBox>
+                <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <Button text="Salvar Novo" onAction="#salvar" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    <Button text="Limpar" onAction="#limpar" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+                </HBox>
+
+                <Label fx:id="lblMensagem" GridPane.columnIndex="1" GridPane.rowIndex="5" style="-fx-text-fill: #2ecc71;"/>
+            </GridPane>
+
+            <TableView fx:id="tblUsuarios" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="colNome" text="Nome" prefWidth="250"/>
+                    <TableColumn fx:id="colLogin" text="Usuário" prefWidth="150"/>
+                    <TableColumn fx:id="colPerfil" text="Perfil" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </content>
+</ScrollPane>

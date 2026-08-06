@@ -1,6 +1,7 @@
 package org.example.app.database;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class DatabaseInit {
@@ -88,7 +89,7 @@ public class DatabaseInit {
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 status INTEGER NOT NULL DEFAULT 1,
-
+                
                 FOREIGN KEY (cliente_id) REFERENCES cliente(id),
                 FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
             );
@@ -130,7 +131,6 @@ public class DatabaseInit {
                 updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 status INTEGER NOT NULL DEFAULT 1,
                 
-                FOREIGN KEY (venda_id) REFERENCES venda(id),
                 FOREIGN KEY (cliente_id) REFERENCES cliente(id),
                 FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
             );
@@ -169,6 +169,8 @@ public class DatabaseInit {
             stmt.execute(sqlProduto);
             stmt.execute(sqlVenda);
             stmt.execute(sqlItemVenda);
+            stmt.execute(sqlPedido);
+            stmt.execute(sqlItemPedido);
 
             // =========================
             // ATUALIZAÇÃO DE SCHEMA (BANCO ANTIGO)
@@ -181,11 +183,25 @@ public class DatabaseInit {
             try { stmt.execute("ALTER TABLE venda ADD COLUMN hora_venda TEXT"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE venda ADD COLUMN status INTEGER NOT NULL DEFAULT 1"); } catch (Exception ignored) {}
 
+// nome da tabela usuario (para bancos antigos)
+            try { stmt.execute("ALTER TABLE usuario ADD COLUMN nome TEXT"); } catch (Exception ignored) {}
             // status geral
             try { stmt.execute("ALTER TABLE usuario ADD COLUMN status INTEGER NOT NULL DEFAULT 1"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE vendedor ADD COLUMN status INTEGER NOT NULL DEFAULT 1"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE cliente ADD COLUMN status INTEGER NOT NULL DEFAULT 1"); } catch (Exception ignored) {}
             try { stmt.execute("ALTER TABLE produto ADD COLUMN status INTEGER NOT NULL DEFAULT 1"); } catch (Exception ignored) {}
+
+            // Criação do usuário admin padrão, caso não exista
+            try (ResultSet rs = stmt.executeQuery(
+                    "SELECT COUNT(*) FROM usuario WHERE login = 'admin'")) {
+                if (rs.next() && rs.getInt(1) == 0) {
+                    stmt.executeUpdate(
+                        "INSERT INTO usuario (nome, login, senha, perfil, status) " +
+                        "VALUES ('Administrador', 'admin', '123', 'ADMIN', 1)"
+                    );
+                    System.out.println("Usuário admin padrão criado (admin/123).");
+                }
+            }
 
             System.out.println("Banco de dados inicializado/atualizado com sucesso.");
 

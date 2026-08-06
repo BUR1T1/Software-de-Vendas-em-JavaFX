@@ -4,7 +4,9 @@ module org.example.app {
     requires javafx.fxml;
     requires java.sql;
     requires com.rabbitmq.client;
+    requires com.google.gson;
 
+    opens org.example.app.consumer to com.google.gson, javafx.fxml;
     opens org.example.app.model to javafx.base;
 
     exports org.example.app;

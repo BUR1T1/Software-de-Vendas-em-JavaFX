@@ -14,13 +14,21 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new Thread(PedidoConsumer::iniciar).start();
         primaryStage = stage;
 
         DatabaseInit.inicializar();
+        // Consumidor da fila de pedidos (RabbitMQ) iniciado automaticamente
+        new Thread(PedidoConsumer::iniciar).start();
         trocarTela("/org/example/view/login.fxml", "Sistema de Loja - Login");
 
         stage.show();
+    }
+
+    /**
+     * Inicia o consumidor da fila de pedidos (RabbitMQ).
+     */
+    public static void iniciarConsumer() {
+        new Thread(PedidoConsumer::iniciar).start();
     }
 
     /**

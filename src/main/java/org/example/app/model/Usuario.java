@@ -5,18 +5,26 @@ import org.example.app.BaseEntity;
 
 public class Usuario extends BaseEntity {
 
+    private String nome;
     private String login;
     private String senha;
-    private String perfil; // ADMIN / OPERADOR
+    private String perfil; // ADMIN / VENDEDOR
 
-    public Usuario(String login, String senha, String perfil) {
+    public Usuario(String nome, String login, String senha, String perfil) {
         super();
-        this.login =login;
-      this.senha= senha;
-      this.perfil= perfil;
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+        this.perfil = perfil;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
     public String getLogin() {
         return login;

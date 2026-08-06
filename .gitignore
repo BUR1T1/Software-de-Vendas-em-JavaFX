@@ -36,3 +36,11 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Temporários / execução ###
+run_out.txt
+run_err.txt
+debug.log
+
+### Banco de dados local ###
+loja.db

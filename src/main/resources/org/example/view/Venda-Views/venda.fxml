@@ -28,6 +28,16 @@
                             <Line endX="60.0" stroke="#2563EB" strokeWidth="3.0" />
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_RIGHT" spacing="5">
+                            <StackPane>
+                                <Button fx:id="btnPedidos" text="🔔 PEDIDOS" onAction="#abrirPedidos" prefHeight="40" prefWidth="130"
+                                        style="-fx-background-color: #0F172A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" />
+                                <Label fx:id="lblBadgePedidos" text="0" visible="false" managed="false"
+                                       alignment="TOP_RIGHT" translateX="8" translateY="-8"
+                                       style="-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 11px; -fx-background-radius: 10; -fx-padding: 2 6;" />
+                            </StackPane>
+                            <Label text="Pedidos recebidos" textFill="#94A3B8" style="-fx-font-size: 11px;" />
+                        </VBox>
                         <VBox alignment="CENTER_RIGHT">
                             <Label fx:id="lblDataAtual" text="00/00/0000" textFill="#64748B" style="-fx-font-weight: bold;" />
                             <Label text="Terminal de Saída" textFill="#94A3B8" style="-fx-font-size: 11px;" />

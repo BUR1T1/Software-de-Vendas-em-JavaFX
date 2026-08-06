@@ -2,6 +2,7 @@ package org.example.app.controller.Venda;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory; // Adicionado
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.app.consumer.PedidoEventBus;
+import org.example.app.dao.PedidosDAO;
 import org.example.app.dao.VendaDAO;
 import org.example.app.util.Alerta;
 import org.example.app.util.BuscaModalController;
@@ -22,6 +25,8 @@ import org.example.app.dao.VendedorDAO; // Adicionado
 import org.example.app.model.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +57,11 @@ public class VendaController {
     @FXML private Spinner<Integer> spParcelas;
     @FXML private Label lblValorParcela;
 
+    @FXML private Button btnPedidos;
+    @FXML private Label lblBadgePedidos;
+
+    private final PedidosDAO pedidosDAO = new PedidosDAO();
+    private Pedido pedidoSelecionado;
 
     /* =========================================================
        ESTADO DA TELA
@@ -107,6 +117,139 @@ public class VendaController {
         );
 
         atualizarTotal();
+        configurarPedidos();
+    }
+
+    /* =========================================================
+       PEDIDOS (INTEGRAÇÃO COM FILA / RABBITMQ)
+       ========================================================= */
+
+    private void configurarPedidos() {
+        if (btnPedidos != null) {
+            btnPedidos.setVisible(true);
+        }
+        atualizarBadgePedidos();
+
+        PedidoEventBus.registrar(pedido -> {
+            javafx.application.Platform.runLater(this::atualizarBadgePedidos);
+        });
+    }
+
+    private void atualizarBadgePedidos() {
+        if (lblBadgePedidos == null) return;
+
+        // Considera pedidos pendentes em memória + pendentes no banco
+        int pendentes = PedidoEventBus.getPedidosPendentes().size();
+        try {
+            pendentes += pedidosDAO.listarPendentes().size();
+        } catch (Exception ignored) {}
+
+        int total = pendentes;
+        lblBadgePedidos.setText(String.valueOf(total));
+
+        boolean temPendente = total > 0;
+        lblBadgePedidos.setVisible(temPendente);
+        lblBadgePedidos.setManaged(temPendente);
+    }
+
+    @FXML
+    private void abrirPedidos() {
+        atualizarBadgePedidos();
+
+        List<Pedido> pendentes = pedidosDAO.listarPendentes();
+
+        if (pedidoSelecionado == null && !PedidoEventBus.getPedidosPendentes().isEmpty()) {
+            pedidoSelecionado = PedidoEventBus.getPedidosPendentes().get(0);
+        }
+
+        if (pendentes.isEmpty() && pedidoSelecionado == null) {
+            Alerta.info("Sem pedidos",
+                    "Nenhum pedido pendente para ser aplicado como venda.");
+            return;
+        }
+
+        List<Pedido> candidatos = pendentes.isEmpty()
+                ? List.of(pedidoSelecionado)
+                : pendentes;
+
+        Pedido escolhido = selecionarPedidoModal(candidatos);
+        if (escolhido != null) {
+            aplicarPedidoNaVenda(escolhido);
+        }
+    }
+
+    private Pedido selecionarPedidoModal(List<Pedido> pedidos) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/BuscaModal.fxml")
+            );
+
+            Parent root = loader.load();
+            BuscaModalController<Pedido> controller = loader.getController();
+
+            TableColumn<Pedido, String> colId = new TableColumn<>("#");
+            colId.setCellValueFactory(d -> new SimpleStringProperty(
+                    String.valueOf(d.getValue().getId())));
+
+            TableColumn<Pedido, String> colCliente = new TableColumn<>("Cliente");
+            colCliente.setCellValueFactory(d -> new SimpleStringProperty(
+                    d.getValue().getCliente().getNome()));
+
+            TableColumn<Pedido, String> colVendedor = new TableColumn<>("Vendedor");
+            colVendedor.setCellValueFactory(d -> new SimpleStringProperty(
+                    d.getValue().getVendedor().getNome()));
+
+            TableColumn<Pedido, String> colTotal = new TableColumn<>("Total");
+            colTotal.setCellValueFactory(d -> new SimpleStringProperty(
+                    String.format("R$ %.2f", d.getValue().getTotal())));
+
+            Pedido[] resultado = new Pedido[1];
+
+            controller.configurar(
+                    "SELECIONAR PEDIDO",
+                    pedidos,
+                    List.of(colId, colCliente, colVendedor, colTotal),
+                    p -> resultado[0] = p
+            );
+
+            abrirModal(root, "Pedidos Pendentes");
+            return resultado[0];
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void aplicarPedidoNaVenda(Pedido pedido) {
+        // Carrega cliente e vendedor
+        clienteSelecionado = pedido.getCliente();
+        lblClienteSelecionado.setText(clienteSelecionado.getNome());
+
+        vendedorSelecionado = pedido.getVendedor();
+        lblVendedorSelecionado.setText(vendedorSelecionado.getNome());
+
+        // Limpa e adiciona os itens
+        itensVenda.clear();
+        for (ItemPedido item : pedido.getItens()) {
+            Produto produto = item.getProduto();
+            itensVenda.add(new ItemVenda(produto, item.getQuantidade()));
+        }
+
+        atualizarTotal();
+
+        // Remove p/ restante e marca como processado
+        pedidoSelecionado = null;
+        PedidoEventBus.removerPedido(pedido);
+        try {
+            pedidosDAO.marcarConcluido(pedido.getId());
+        } catch (Exception ex) {
+            // se não tem id ainda, segue sem marcar
+        }
+
+        atualizarBadgePedidos();
+        Alerta.info("Pedido aplicado",
+                "Pedido carregado na venda com sucesso!");
     }
 
 
