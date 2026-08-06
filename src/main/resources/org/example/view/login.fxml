@@ -8,23 +8,26 @@
 <?import javafx.scene.effect.*?>
 
 <StackPane prefHeight="650.0" prefWidth="900.0"
-           style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2, #f093fb);"
+           style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);"
            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.example.app.controller.Login.LoginController">
 
     <children>
         <!-- Círculos decorativos de fundo -->
-        <Circle radius="220" fill="rgba(255,255,255,0.08)" centerX="80" centerY="80"/>
-        <Circle radius="300" fill="rgba(255,255,255,0.05)" centerX="820" centerY="600"/>
-        <Circle radius="120" fill="rgba(255,255,255,0.10)" centerX="700" centerY="120"/>
+        <Circle radius="220" fill="rgba(249,115,22,0.12)" centerX="80" centerY="80"/>
+        <Circle radius="300" fill="rgba(249,115,22,0.08)" centerX="820" centerY="600"/>
+        <Circle radius="120" fill="rgba(255,255,255,0.08)" centerX="700" centerY="120"/>
 
         <HBox alignment="CENTER" spacing="0.0">
             <children>
                 <!-- Documento de login -->
                 <VBox alignment="CENTER" maxHeight="540.0" maxWidth="420.0" spacing="0.0"
-                      style="-fx-background-color: white;
+                      style="-fx-background-color: #1e293b;
                              -fx-background-radius: 24;
-                             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 40, 0, 0, 15);">
+                             -fx-border-color: #334155;
+                             -fx-border-width: 1;
+                             -fx-border-radius: 24;
+                             -fx-effect: dropshadow(three-pass-box, rgba(249,115,22,0.25), 40, 0, 0, 15);">
 
                     <children>
                         <!-- Cabeçalho com ícone -->
@@ -34,7 +37,7 @@
                             </padding>
                             <children>
                                 <StackPane prefHeight="70.0" prefWidth="70.0"
-                                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);">
+                                           style="-fx-background-radius: 20; -fx-background-color: linear-gradient(to bottom right, #f97316, #fb923c);">
                                     <children>
                                         <Label text="🛒" textFill="white" style="-fx-font-size: 34px;">
                                             <font>
@@ -43,7 +46,7 @@
                                         </Label>
                                     </children>
                                 </StackPane>
-                                <Label text="Sistema de Vendas" textFill="#1e293b"
+                                <Label text="Sistema de Vendas" textFill="#f8fafc"
                                        style="-fx-font-weight: 900; -fx-font-size: 22px;">
                                     <font>
                                         <Font name="System Bold" size="22.0" />
@@ -65,49 +68,51 @@
 
                                 <VBox spacing="8.0">
                                     <children>
-                                        <Label text="USUÁRIO" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
+                                        <Label text="USUÁRIO" textFill="#f97316" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
                                         <TextField fx:id="txtUsuario" prefHeight="50.0" promptText="Digite seu usuário..."
-                                                   style="-fx-background-color: #f8fafc;
-                                                          -fx-border-color: #e2e8f0;
+                                                   style="-fx-background-color: #0f172a;
+                                                          -fx-border-color: #334155;
                                                           -fx-border-width: 1.5;
                                                           -fx-border-radius: 12;
                                                           -fx-background-radius: 12;
                                                           -fx-padding: 0 16;
                                                           -fx-font-size: 14px;
-                                                          -fx-text-fill: #0f172a;
-                                                          -fx-focus-color: #667eea;" />
+                                                          -fx-text-fill: #f8fafc;
+                                                          -fx-prompt-text-fill: #64748b;
+                                                          -fx-focus-color: #f97316;" />
                                     </children>
                                 </VBox>
 
                                 <VBox spacing="8.0">
                                     <children>
-                                        <Label text="SENHA" textFill="#64748b" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
+                                        <Label text="SENHA" textFill="#f97316" style="-fx-font-weight: bold; -fx-font-size: 10px; -fx-letter-spacing: 1px;" />
                                         <PasswordField fx:id="txtSenha" prefHeight="50.0" promptText="••••••••"
-                                                       style="-fx-background-color: #f8fafc;
-                                                              -fx-border-color: #e2e8f0;
+                                                       style="-fx-background-color: #0f172a;
+                                                              -fx-border-color: #334155;
                                                               -fx-border-width: 1.5;
                                                               -fx-border-radius: 12;
                                                               -fx-background-radius: 12;
                                                               -fx-padding: 0 16;
                                                               -fx-font-size: 14px;
-                                                              -fx-text-fill: #0f172a;
-                                                              -fx-focus-color: #667eea;" />
+                                                              -fx-text-fill: #f8fafc;
+                                                              -fx-prompt-text-fill: #64748b;
+                                                              -fx-focus-color: #f97316;" />
                                     </children>
                                 </VBox>
 
                                 <Region prefHeight="4" />
 
                                 <Button maxWidth="Infinity" onAction="#entrar" prefHeight="52.0"
-                                        style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+                                        style="-fx-background-color: linear-gradient(to right, #f97316, #fb923c);
                                                -fx-text-fill: white;
                                                -fx-font-weight: bold;
                                                -fx-font-size: 14px;
                                                -fx-background-radius: 12;
                                                -fx-cursor: hand;
-                                               -fx-effect: dropshadow(three-pass-box, rgba(102,126,234,0.4), 12, 0, 0, 5);"
+                                               -fx-effect: dropshadow(three-pass-box, rgba(249,115,22,0.4), 12, 0, 0, 5);"
                                         text="ENTRAR" />
 
-                                <Label fx:id="lblMensagem" alignment="CENTER" maxWidth="Infinity" textFill="#e11d48" wrapText="true">
+                                <Label fx:id="lblMensagem" alignment="CENTER" maxWidth="Infinity" textFill="#fb923c" wrapText="true">
                                     <font>
                                         <Font name="System Bold" size="12.0" />
                                     </font>
@@ -120,3 +125,4 @@
         </HBox>
     </children>
 </StackPane>
+

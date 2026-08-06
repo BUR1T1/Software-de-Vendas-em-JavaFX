@@ -9,10 +9,10 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.app.controller.Venda.VendaController"
-            style="-fx-background-color: #f1f5f9;">
+            style="-fx-background-color: #0f172a;">
 
     <top>
-        <VBox spacing="0" style="-fx-background-color: white; -fx-border-color: #0F172A; -fx-border-width: 0 0 2.5 0;">
+        <VBox spacing="0" style="-fx-background-color: #1e293b; -fx-border-color: #f97316; -fx-border-width: 0 0 2.5 0;">
             <children>
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <padding>
@@ -20,27 +20,27 @@
                     </padding>
                     <children>
                         <VBox spacing="5">
-                            <Label text="MOVIMENTAÇÃO DE VENDA" textFill="#0F172A" style="-fx-font-weight: 900; -fx-letter-spacing: 1px;">
+                            <Label text="MOVIMENTAÇÃO DE VENDA" textFill="#f8fafc" style="-fx-font-weight: 900; -fx-letter-spacing: 1px;">
                                 <font>
                                     <Font size="18.0" />
                                 </font>
                             </Label>
-                            <Line endX="60.0" stroke="#2563EB" strokeWidth="3.0" />
+                            <Line endX="60.0" stroke="#f97316" strokeWidth="3.0" />
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox alignment="CENTER_RIGHT" spacing="5">
                             <StackPane>
                                 <Button fx:id="btnPedidos" text="🔔 PEDIDOS" onAction="#abrirPedidos" prefHeight="40" prefWidth="130"
-                                        style="-fx-background-color: #0F172A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" />
+                                        style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" />
                                 <Label fx:id="lblBadgePedidos" text="0" visible="false" managed="false"
                                        alignment="TOP_RIGHT" translateX="8" translateY="-8"
-                                       style="-fx-background-color: #EF4444; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 11px; -fx-background-radius: 10; -fx-padding: 2 6;" />
+                                       style="-fx-background-color: #f87171; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 11px; -fx-background-radius: 10; -fx-padding: 2 6;" />
                             </StackPane>
-                            <Label text="Pedidos recebidos" textFill="#94A3B8" style="-fx-font-size: 11px;" />
+                            <Label text="Pedidos recebidos" textFill="#94a3b8" style="-fx-font-size: 11px;" />
                         </VBox>
                         <VBox alignment="CENTER_RIGHT">
-                            <Label fx:id="lblDataAtual" text="00/00/0000" textFill="#64748B" style="-fx-font-weight: bold;" />
-                            <Label text="Terminal de Saída" textFill="#94A3B8" style="-fx-font-size: 11px;" />
+                            <Label fx:id="lblDataAtual" text="00/00/0000" textFill="#fb923c" style="-fx-font-weight: bold;" />
+                            <Label text="Terminal de Saída" textFill="#94a3b8" style="-fx-font-size: 11px;" />
                         </VBox>
                     </children>
                 </HBox>
@@ -55,27 +55,27 @@
                 <HBox spacing="15">
                     <children>
                         <VBox spacing="8" HBox.hgrow="ALWAYS"
-                              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #0F172A; -fx-border-width: 1.5;">
+                              style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1.5;">
                             <children>
                                 <Button text="CLIENTE (F2)" onAction="#abrirBuscaCliente"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #2563EB; -fx-font-weight: 900; -fx-font-size: 10px; -fx-padding: 0; -fx-cursor: hand;" />
+                                        style="-fx-background-color: transparent; -fx-text-fill: #fb923c; -fx-font-weight: 900; -fx-font-size: 10px; -fx-padding: 0; -fx-cursor: hand;" />
                                 <HBox spacing="10" alignment="CENTER_LEFT">
                                     <TextField fx:id="txtBuscaRapidaCliente" onAction="#pesquisarClienteEnter" promptText="Nome do cliente..." HBox.hgrow="ALWAYS" prefHeight="40"
-                                               style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 5;" />
-                                    <Label fx:id="lblClienteSelecionado" text="Nenhum selecionado" textFill="#0F172A" style="-fx-font-weight: bold;" />
+                                               style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;" />
+                                    <Label fx:id="lblClienteSelecionado" text="Nenhum selecionado" textFill="#f8fafc" style="-fx-font-weight: bold;" />
                                 </HBox>
                             </children>
                         </VBox>
 
                         <VBox spacing="8" HBox.hgrow="ALWAYS"
-                              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #0F172A; -fx-border-width: 1.5;">
+                              style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1.5;">
                             <children>
                                 <Button text="VENDEDOR (F3)" onAction="#abrirBuscaVendedor"
-                                        style="-fx-background-color: transparent; -fx-text-fill: #2563EB; -fx-font-weight: 900; -fx-font-size: 10px; -fx-padding: 0; -fx-cursor: hand;" />
+                                        style="-fx-background-color: transparent; -fx-text-fill: #fb923c; -fx-font-weight: 900; -fx-font-size: 10px; -fx-padding: 0; -fx-cursor: hand;" />
                                 <HBox spacing="10" alignment="CENTER_LEFT">
                                     <TextField fx:id="txtBuscaRapidaVendedor" onAction="#pesquisarVendedorEnter" promptText="Nome do vendedor..." HBox.hgrow="ALWAYS" prefHeight="40"
-                                               style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 5;" />
-                                    <Label fx:id="lblVendedorSelecionado" text="Não informado" textFill="#0F172A" style="-fx-font-weight: bold;" />
+                                               style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;" />
+                                    <Label fx:id="lblVendedorSelecionado" text="Não informado" textFill="#f8fafc" style="-fx-font-weight: bold;" />
                                 </HBox>
                             </children>
                         </VBox>
@@ -83,32 +83,32 @@
                 </HBox>
 
                 <VBox spacing="0" VBox.vgrow="ALWAYS"
-                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #0F172A; -fx-border-width: 2.5; -fx-border-radius: 10;">
+                      style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-border-color: #f97316; -fx-border-width: 2.5; -fx-border-radius: 10;">
                     <children>
-                        <HBox spacing="15" alignment="BOTTOM_LEFT" style="-fx-background-color: #F8FAFC; -fx-padding: 20; -fx-background-radius: 10 10 0 0; -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;">
+                        <HBox spacing="15" alignment="BOTTOM_LEFT" style="-fx-background-color: #0f172a; -fx-padding: 20; -fx-background-radius: 10 10 0 0; -fx-border-color: #334155; -fx-border-width: 0 0 1 0;">
                             <children>
                                 <VBox spacing="5" HBox.hgrow="ALWAYS">
                                     <Button text="SELECIONAR PRODUTO (F4)" onAction="#abrirBuscaProduto"
-                                            style="-fx-background-color: transparent; -fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 11px; -fx-padding: 0;"/>
+                                            style="-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 11px; -fx-padding: 0;"/>
                                     <TextField fx:id="txtBuscaProduto" onAction="#pesquisarProdutoEnter" promptText="Código ou Nome..." prefHeight="48"
-                                               style="-fx-background-color: white; -fx-border-color: #0F172A; -fx-border-radius: 5;" />
+                                               style="-fx-background-color: #1e293b; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;" />
                                 </VBox>
                                 <VBox spacing="5">
-                                    <Label text="QTD." textFill="#64748B" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+                                    <Label text="QTD." textFill="#94a3b8" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
                                     <TextField fx:id="txtQuantidade" text="1" alignment="CENTER" prefWidth="90" prefHeight="48"
-                                               style="-fx-background-color: white; -fx-border-color: #0F172A; -fx-border-radius: 5; -fx-font-weight: bold;" />
+                                               style="-fx-background-color: #1e293b; -fx-text-fill: #f8fafc; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-font-weight: bold; -fx-focus-color: #f97316;" />
                                 </VBox>
                                 <Button text="ADICIONAR" onAction="#adicionarItem" prefHeight="48" prefWidth="140"
-                                        style="-fx-background-color: #0F172A; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" />
+                                        style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" />
                             </children>
                         </HBox>
 
-                        <TableView fx:id="tblItens" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10;">
+                        <TableView fx:id="tblItens" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
                             <columns>
                                 <TableColumn fx:id="colProduto" text="DESCRIÇÃO" prefWidth="350" />
                                 <TableColumn fx:id="colQtd" text="QTD" prefWidth="80" style="-fx-alignment: CENTER;" />
                                 <TableColumn fx:id="colPreco" text="UNIT." prefWidth="120" style="-fx-alignment: CENTER-RIGHT;" />
-                                <TableColumn fx:id="colTotal" text="TOTAL" prefWidth="130" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold; -fx-text-fill: #2563EB;" />
+                                <TableColumn fx:id="colTotal" text="TOTAL" prefWidth="130" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold; -fx-text-fill: #fb923c;" />
                             </columns>
                             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
                         </TableView>
@@ -119,7 +119,7 @@
     </center>
 
     <bottom>
-        <VBox style="-fx-background-color: #0F172A; -fx-border-color: #2563EB; -fx-border-width: 4 0 0 0;">
+        <VBox style="-fx-background-color: #1e293b; -fx-border-color: #f97316; -fx-border-width: 4 0 0 0;">
             <padding>
                 <Insets top="25" right="40" bottom="25" left="40"/>
             </padding>
@@ -127,29 +127,29 @@
                 <HBox spacing="30" alignment="CENTER_LEFT">
                     <children>
                         <VBox spacing="5">
-                            <Label text="FORMA DE PAGAMENTO" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
-                            <ComboBox fx:id="cbFormaPagamento" onAction="#alterarFormaPagamento" prefWidth="200" prefHeight="40" style="-fx-background-color: #1E293B;" />
+                            <Label text="FORMA DE PAGAMENTO" textFill="#94a3b8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
+                            <ComboBox fx:id="cbFormaPagamento" onAction="#alterarFormaPagamento" prefWidth="200" prefHeight="40" style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc;" />
                         </VBox>
 
                         <VBox spacing="5">
-                            <Label text="PARCELAS" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
+                            <Label text="PARCELAS" textFill="#94a3b8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
                             <Spinner fx:id="spParcelas" editable="true" disable="true" prefWidth="90" prefHeight="40" />
                         </VBox>
 
                         <VBox spacing="5">
-                            <Label text="VALOR DA PARCELA" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
-                            <Label fx:id="lblValorParcela" text="R$ 0,00" textFill="#FACC15" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+                            <Label text="VALOR DA PARCELA" textFill="#94a3b8" style="-fx-font-weight: bold; -fx-font-size: 10px;" />
+                            <Label fx:id="lblValorParcela" text="R$ 0,00" textFill="#fb923c" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
                         </VBox>
 
                         <Region HBox.hgrow="ALWAYS" />
 
                         <VBox alignment="CENTER_RIGHT">
-                            <Label text="TOTAL DA VENDA" textFill="#94A3B8" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
-                            <Label fx:id="lblValorTotal" text="R$ 0,00" textFill="#4ADE80" style="-fx-font-size: 36px; -fx-font-weight: 900;" />
+                            <Label text="TOTAL DA VENDA" textFill="#94a3b8" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                            <Label fx:id="lblValorTotal" text="R$ 0,00" textFill="#4ade80" style="-fx-font-size: 36px; -fx-font-weight: 900;" />
                         </VBox>
 
                         <Button text="FINALIZAR (F10)" onAction="#finalizarVenda" prefHeight="60" prefWidth="220"
-                                style="-fx-background-color: #22C55E; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 16px; -fx-background-radius: 8; -fx-cursor: hand;" />
+                                style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 16px; -fx-background-radius: 8; -fx-cursor: hand;" />
                     </children>
                 </HBox>
             </children>

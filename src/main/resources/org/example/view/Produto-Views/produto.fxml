@@ -8,8 +8,8 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.app.controller.Produto.ProdutoController"
-            style="-fx-background-color: #F1F5F9;"> <top>
-    <VBox spacing="0" style="-fx-background-color: white; -fx-border-color: #0F172A; -fx-border-width: 0 0 2.5 0;">
+            style="-fx-background-color: #0f172a;"> <top>
+    <VBox spacing="0" style="-fx-background-color: #1e293b; -fx-border-color: #f97316; -fx-border-width: 0 0 2.5 0;">
         <children>
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <padding>
@@ -17,24 +17,24 @@
                 </padding>
                 <children>
                     <VBox spacing="5">
-                        <Label text="GESTÃO DE PRODUTOS" textFill="#0F172A" style="-fx-font-weight: 900; -fx-letter-spacing: 1px;">
+                        <Label text="GESTÃO DE PRODUTOS" textFill="#f8fafc" style="-fx-font-weight: 900; -fx-letter-spacing: 1px;">
                             <font>
                                 <Font size="20"/>
                             </font>
                         </Label>
-                        <Line endX="50.0" stroke="#2563EB" strokeWidth="3.0" />
+                        <Line endX="50.0" stroke="#f97316" strokeWidth="3.0" />
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <Button text="+ NOVO PRODUTO"
                             onAction="#abrirNovo"
                             prefHeight="45"
-                            style="-fx-background-color: #0F172A;
+                            style="-fx-background-color: #f97316;
                                        -fx-text-fill: white;
                                        -fx-font-weight: bold;
                                        -fx-background-radius: 8;
                                        -fx-padding: 0 25;
                                        -fx-cursor: hand;
-                                       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);"/>
+                                       -fx-effect: dropshadow(three-pass-box, rgba(249,115,22,0.4), 10, 0, 0, 5);"/>
                 </children>
             </HBox>
         </children>
@@ -45,32 +45,32 @@
         <VBox spacing="20" style="-fx-padding: 25;">
             <children>
                 <HBox spacing="15" alignment="CENTER_LEFT"
-                      style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #E2E8F0; -fx-border-width: 1;">
+                      style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1;">
                     <children>
                         <TextField fx:id="txtPesquisar"
                                    prefWidth="350"
                                    prefHeight="40"
                                    promptText="🔍 Pesquisar por nome ou ID..."
-                                   style="-fx-background-color: #F8FAFC; -fx-border-color: #CBD5E1; -fx-border-radius: 5;"/>
+                                   style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <Button text="EDITAR"
                                 onAction="#abrirEdicao"
                                 prefHeight="35"
-                                style="-fx-background-color: white; -fx-text-fill: #0F172A; -fx-font-weight: bold; -fx-border-color: #0F172A; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                                style="-fx-background-color: #0f172a; -fx-text-fill: #fb923c; -fx-font-weight: bold; -fx-border-color: #f97316; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"/>
                         <Button text="INATIVAR"
                                 onAction="#inativar"
                                 prefHeight="35"
-                                style="-fx-background-color: #FFF1F2; -fx-text-fill: #E11D48; -fx-font-weight: bold; -fx-border-color: #FECDD3; -fx-border-radius: 5; -fx-cursor: hand;"/>
+                                style="-fx-background-color: #3f1d1d; -fx-text-fill: #f87171; -fx-font-weight: bold; -fx-border-color: #7f1d1d; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"/>
                     </children>
                 </HBox>
 
                 <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"
-                         style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #0F172A; -fx-border-width: 2; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 10);">
+                         style="-fx-background-color: #1e293b; -fx-background-radius: 12; -fx-border-color: #f97316; -fx-border-width: 2; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(249,115,22,0.2), 20, 0, 0, 10);">
                     <tabs>
                         <Tab text=" PRODUTOS ATIVOS ">
                             <content>
                                 <VBox style="-fx-padding: 15;">
-                                    <TableView fx:id="tabelaProdutos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                                    <TableView fx:id="tabelaProdutos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
                                         <columns>
                                             <TableColumn fx:id="colId" text="ID" prefWidth="80" />
                                             <TableColumn fx:id="colNome" text="NOME DO ITEM" prefWidth="350" />
@@ -87,9 +87,9 @@
                                 <VBox spacing="10" style="-fx-padding: 15;">
                                     <HBox alignment="CENTER_RIGHT">
                                         <Button text="REATIVAR SELECIONADOS" onAction="#reativar"
-                                                style="-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-font-weight: bold; -fx-background-radius: 5;"/>
+                                                style="-fx-background-color: #143d2a; -fx-text-fill: #4ade80; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
                                     </HBox>
-                                    <TableView fx:id="tabelaInativos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                                    <TableView fx:id="tabelaInativos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
                                         <columns>
                                             <TableColumn fx:id="colInativoId" text="ID" prefWidth="80" />
                                             <TableColumn fx:id="colInativoNome" text="NOME" prefWidth="350" />

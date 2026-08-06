@@ -24,3 +24,16 @@
 - [x] 16. Criar usuário admin padrão (`admin`/`123`) automaticamente no `DatabaseInit`
 - [x] 17. `LoginController` validar usando `UsuarioDAO` (remover login mock)
 
+# TODO - Aplicar tema escuro (branco + laranja)
+
+- [x] login.fxml
+- [x] principal.fxml
+- [x] main_shell.fxml
+- [x] Usuario.fxml
+- [x] BuscaModal.fxml
+- [x] Cliente.fxml / ClienteForm.fxml
+- [x] Produto.fxml / ProdutoForm.fxml
+- [x] Venda.fxml / venda-historico.fxml / pedido-historico.fxml
+- [x] Vendedor.fxml / VendedorForm.fxml
+- [x] Compilar e verificar
+
