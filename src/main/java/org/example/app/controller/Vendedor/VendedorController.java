@@ -1,4 +1,4 @@
-package org.example.app.controller.Vendedor;
+package org.example.app.controller.vendedor;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -18,11 +18,14 @@ import org.example.app.util.Alerta;
 
 public class VendedorController {
 
-    @FXML private TableView<Vendedor> tabelaVendedores;
+@FXML private TableView<Vendedor> tabelaVendedores;
     @FXML private TableColumn<Vendedor, Long> colId;
     @FXML private TableColumn<Vendedor, String> colNome;
     @FXML private TableColumn<Vendedor, String> colCpf;
     @FXML private TableColumn<Vendedor, Double> colComissao;
+
+    @FXML private ComboBox<String> cmbFiltro;
+    @FXML private TextField txtPesquisar;
 
     @FXML private TableView<Vendedor> tabelaInativos;
     @FXML private TableColumn<Vendedor, Long> colIdInativo;
@@ -46,7 +49,44 @@ public class VendedorController {
 
         tabelaInativos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+        cmbFiltro.getItems().addAll("ID", "NOME");
+        cmbFiltro.setValue("NOME");
+
         carregarTabelas();
+    }
+
+    @FXML
+    private void buscarRelatorio() {
+        String filtro = cmbFiltro.getValue();
+        String termo = txtPesquisar.getText() == null ? "" : txtPesquisar.getText().trim();
+
+        if (termo.isEmpty()) {
+            carregarTabelas();
+            return;
+        }
+
+        List<Vendedor> ativos = vendedorDAO.listarAtivos();
+        List<Vendedor> inativos = vendedorDAO.listarInativos();
+
+        List<Vendedor> resAtivos = new java.util.ArrayList<>();
+        List<Vendedor> resInativos = new java.util.ArrayList<>();
+
+        for (Vendedor v : ativos) {
+            if (matches(v, filtro, termo)) resAtivos.add(v);
+        }
+        for (Vendedor v : inativos) {
+            if (matches(v, filtro, termo)) resInativos.add(v);
+        }
+
+        tabelaVendedores.setItems(FXCollections.observableArrayList(resAtivos));
+        tabelaInativos.setItems(FXCollections.observableArrayList(resInativos));
+    }
+
+    private boolean matches(Vendedor v, String filtro, String termo) {
+        if ("NOME".equals(filtro)) {
+            return v.getNome() != null && v.getNome().toLowerCase().contains(termo.toLowerCase());
+        }
+        return String.valueOf(v.getId()).equals(termo);
     }
 
     private void carregarTabelas() {
@@ -69,7 +109,7 @@ public class VendedorController {
         if (selecionado != null) {
             exibirFormulario(selecionado);
         } else {
-            Alerta.info("Seleção", "Selecione um vendedor para editar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione um vendedor para editar.");
         }
     }
 
@@ -106,7 +146,7 @@ public class VendedorController {
             vendedorDAO.inativar(v.getId());
             carregarTabelas();
         } else {
-            Alerta.info("Seleção", "Selecione um vendedor para inativar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione um vendedor para inativar.");
         }
     }
 
@@ -122,7 +162,7 @@ public class VendedorController {
             vendedorDAO.reativar(ids);
             carregarTabelas();
         } else {
-            Alerta.info("Seleção", "Selecione ao menos um vendedor para reativar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione ao menos um vendedor para reativar.");
         }
     }
 

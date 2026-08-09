@@ -6,8 +6,8 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17"
-            fx:controller="org.example.app.controller.Cliente.ClienteFormController"
-            style="-fx-background-color: #f4f7f6;">
+fx:controller="org.example.app.controller.cliente.ClienteFormController"
+            style="-fx-background-color: #0f172a;">
 
     <center>
         <VBox spacing="25" alignment="TOP_CENTER" prefWidth="450.0">
@@ -17,12 +17,12 @@
 
             <VBox spacing="5" alignment="CENTER">
                 <children>
-                    <Label text="DADOS DO CLIENTE" style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;">
+                    <Label text="DADOS DO CLIENTE" style="-fx-text-fill: #fb923c; -fx-font-weight: bold;">
                         <font>
                             <Font size="20.0" />
                         </font>
                     </Label>
-                    <Label text="Insira as informações básicas para o cadastro" style="-fx-text-fill: #95a5a6;">
+                    <Label text="Insira as informações básicas para o cadastro" style="-fx-text-fill: #94a3b8;">
                         <font>
                             <Font size="13.0" />
                         </font>
@@ -40,25 +40,25 @@
                 <children>
                     <VBox spacing="8" GridPane.rowIndex="0">
                         <children>
-                            <Label text="NOME COMPLETO" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-weight: bold;" />
+                            <Label text="NOME COMPLETO" style="-fx-text-fill: #f97316; -fx-font-size: 11px; -fx-font-weight: bold;" />
                             <TextField fx:id="txtNome" prefHeight="45.0" promptText="Ex: Maria Oliveira"
-                                       style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12;" />
+                                       style="-fx-background-color: #1e293b; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12; -fx-focus-color: #f97316;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="8" GridPane.rowIndex="1">
                         <children>
-                            <Label text="CPF" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-weight: bold;" />
+                            <Label text="CPF" style="-fx-text-fill: #f97316; -fx-font-size: 11px; -fx-font-weight: bold;" />
                             <TextField fx:id="txtCpf" prefHeight="45.0" promptText="000.000.000-00"
-                                       style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12;" />
+                                       style="-fx-background-color: #1e293b; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12; -fx-focus-color: #f97316;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="8" GridPane.rowIndex="2">
                         <children>
-                            <Label text="TELEFONE" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px; -fx-font-weight: bold;" />
+                            <Label text="TELEFONE" style="-fx-text-fill: #f97316; -fx-font-size: 11px; -fx-font-weight: bold;" />
                             <TextField fx:id="txtTelefone" prefHeight="45.0" promptText="(00) 00000-0000"
-                                       style="-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12;" />
+                                       style="-fx-background-color: #1e293b; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 0 12; -fx-focus-color: #f97316;" />
                         </children>
                     </VBox>
                 </children>
@@ -67,10 +67,10 @@
             <HBox spacing="15" alignment="CENTER_RIGHT">
                 <children>
                     <Button text="CANCELAR" onAction="#fecharFormulario" prefHeight="45.0" prefWidth="120.0"
-                            style="-fx-background-color: transparent; -fx-text-fill: #7f8c8d; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #dcdde1; -fx-border-radius: 8;" />
+                            style="-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #334155; -fx-border-radius: 8; -fx-background-radius: 8;" />
 
                     <Button text="SALVAR" onAction="#salvar" prefHeight="45.0" prefWidth="140.0"
-                            style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(46, 204, 113, 0.3), 10, 0, 0, 3);" />
+                            style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.4), 10, 0, 0, 3);" />
                 </children>
                 <VBox.margin>
                     <Insets top="10.0" />

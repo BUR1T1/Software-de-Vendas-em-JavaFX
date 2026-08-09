@@ -56,6 +56,13 @@ public class BuscaModalController<T> {
         }
     }
 
+    public void setFiltroInicial(String filtro) {
+        if (filtro != null && !filtro.isEmpty()) {
+            txtFiltro.setText(filtro);
+            filtrar();
+        }
+    }
+
     @FXML
     private void filtrar() {
 
@@ -84,7 +91,7 @@ public class BuscaModalController<T> {
 
         if (selecionado == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Atenção");
+            alert.setTitle("AtenÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o");
             alert.setHeaderText(null);
             alert.setContentText("Selecione um registro antes de confirmar.");
             alert.showAndWait();

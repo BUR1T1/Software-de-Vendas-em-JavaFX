@@ -1,7 +1,5 @@
 package org.example.app.model;
 
-import org.example.app.BaseEntity;
-
 public class Cliente extends BaseEntity {
 
     private String nome;
@@ -60,7 +58,7 @@ public class Cliente extends BaseEntity {
 
     public void setCpf(String cpf) {
         if (cpf == null || !cpf.matches("\\d{11}")) {
-            throw new IllegalArgumentException("CPF deve conter exatamente 11 dígitos numéricos.");
+            throw new IllegalArgumentException("CPF deve conter exatamente 11 dÃƒÆ’Ã‚Â­gitos numÃƒÆ’Ã‚Â©ricos.");
         }
         this.cpf = cpf;
     }
@@ -72,7 +70,7 @@ public class Cliente extends BaseEntity {
 
     public void setTelefone(String telefone) {
         if (telefone == null || !(telefone.matches("\\d{10}") || telefone.matches("\\d{11}"))) {
-            throw new IllegalArgumentException("Telefone deve conter 10 ou 11 dígitos numéricos.");
+            throw new IllegalArgumentException("Telefone deve conter 10 ou 11 dÃƒÆ’Ã‚Â­gitos numÃƒÆ’Ã‚Â©ricos.");
         }
         this.telefone = telefone;
     }

@@ -1,16 +1,21 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
-import org.example.app.model.Cliente;
-import org.example.app.model.Venda;
-import org.example.app.model.ItemVenda;
-import org.example.app.model.Vendedor;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.app.database.ConnectionManager;
+import org.example.app.model.Cliente;
+import org.example.app.model.ItemVenda;
+import org.example.app.model.Produto;
+import org.example.app.model.Venda;
+import org.example.app.model.Vendedor;
 
 public class VendaDAO {
 
@@ -24,9 +29,8 @@ public class VendaDAO {
         executarUpdate(sql, vendedorId, vendaId);
     }
 
-    private void executarUpdate(String sql, Long fkId, Long vendaId) {
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+private void executarUpdate(String sql, Long fkId, Long vendaId) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, fkId);
             ps.setLong(2, vendaId);
             ps.executeUpdate();
@@ -40,7 +44,7 @@ public class VendaDAO {
         String sqlVenda = """
         INSERT INTO venda 
         (cliente_id, vendedor_id, total, forma_pagamento, parcelas, valor_parcela,
-         data_venda, hora_venda, status)
+        data_venda, hora_venda, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
@@ -56,12 +60,12 @@ public class VendaDAO {
         WHERE id = ?
     """;
 
-        try (Connection conn = ConexaoSQLite.conectar()) {
+try (Connection conn = ConnectionManager.getConnection()) {
 
             conn.setAutoCommit(false);
 
-            try (PreparedStatement psVenda =
-                         conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement psVenda
+                    = conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
 
                 venda.calcularTotalFinal();
 
@@ -85,8 +89,8 @@ public class VendaDAO {
 
                     for (ItemVenda item : venda.getItens()) {
 
-                        try (PreparedStatement psItem =
-                                     conn.prepareStatement(sqlItem)) {
+                        try (PreparedStatement psItem
+                                = conn.prepareStatement(sqlItem)) {
 
                             psItem.setLong(1, vendaId);
                             psItem.setLong(2, item.getProduto().getId());
@@ -95,8 +99,8 @@ public class VendaDAO {
                             psItem.executeUpdate();
                         }
 
-                        try (PreparedStatement psEstoque =
-                                     conn.prepareStatement(sqlEstoque)) {
+                        try (PreparedStatement psEstoque
+                                = conn.prepareStatement(sqlEstoque)) {
 
                             psEstoque.setInt(1, item.getQuantidade());
                             psEstoque.setLong(2, item.getProduto().getId());
@@ -120,7 +124,7 @@ public class VendaDAO {
     public List<Venda> listarHistorico() {
         List<Venda> lista = new ArrayList<>();
 
-        // Query corrigida: Removido o JOIN desnecessário com 'usuario'
+        // Query corrigida: Removido o JOIN desnecessÃƒÆ’Ã‚Â¡rio com 'usuario'
         String sql = """
         SELECT v.*, 
                c.nome AS nome_cliente, 
@@ -132,9 +136,7 @@ public class VendaDAO {
         ORDER BY v.id DESC
     """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Venda v = new Venda();
@@ -150,19 +152,51 @@ public class VendaDAO {
                 c.setNome(rs.getString("nome_cliente"));
                 v.setCliente(c);
 
-                Vendedor vendedor = new Vendedor();
+Vendedor vendedor = new Vendedor();
                 vendedor.setNome(rs.getString("nome_vendedor"));
                 v.setVendedor(vendedor);
+
+                // Carrega os itens da venda (necessÃƒÆ’Ã‚Â¡rio para o comprovante/cupom)
+                v.setItens(carregarItens(v.getId()));
 
                 lista.add(v);
             }
         } catch (Exception e) {
-            System.err.println("Erro ao listar histórico de vendas:");
+            System.err.println("Erro ao listar histÃƒÆ’Ã‚Â³rico de vendas:");
             e.printStackTrace();
         }
         return lista;
     }
 
+    /**
+     * Carrega os itens (produtos) de uma venda especÃƒÆ’Ã‚Â­fica.
+     */
+    public List<ItemVenda> carregarItens(Long vendaId) {
+        List<ItemVenda> itens = new ArrayList<>();
+        String sql = """
+            SELECT iv.*, p.nome AS nome_produto, p.preco AS preco_produto
+            FROM item_venda iv
+            JOIN produto p ON iv.produto_id = p.id
+            WHERE iv.venda_id = ?
+        """;
+try (Connection conn = ConnectionManager.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, vendaId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Produto prod = new Produto();
+                prod.setId(rs.getLong("produto_id"));
+                prod.setNome(rs.getString("nome_produto"));
+                prod.setPreco(rs.getDouble("preco_unitario"));
+                ItemVenda item = new ItemVenda(prod, rs.getInt("quantidade"));
+                itens.add(item);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar itens da venda " + vendaId);
+            e.printStackTrace();
+        }
+        return itens;
+    }
 
     public void cancelarVenda(Long vendaId) {
         String sqlCheck = "SELECT status FROM venda WHERE id = ?";
@@ -170,7 +204,7 @@ public class VendaDAO {
         String sqlItens = "SELECT produto_id, quantidade FROM item_venda WHERE venda_id = ?";
         String sqlUpdateProduto = "UPDATE produto SET estoque = estoque + ? WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar()) {
+try (Connection conn = ConnectionManager.getConnection()) {
             conn.setAutoCommit(false);
 
             // 1. Atualiza status da venda
@@ -180,8 +214,7 @@ public class VendaDAO {
             }
 
             // 2. Repor estoque dos produtos
-            try (PreparedStatement psItens = conn.prepareStatement(sqlItens);
-                 PreparedStatement psProduto = conn.prepareStatement(sqlUpdateProduto)) {
+            try (PreparedStatement psItens = conn.prepareStatement(sqlItens); PreparedStatement psProduto = conn.prepareStatement(sqlUpdateProduto)) {
 
                 psItens.setLong(1, vendaId);
                 ResultSet rs = psItens.executeQuery();
@@ -201,7 +234,5 @@ public class VendaDAO {
             e.printStackTrace();
         }
     }
-
-
 
 }

@@ -3,22 +3,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import java.net.URL?>
 
 <BorderPane fx:id="mainPane" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.app.controller.MainController">
-
-    <stylesheets>
-        <URL value="org.example.css.style" />
-    </stylesheets>
+            fx:controller="org.example.app.controller.MainController"
+            style="-fx-background-color: #0f172a;">
 
     <left>
-        <VBox fx:id="sideMenu" prefWidth="220.0" styleClass="sidebar" spacing="5">
+        <VBox fx:id="sideMenu" prefWidth="220.0" style="-fx-background-color: #1e293b; -fx-border-color: #334155; -fx-border-width: 0 1 0 0;" spacing="5">
             <padding>
                 <Insets top="15" right="0" bottom="15" left="0"/>
             </padding>
 
-            <Button fx:id="btnToggle" onAction="#toggleMenu" styleClass="menu-button" text="☰  MENU">
+            <Button fx:id="btnToggle" onAction="#toggleMenu" text="☰  MENU"
+                    style="-fx-background-color: rgba(249,115,22,0.15); -fx-text-fill: #fb923c; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10;">
                 <VBox.margin>
                     <Insets bottom="20" left="10"/>
                 </VBox.margin>
@@ -26,24 +23,29 @@
 
             <Separator opacity="0.1" />
 
-            <Button fx:id="btnVendas" onAction="#showVendas" text="🛒  Vendas" styleClass="menu-button" maxWidth="Infinity"/>
-            <Button fx:id="btnProdutos" onAction="#showProdutos" text="📦  Produtos" styleClass="menu-button" maxWidth="Infinity"/>
-            <Button fx:id="btnClientes" onAction="#showClientes" text="👥  Clientes" styleClass="menu-button" maxWidth="Infinity"/>
-            <Button fx:id="btnVendedores" onAction="#showVendedores" text="👔  Vendedores" styleClass="menu-button" maxWidth="Infinity"/>
+            <Button fx:id="btnVendas" onAction="#showVendas" text="🛒  Vendas" maxWidth="Infinity"
+                    style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 15;"/>
+            <Button fx:id="btnProdutos" onAction="#showProdutos" text="📦  Produtos" maxWidth="Infinity"
+                    style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 15;"/>
+            <Button fx:id="btnClientes" onAction="#showClientes" text="👥  Clientes" maxWidth="Infinity"
+                    style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 15;"/>
+            <Button fx:id="btnVendedores" onAction="#showVendedores" text="👔  Vendedores" maxWidth="Infinity"
+                    style="-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: #f8fafc; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 15;"/>
 
             <Region VBox.vgrow="ALWAYS" />
 
             <Separator opacity="0.1" />
-            <Button onAction="#showUsuarios" text="⚙  Configurações" styleClass="menu-button" maxWidth="Infinity"/>
+            <Button onAction="#showUsuarios" text="⚙  Configurações" maxWidth="Infinity"
+                    style="-fx-background-color: rgba(249,115,22,0.15); -fx-text-fill: #fb923c; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 15;"/>
         </VBox>
     </left>
 
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+        <StackPane fx:id="contentArea" style="-fx-background-color: #0f172a;">
             <children>
                 <VBox alignment="CENTER" spacing="10">
-                    <Label text="SISTEMA DE GESTÃO" style="-fx-text-fill: #bdc3c7; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-                    <Label text="Selecione uma opção no menu lateral para começar." style="-fx-text-fill: #bdc3c7; -fx-font-size: 14px;"/>
+                    <Label text="SISTEMA DE GESTÃO" style="-fx-text-fill: #fb923c; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <Label text="Selecione uma opção no menu lateral para começar." style="-fx-text-fill: #94a3b8; -fx-font-size: 14px;"/>
                 </VBox>
             </children>
         </StackPane>

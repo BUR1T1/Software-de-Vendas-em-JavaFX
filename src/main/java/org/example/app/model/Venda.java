@@ -1,7 +1,5 @@
 package org.example.app.model;
 
-import org.example.app.BaseEntity;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ public class Venda extends BaseEntity {
 
         this.total = this.valorBruto - this.desconto + this.acrescimo;
 
-        if ("CRÉDITO".equalsIgnoreCase(this.formaPagamento)
+        if ("CRÃƒÆ’Ã¢â‚¬Â°DITO".equalsIgnoreCase(this.formaPagamento)
                 && this.parcelas > 0) {
 
             this.valorParcela = this.total / this.parcelas;

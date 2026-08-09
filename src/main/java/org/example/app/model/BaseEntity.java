@@ -1,4 +1,4 @@
-package org.example.app;
+package org.example.app.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +25,7 @@ public abstract class BaseEntity {
 
     public void setId(Long id) {
         if (this.id != null) {
-            throw new IllegalStateException("ID não pode ser alterado.");
+            throw new IllegalStateException("ID nÃƒÆ’Ã‚Â£o pode ser alterado.");
         }
         this.id = id;
     }
@@ -49,7 +49,7 @@ public abstract class BaseEntity {
     public int getStatus() { return status; }
     public void setStatus(int status) {
         if (status != 1 && status != 2) {
-            throw new IllegalArgumentException("Status inválido. Use 1 (ativo) ou 2 (inativo).");
+            throw new IllegalArgumentException("Status invÃƒÆ’Ã‚Â¡lido. Use 1 (ativo) ou 2 (inativo).");
         }
         this.status = status;
     }

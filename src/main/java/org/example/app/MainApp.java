@@ -1,12 +1,17 @@
 package org.example.app;
 
+import org.example.app.consumer.PedidoConsumer;
+import org.example.app.consumer.RabbitMQConnection;
+import org.example.app.database.ConnectionManager;
+import org.example.app.database.DatabaseInit;
+import org.example.app.database.DatabaseOfflineInit;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.example.app.consumer.PedidoConsumer;
-import org.example.app.database.DatabaseInit;
 
 public class MainApp extends Application {
 
@@ -14,17 +19,40 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        new Thread(PedidoConsumer::iniciar).start();
         primaryStage = stage;
 
-        DatabaseInit.inicializar();
+        // Define o ÃƒÆ’Ã‚Â­cone da loja na janela e na barra de tarefas
+        try {
+            stage.getIcons().add(new Image(
+                    MainApp.class.getResourceAsStream("/org/example/view/img/logo.png")));
+        } catch (Exception e) {
+            System.err.println("NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel carregar o ÃƒÆ’Ã‚Â­cone da loja: " + e.getMessage());
+        }
+
+        DatabaseOfflineInit.inicializar();
+
+        if (ConnectionManager.estaOnline()) {
+            DatabaseInit.inicializar();
+        } else {
+            System.out.println("AplicaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o iniciada em modo offline. Usando apenas o schema de contingÃƒÆ’Ã‚Âªncia SQLite.");
+        }
+
+        // Consumidor da fila de pedidos (RabbitMQ) iniciado automaticamente
+        new Thread(PedidoConsumer::iniciar).start();
         trocarTela("/org/example/view/login.fxml", "Sistema de Loja - Login");
 
         stage.show();
     }
 
     /**
-     * Método utilitário para trocar a cena principal do sistema
+     * Inicia o consumidor da fila de pedidos (RabbitMQ).
+     */
+    public static void iniciarConsumer() {
+        new Thread(PedidoConsumer::iniciar).start();
+    }
+
+    /**
+     * MÃƒÆ’Ã‚Â©todo utilitÃƒÆ’Ã‚Â¡rio para trocar a cena principal do sistema
      * @param fxml Caminho do arquivo FXML
      * @param titulo
      */
@@ -40,6 +68,14 @@ public class MainApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+@Override
+    public void stop() throws Exception {
+        // Encerra a conexão com o RabbitMQ ao fechar a aplicação,
+        // evitando o acúmulo de consumers/filas órfãs no servidor.
+        RabbitMQConnection.fechar();
+        super.stop();
     }
 
     public static void main(String[] args) {

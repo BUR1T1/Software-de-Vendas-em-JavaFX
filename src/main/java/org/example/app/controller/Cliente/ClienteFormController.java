@@ -1,19 +1,22 @@
-package org.example.app.controller.Cliente;
+package org.example.app.controller.cliente;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.stage.Stage;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.model.Cliente;
 import org.example.app.util.Alerta;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.stage.Stage;
+
 public class ClienteFormController {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtCpf;
-    @FXML private TextField txtTelefone;
+    @FXML
+    private TextField txtNome;
+    @FXML
+    private TextField txtCpf;
+    @FXML
+    private TextField txtTelefone;
 
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private Cliente clienteSelecionado;
@@ -26,29 +29,29 @@ public class ClienteFormController {
         txtTelefone.setText(cliente.getTelefone());
     }
 
-       /* =========================================================
-       MÉTODOS PRA VALIDAR CAMPOS
-       ========================================================= */
-       private boolean validarPrenchimentoCPF() {
-           if (txtCpf.getText().isEmpty()) {
-               Alerta.warning("Validação", "CPF do cliente precisa ser preenchido");
-               return false;
-           }
-           return true;
-       }
+    /* =========================================================
+    MÃƒÆ’Ã¢â‚¬Â°TODOS PRA VALIDAR CAMPOS
+    ========================================================= */
+    private boolean validarPrenchimentoCPF() {
+        if (txtCpf.getText().isEmpty()) {
+            Alerta.warning("ValidaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "CPF do cliente precisa ser preenchido");
+            return false;
+        }
+        return true;
+    }
 
     private boolean validarPrenchimentoNome() {
         if (txtNome.getText().isEmpty()) {
-            Alerta.warning("Validação", "Nome do cliente precisa ser preenchido");
+            Alerta.warning("ValidaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Nome do cliente precisa ser preenchido");
             return false;
         }
         return true;
     }
 
     /* =========================================================
-      MÉTODOS PRA CRIAR CLIENTE
+      MÃƒÆ’Ã¢â‚¬Â°TODOS PRA CRIAR CLIENTE
       ========================================================= */
-    public void criarClient(){
+    public void criarClient() {
         Cliente c = new Cliente(
                 txtNome.getText(),
                 txtCpf.getText(),
@@ -58,10 +61,10 @@ public class ClienteFormController {
         clienteDAO.salvar(c);
     }
 
-     /* =========================================================
-       MÉTODOS PRA ATUALIZAR CLIENTE
+    /* =========================================================
+       MÃƒÆ’Ã¢â‚¬Â°TODOS PRA ATUALIZAR CLIENTE
        ========================================================= */
-    public void atualizarClinete(){
+    public void atualizarClinete() {
         clienteSelecionado.setNome(txtNome.getText());
         clienteSelecionado.setCpf(txtCpf.getText());
         clienteSelecionado.setTelefone(txtTelefone.getText());
@@ -70,17 +73,14 @@ public class ClienteFormController {
         clienteDAO.atualizar(clienteSelecionado);
     }
 
-       /* =========================================================
-      MÉTODOS PRA CRIAR OU ATUALIZAR O CLIENTE NO CENARIO DELE JÁ EXISTIR.
+    /* =========================================================
+      MÃƒÆ’Ã¢â‚¬Â°TODOS PRA CRIAR OU ATUALIZAR O CLIENTE NO CENARIO DELE JÃƒÆ’Ã‚Â EXISTIR.
       ========================================================= */
-
-    public void verificarCliente(){
-        if(clienteDAO.existeCpf(txtCpf.getText())){
-            throw new IllegalArgumentException("Cliente com esse CPF já existe");
+    public void verificarCliente() {
+        if (clienteDAO.existeCpf(txtCpf.getText())) {
+            throw new IllegalArgumentException("Cliente com esse CPF jÃƒÆ’Ã‚Â¡ existe");
         }
     }
-
-
 
     @FXML
     private void salvar() {
@@ -106,17 +106,19 @@ public class ClienteFormController {
         stage.close();
     }
 
-    @FXML public void initialize() {
+    @FXML
+    public void initialize() {
         txtCpf.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getText().matches("[0-9]*") && (txtCpf.getText().length() + change.getText().length() <= 11)) {
                 return change;
-            } return null;
+            }
+            return null;
         }));
-          txtTelefone.setTextFormatter(new TextFormatter<>(change -> {
-              if (change.getText().matches("[0-9]*") && (txtTelefone.getText().length() + change.getText().length() <= 11)) {
-                  return change;
-              }
-              return null;
-          }));
+        txtTelefone.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().matches("[0-9]*") && (txtTelefone.getText().length() + change.getText().length() <= 11)) {
+                return change;
+            }
+            return null;
+        }));
     }
 }

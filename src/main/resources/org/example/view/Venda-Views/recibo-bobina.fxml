@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="12" style="-fx-background-color: #0f172a;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="org.example.app.controller.venda.ReciboBobinaController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <children>
+        <Label text="Comprovante de Venda" textFill="#fb923c" style="-fx-font-weight: bold; -fx-font-size: 18px;" />
+
+        <TextArea fx:id="txtRecibo" editable="false" prefHeight="420.0" wrapText="true"
+                  style="-fx-control-inner-background: white; -fx-text-fill: black; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-background-color: white;"/>
+
+        <Button onAction="#imprimir" text="🖨  IMPRIMIR" maxWidth="Infinity" prefHeight="44"
+                style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+    </children>
+</VBox>

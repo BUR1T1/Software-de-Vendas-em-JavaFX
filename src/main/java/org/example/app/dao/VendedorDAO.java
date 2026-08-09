@@ -1,19 +1,30 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
-import org.example.app.model.Vendedor;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.example.app.database.ConnectionManager;
+import org.example.app.model.Vendedor;
+
+/**
+ * DAO de Vendedores.
+ *
+ * Consome o {@link ConnectionManager} de forma TRANSPARENTE: o mÃƒÆ’Ã‚Â©todo
+ * {@code ConnectionManager.getConnection()} decide automaticamente se a
+ * operaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o irÃƒÆ’Ã‚Â¡ para o banco PRINCIPAL (PostgreSQL / online) ou para o banco
+ * de CONTINGÃƒÆ’Ã…Â NCIA (loja.db / SQLite), conforme o estado da rede.
+ */
 public class VendedorDAO {
 
     public void salvar(Vendedor vendedor) {
         if (vendedor.getId() == null) {
             String sql = "INSERT INTO vendedor (nome, cpf, comissao, status) VALUES (?, ?, ?, ?)";
-            try (Connection conn = ConexaoSQLite.conectar();
-                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, vendedor.getNome());
                 ps.setString(2, vendedor.getCpf());
                 ps.setDouble(3, vendedor.getComissao());
@@ -26,7 +37,7 @@ public class VendedorDAO {
                     }
                 }
             } catch (SQLException e) {
-                throw new RuntimeException("Erro ao salvar vendedor. CPF já cadastrado? " + e.getMessage(), e);
+                throw new RuntimeException("Erro ao salvar vendedor. CPF jÃƒÆ’Ã‚Â¡ cadastrado? " + e.getMessage(), e);
             }
         } else {
             atualizar(vendedor);
@@ -36,8 +47,7 @@ public class VendedorDAO {
     public void inativar(Long id) {
         String sql = "UPDATE vendedor SET status = 2 WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, id);
             ps.executeUpdate();
@@ -49,8 +59,7 @@ public class VendedorDAO {
     public void reativar(List<Long> ids) {
         String sql = "UPDATE vendedor SET status = 1 WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             for (Long id : ids) {
                 ps.setLong(1, id);
@@ -63,13 +72,33 @@ public class VendedorDAO {
         }
     }
 
+public Vendedor buscarPorId(Long id) {
+        String sql = "SELECT * FROM vendedor WHERE id = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Vendedor v = new Vendedor();
+                    v.setId(rs.getLong("id"));
+                    v.setNome(rs.getString("nome"));
+                    v.setCpf(rs.getString("cpf"));
+                    v.setComissao(rs.getDouble("comissao"));
+                    v.setStatus(rs.getInt("status"));
+                    return v;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar vendedor por id", e);
+        }
+        return null;
+    }
+
     public List<Vendedor> listar() {
         List<Vendedor> lista = new ArrayList<>();
         String sql = "SELECT * FROM vendedor";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
                 Vendedor v = new Vendedor();
@@ -91,10 +120,9 @@ public class VendedorDAO {
     public void atualizar(Vendedor vendedor) {
         String sql = "UPDATE vendedor SET nome = ? ,cpf = ?, comissao = ?, status = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1,vendedor.getNome());
+            ps.setString(1, vendedor.getNome());
             ps.setString(2, vendedor.getCpf());
             ps.setDouble(3, vendedor.getComissao());
             ps.setInt(4, vendedor.getStatus());
@@ -110,9 +138,7 @@ public class VendedorDAO {
         String sql = "SELECT * FROM vendedor WHERE status = 1";
         List<Vendedor> list = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Vendedor v = new Vendedor();
@@ -134,9 +160,7 @@ public class VendedorDAO {
         String sql = "SELECT * FROM vendedor WHERE status = 2";
         List<Vendedor> list = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Vendedor v = new Vendedor();

@@ -1,25 +1,35 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
-import org.example.app.model.Usuario;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.sql.*;
+import org.example.app.database.ConnectionManager;
+import org.example.app.model.Usuario;
 
 public class UsuarioDAO {
 
     public void salvar(Usuario usuario) {
         String sql = """
-            INSERT INTO usuario (login, senha, perfil)
-            VALUES (?, ?, ?)
+            INSERT INTO usuario (nome, login, senha, perfil)
+            VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, usuario.getLogin());
-            ps.setString(2, usuario.getSenha());
-            ps.setString(3, usuario.getPerfil());
+            ps.setString(1, usuario.getNome());
+            ps.setString(2, usuario.getLogin());
+            ps.setString(3, usuario.getSenha());
+            ps.setString(4, usuario.getPerfil());
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                usuario.setId(rs.getLong(1));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,11 +39,10 @@ public class UsuarioDAO {
     public Usuario autenticar(String login, String senha) {
         String sql = """
             SELECT * FROM usuario
-            WHERE login = ? AND senha = ?
+            WHERE login = ? AND senha = ? AND status = 1
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, login);
             ps.setString(2, senha);
@@ -41,10 +50,13 @@ public class UsuarioDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Usuario u = new Usuario(null,null,null);
-
-                u.setLogin(rs.getString("login"));
-                u.setPerfil(rs.getString("perfil"));
+                Usuario u = new Usuario(
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getString("perfil")
+                );
+                u.setId(rs.getLong("id"));
                 return u;
             }
 
@@ -54,5 +66,55 @@ public class UsuarioDAO {
 
         return null;
     }
-}
 
+    public Usuario buscarPorLogin(String login) {
+        String sql = "SELECT * FROM usuario WHERE login = ?";
+
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, login);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Usuario u = new Usuario(
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getString("perfil")
+                );
+                u.setId(rs.getLong("id"));
+                u.setStatus(rs.getInt("status"));
+                return u;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public List<Usuario> listarTodos() {
+        List<Usuario> lista = new ArrayList<>();
+        String sql = "SELECT * FROM usuario ORDER BY id";
+
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Usuario u = new Usuario(
+                        rs.getString("nome"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getString("perfil")
+                );
+                u.setId(rs.getLong("id"));
+                u.setStatus(rs.getInt("status"));
+                lista.add(u);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+}

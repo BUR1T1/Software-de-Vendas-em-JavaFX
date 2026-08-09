@@ -5,7 +5,7 @@ import javafx.scene.control.Alert;
 public final class Alerta {
 
     private Alerta() {
-        // impede instanciação
+        // impede instanciaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
     }
 
     public static void warning(String titulo, String mensagem) {

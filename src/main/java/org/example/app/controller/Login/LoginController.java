@@ -1,13 +1,17 @@
-package org.example.app.controller.Login;
+package org.example.app.controller.login;
+
+import org.example.app.dao.UsuarioDAO;
+import org.example.app.model.Usuario;
+import org.example.app.util.Alerta;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import org.example.app.util.Alerta;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController {
 
@@ -18,16 +22,31 @@ public class LoginController {
     private PasswordField txtSenha;
 
     @FXML
+    private Label lblMensagem;
+
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+    @FXML
     private void entrar() {
         if (txtUsuario.getText().isEmpty() || txtSenha.getText().isEmpty()) {
+            if (lblMensagem != null) {
+                lblMensagem.setText("Preencha usuÃƒÆ’Ã‚Â¡rio e senha.");
+            }
             return;
         }
 
-        // login mock de teste
-        if (txtUsuario.getText().equals("admin") && txtSenha.getText().equals("123")) {
+        Usuario usuario = usuarioDAO.autenticar(
+                txtUsuario.getText().trim(),
+                txtSenha.getText()
+        );
+
+        if (usuario != null) {
             abrirTelaPrincipal();
         } else {
-            Alerta.warning("Falha no acesso", "Login ou senha invalidos");
+            if (lblMensagem != null) {
+                lblMensagem.setText("Login ou senha invÃƒÆ’Ã‚Â¡lidos");
+            }
+            Alerta.warning("Falha no acesso", "Login ou senha invÃƒÆ’Ã‚Â¡lidos");
         }
     }
 

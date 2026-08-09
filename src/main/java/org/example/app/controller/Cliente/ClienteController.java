@@ -1,4 +1,4 @@
-package org.example.app.controller.Cliente;
+package org.example.app.controller.cliente;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -17,9 +17,12 @@ import java.util.List;
 
 public class ClienteController {
 
-    @FXML private TextField txtNome;
+@FXML private TextField txtNome;
     @FXML private TextField txtCpf;
     @FXML private TextField txtTelefone;
+
+    @FXML private ComboBox<String> cmbFiltro;
+    @FXML private TextField txtPesquisar;
 
     @FXML private TableView<Cliente> tabelaClientes;
     @FXML private TableColumn<Cliente, Long> colId;
@@ -32,13 +35,49 @@ public class ClienteController {
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private Cliente clienteSelecionado;
 
-    @FXML public void initialize() {
+@FXML public void initialize() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
 
+        cmbFiltro.getItems().addAll("ID", "NOME");
+        cmbFiltro.setValue("NOME");
         carregarTabelas();
+    }
+
+    @FXML
+    private void buscarRelatorio() {
+        String filtro = cmbFiltro.getValue();
+        String termo = txtPesquisar.getText() == null ? "" : txtPesquisar.getText().trim();
+
+        if (termo.isEmpty()) {
+            carregarTabelas();
+            return;
+        }
+
+        List<Cliente> ativos = clienteDAO.listarAtivos();
+        List<Cliente> inativos = clienteDAO.listarInativos();
+
+        List<Cliente> resAtivos = new java.util.ArrayList<>();
+        List<Cliente> resInativos = new java.util.ArrayList<>();
+
+        for (Cliente c : ativos) {
+            if (matches(c, filtro, termo)) resAtivos.add(c);
+        }
+        for (Cliente c : inativos) {
+            if (matches(c, filtro, termo)) resInativos.add(c);
+        }
+
+        tabelaClientes.setItems(FXCollections.observableArrayList(resAtivos));
+        tabelaInativos.setItems(FXCollections.observableArrayList(resInativos));
+    }
+
+    private boolean matches(Cliente c, String filtro, String termo) {
+        if ("NOME".equals(filtro)) {
+            return c.getNome() != null && c.getNome().toLowerCase().contains(termo.toLowerCase());
+        }
+        return String.valueOf(c.getId()).equals(termo);
     }
 
 
@@ -46,7 +85,7 @@ public class ClienteController {
     @FXML
     private void salvar() {
         if (txtNome.getText().isEmpty() || txtCpf.getText().isEmpty()) {
-            Alerta.info("Validação", "Nome e CPF são obrigatórios.");
+            Alerta.info("ValidaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Nome e CPF sÃƒÆ’Ã‚Â£o obrigatÃƒÆ’Ã‚Â³rios.");
             return;
         }
 
@@ -58,10 +97,10 @@ public class ClienteController {
                     txtTelefone.getText(),
                     1
             );
-            // O createdAt já é gerado no construtor da BaseEntity automaticamente
+            // O createdAt jÃƒÆ’Ã‚Â¡ ÃƒÆ’Ã‚Â© gerado no construtor da BaseEntity automaticamente
             clienteDAO.salvar(c);
         } else {
-            // ATUALIZAÇÃO DE CLIENTE EXISTENTE
+            // ATUALIZAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O DE CLIENTE EXISTENTE
             clienteSelecionado.setNome(txtNome.getText());
             clienteSelecionado.setCpf(txtCpf.getText());
             clienteSelecionado.setTelefone(txtTelefone.getText());
@@ -99,7 +138,7 @@ public class ClienteController {
             carregarTabelas();
         } catch (Exception e) {
             e.printStackTrace();
-            Alerta.error("Erro", "Não foi possível abrir o formulário.");
+            Alerta.error("Erro", "NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel abrir o formulÃƒÆ’Ã‚Â¡rio.");
         }
     }
 
@@ -107,7 +146,7 @@ public class ClienteController {
     private void editar() {
         Cliente c = tabelaClientes.getSelectionModel().getSelectedItem();
         if (c == null) {
-            Alerta.info("Seleção", "Selecione um cliente para editar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione um cliente para editar.");
             return;
         }
         try {
@@ -126,7 +165,7 @@ public class ClienteController {
             carregarTabelas();
         } catch (Exception e) {
             e.printStackTrace();
-            Alerta.error("Erro", "Não foi possível abrir o formulário.");
+            Alerta.error("Erro", "NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel abrir o formulÃƒÆ’Ã‚Â¡rio.");
         }
     }
 
@@ -138,7 +177,7 @@ public class ClienteController {
             clienteDAO.inativar(c.getId());
             carregarTabelas();
         } else {
-            Alerta.info("Seleção", "Selecione um cliente para inativar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione um cliente para inativar.");
         }
     }
 
@@ -158,7 +197,7 @@ public class ClienteController {
             clienteDAO.reativar(ids);
             carregarTabelas(); // Recarrega para ver os reativados
         } else {
-            Alerta.info("Seleção", "Selecione ao menos um cliente para reativar.");
+            Alerta.info("SeleÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Selecione ao menos um cliente para reativar.");
         }
     }
 
