@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="8" style="-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12; -fx-padding: 12;"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.app.controller.SyncController">
+    <children>
+        <Label fx:id="lblStatusConexao" text="● ONLINE" style="-fx-text-fill: #4ADE80; -fx-font-weight: bold; -fx-font-size: 13px;" />
+        <Label fx:id="lblPendentes" text="Sem pendências" style="-fx-text-fill: #94A3B8; -fx-font-size: 11px;" wrapText="true" />
+        <Button fx:id="btnSincronizar" onAction="#sincronizar" text="↻ Sincronizar"
+                maxWidth="Infinity"
+                style="-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 12;" />
+    </children>
+</VBox>

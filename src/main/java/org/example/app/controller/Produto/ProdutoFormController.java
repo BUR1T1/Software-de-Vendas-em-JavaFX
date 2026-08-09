@@ -1,4 +1,4 @@
-package org.example.app.controller.Produto;
+package org.example.app.controller.produto;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,8 +28,8 @@ public class ProdutoFormController {
     private boolean salvo = false;
 
     /* =========================================================
-       GETTERS E SETTERS
-       ========================================================= */
+    GETTERS E SETTERS
+    ========================================================= */
 
     public void setProduto(Produto produto) {
         this.produto = produto;
@@ -50,14 +50,14 @@ public class ProdutoFormController {
     }
 
     /* =========================================================
-       VALIDAÇÕES
+       VALIDAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã¢â‚¬Â¢ES
        ========================================================= */
 
     public void validarNome(String nome) {
         if (produtoDAO.buscarNome(nome)) {
             Alerta.warning(
-                    "Nome já utilizado.",
-                    "Adicione alguma especificação ao título."
+                    "Nome jÃƒÆ’Ã‚Â¡ utilizado.",
+                    "Adicione alguma especificaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o ao tÃƒÆ’Ã‚Â­tulo."
             );
             throw new IllegalArgumentException("Valor inesperado");
         }
@@ -65,7 +65,7 @@ public class ProdutoFormController {
         if (nome == null || nome.isBlank()) {
             Alerta.warning(
                     "Aviso",
-                    "Nome do produto obrigatório."
+                    "Nome do produto obrigatÃƒÆ’Ã‚Â³rio."
             );
             throw new IllegalArgumentException("Valor inesperado");
         }
@@ -85,7 +85,7 @@ public class ProdutoFormController {
         if (quantidade <= 0) {
             Alerta.warning(
                     "Valor imprevisto",
-                    "O estoque não pode ser menor ou igual a zero."
+                    "O estoque nÃƒÆ’Ã‚Â£o pode ser menor ou igual a zero."
             );
             throw new IllegalArgumentException("Valor imprevisto");
         }
@@ -131,7 +131,7 @@ public class ProdutoFormController {
     }
 
     /* =========================================================
-       MÉTODOS AUXILIARES
+       MÃƒÆ’Ã¢â‚¬Â°TODOS AUXILIARES
        ========================================================= */
 
     private void fechar() {

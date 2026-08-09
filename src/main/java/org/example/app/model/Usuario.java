@@ -1,8 +1,5 @@
 package org.example.app.model;
 
-
-import org.example.app.BaseEntity;
-
 public class Usuario extends BaseEntity {
 
     private String nome;

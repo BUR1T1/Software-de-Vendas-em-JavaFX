@@ -1,10 +1,13 @@
-package org.example.app.controller.Vendedor;
+package org.example.app.controller.vendedor;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
 import org.example.app.model.Vendedor;
 import org.example.app.util.Alerta;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.stage.Stage;
 
 public class VendedorFormController {
     @FXML private Label lblTitulo;
@@ -30,12 +33,12 @@ public class VendedorFormController {
     private void salvar() {
         try {
             if (txtNome.getText().isBlank()) {
-                Alerta.info("Validação", "Informe o nome do vendedor.");
+                Alerta.info("ValidaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Informe o nome do vendedor.");
                 return;
             }
 
             if (txtCpf.getText().isBlank()) {
-                Alerta.info("Validação", "Informe o CPF.");
+                Alerta.info("ValidaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o", "Informe o CPF.");
                 return;
             }
 
@@ -49,16 +52,16 @@ public class VendedorFormController {
             fechar();
 
         } catch (NumberFormatException e) {
-            Alerta.error("Erro", "Comissão inválida.");
+            Alerta.error("Erro", "ComissÃƒÆ’Ã‚Â£o invÃƒÆ’Ã‚Â¡lida.");
         }
     }
 
       /* =========================================================
-       MÉTODOS PRA VALIDAR CAMPOS OBRIGATORIO;
+       MÃƒÆ’Ã¢â‚¬Â°TODOS PRA VALIDAR CAMPOS OBRIGATORIO;
        ========================================================= */
 
        /* =========================================================
-       MÉTODOS PRA ATUALIZAR DADOS DO VENDEDOR
+       MÃƒÆ’Ã¢â‚¬Â°TODOS PRA ATUALIZAR DADOS DO VENDEDOR
        ========================================================= */
 
     @FXML public void initialize() {

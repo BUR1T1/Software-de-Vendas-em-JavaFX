@@ -8,7 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.app.controller.Venda.VendaController"
+fx:controller="org.example.app.controller.venda.VendaController"
             style="-fx-background-color: #0f172a;">
 
     <top>
@@ -103,7 +103,7 @@
                             </children>
                         </HBox>
 
-                        <TableView fx:id="tblItens" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
+<TableView fx:id="tblItens" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 10; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
                             <columns>
                                 <TableColumn fx:id="colProduto" text="DESCRIÇÃO" prefWidth="350" />
                                 <TableColumn fx:id="colQtd" text="QTD" prefWidth="80" style="-fx-alignment: CENTER;" />

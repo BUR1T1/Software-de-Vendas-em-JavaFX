@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.app.controller.Usuario.UsuarioController"
+fx:controller="org.example.app.controller.usuario.UsuarioController"
             style="-fx-background-color: transparent; -fx-background: transparent;">
     <content>
         <VBox spacing="20" style="-fx-background-color: #0f172a;">
@@ -37,11 +37,24 @@
                     <Button text="Limpar" onAction="#limpar" style="-fx-background-color: #334155; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand;"/>
                 </HBox>
 
-                <Label fx:id="lblMensagem" GridPane.columnIndex="1" GridPane.rowIndex="5" style="-fx-text-fill: #fb923c;"/>
+<Label fx:id="lblMensagem" GridPane.columnIndex="1" GridPane.rowIndex="5" style="-fx-text-fill: #fb923c;"/>
             </GridPane>
 
-            <TableView fx:id="tblUsuarios" VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: #1e293b; -fx-table-cell-border-color: #334155; -fx-control-inner-background: #1e293b;">
+            <HBox spacing="15" alignment="CENTER_LEFT"
+                  style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1;">
+                <children>
+                    <ComboBox fx:id="cmbFiltro" prefWidth="140" prefHeight="40"
+                              style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                    <TextField fx:id="txtPesquisar" prefWidth="350" prefHeight="40"
+                               promptText="🔍 Pesquisar por ID ou nome..."
+                               style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;"/>
+                    <Button text="🔍 BUSCAR" onAction="#buscarRelatorio" prefHeight="40" prefWidth="110"
+                            style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </children>
+            </HBox>
+
+<TableView fx:id="tblUsuarios" VBox.vgrow="ALWAYS"
+                       style="-fx-background-color: #1e293b; -fx-table-cell-border-color: #334155; -fx-control-inner-background: #1e293b; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
                     <TableColumn fx:id="colNome" text="Nome" prefWidth="250"/>

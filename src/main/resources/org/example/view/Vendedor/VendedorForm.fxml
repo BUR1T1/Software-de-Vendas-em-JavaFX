@@ -6,9 +6,9 @@
 
 <VBox spacing="0.0" prefWidth="450.0" style="-fx-background-color: #1e293b; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: #f97316; -fx-border-width: 1;"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.app.controller.Vendedor.VendedorFormController">
+fx:controller="org.example.app.controller.vendedor.VendedorFormController">
 
-    <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: linear-gradient(to right, #f97316, #fb923c); -fx-background-radius: 15 15 0 0;">
+<HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: linear-gradient(to right, #f97316, #fb923c); -fx-background-radius: 15 15 0 0;">
         <padding><Insets left="25.0" right="25.0" /></padding>
         <children>
             <Label fx:id="lblTitulo" text="CADASTRO DE VENDEDOR" textFill="WHITE" style="-fx-font-weight: bold; -fx-font-size: 18px;" />

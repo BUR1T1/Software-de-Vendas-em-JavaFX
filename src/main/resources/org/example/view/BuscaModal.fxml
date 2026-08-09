@@ -19,9 +19,9 @@
                    promptText="Digite para filtrar..."
                    style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-background-radius: 5; -fx-border-radius: 5; -fx-focus-color: #f97316;"/>
 
-        <TableView fx:id="tblResultados" VBox.vgrow="ALWAYS"
+<TableView fx:id="tblResultados" VBox.vgrow="ALWAYS"
                    onMouseClicked="#verificarCliqueDuplo"
-                   style="-fx-background-color: #0f172a; -fx-table-cell-border-color: #334155; -fx-control-inner-background: #0f172a;">
+                   style="-fx-background-color: transparent; -fx-table-cell-border-color: #334155; -fx-control-inner-background: #1e293b; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
         </TableView>
 

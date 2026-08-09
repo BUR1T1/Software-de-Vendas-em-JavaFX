@@ -1,4 +1,4 @@
-package org.example.app.controller.Venda;
+package org.example.app.controller.venda;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,9 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,12 +33,16 @@ import java.util.List;
 
 public class VendaHistoricoController {
 
-    @FXML private TableView<Venda> tblHistorico;
+@FXML private TableView<Venda> tblHistorico;
     @FXML private TableColumn<Venda, Long> colId;
     @FXML private TableColumn<Venda, String> colData;
     @FXML private TableColumn<Venda, String> colCliente;
     @FXML private TableColumn<Venda, String> colVendedor;
-    @FXML private TableColumn<Venda, Double> colTotal;
+@FXML private TableColumn<Venda, Double> colTotal;
+    @FXML private TableColumn<Venda, Void> colImprimir;
+
+    @FXML private ComboBox<String> cmbFiltro;
+    @FXML private TextField txtBusca;
 
     private final VendaDAO vendaDAO = new VendaDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
@@ -49,13 +56,52 @@ public class VendaHistoricoController {
     @FXML
     public void initialize() {
         configurarColunas();
+        configurarBusca();
         carregarDados();
+    }
+
+    private void configurarBusca() {
+        cmbFiltro.getItems().addAll("ID", "NOME");
+        cmbFiltro.setValue("ID");
+    }
+
+    @FXML
+    private void buscar() {
+        String filtro = cmbFiltro.getValue();
+        String termo = txtBusca.getText() == null ? "" : txtBusca.getText().trim();
+
+        // Sem termo -> mostra todos (equivale a "SELECT *")
+        if (termo.isEmpty()) {
+            carregarDados();
+            return;
+        }
+
+        java.util.List<Venda> todas = vendaDAO.listarHistorico();
+        java.util.List<Venda> resultado = new java.util.ArrayList<>();
+
+        for (Venda v : todas) {
+            boolean ok;
+            if ("NOME".equals(filtro)) {
+                String cliente = v.getCliente() != null && v.getCliente().getNome() != null ? v.getCliente().getNome() : "";
+                String vendedor = v.getVendedor() != null && v.getVendedor().getNome() != null ? v.getVendedor().getNome() : "";
+                ok = cliente.toLowerCase().contains(termo.toLowerCase())
+                        || vendedor.toLowerCase().contains(termo.toLowerCase());
+            } else {
+                ok = String.valueOf(v.getId()).equals(termo);
+            }
+            if (ok) {
+                resultado.add(v);
+            }
+        }
+
+        listaVendas.setAll(resultado);
+        tblHistorico.setItems(listaVendas);
     }
 
     private void configurarColunas() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        // Exibição de Data e Hora
+        // ExibiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o de Data e Hora
         colData.setCellValueFactory(fila -> {
             Venda v = fila.getValue();
             if (v.getDataVenda() != null && v.getHoraVenda() != null) {
@@ -78,7 +124,7 @@ public class VendaHistoricoController {
                 return new javafx.beans.property.SimpleObjectProperty<>(fila.getValue().getTotal());
             });
 
-            colTotal.setCellFactory(tc -> new TableCell<Venda, Double>() {
+colTotal.setCellFactory(tc -> new TableCell<Venda, Double>() {
                 @Override
                 protected void updateItem(Double item, boolean empty) {
                     super.updateItem(item, empty);
@@ -91,6 +137,55 @@ public class VendaHistoricoController {
                     }
                 }
             });
+
+            // =====================================================
+            // COLUNA DE IMPRESSÃƒÆ’Ã†â€™O (botÃƒÆ’Ã‚Â£o de impressora por linha)
+            // =====================================================
+            colImprimir.setCellFactory(col -> new TableCell<Venda, Void>() {
+                private final Button btnImprimir = new Button("ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¨");
+                {
+                    btnImprimir.setStyle("-fx-background-color: #f97316; -fx-text-fill: white; " +
+                            "-fx-font-size: 14; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 4 10;");
+                    btnImprimir.setTooltip(new javafx.scene.control.Tooltip("Imprimir comprovante"));
+                    btnImprimir.setOnAction(e -> {
+                        Venda venda = getTableView().getItems().get(getIndex());
+                        abrirRecibo(venda);
+                    });
+                }
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btnImprimir);
+                    }
+                }
+            });
+    }
+
+    /**
+     * Abre o comprovante/cupom (recibo bobina) da venda selecionada.
+     */
+    private void abrirRecibo(Venda venda) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/view/Venda-Views/recibo-bobina.fxml")
+            );
+            Parent root = loader.load();
+
+            ReciboBobinaController controller = loader.getController();
+            controller.carregar(venda);
+
+            Stage stage = new Stage();
+            stage.setTitle("Comprovante - Venda #" + venda.getId());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            alerta("NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel abrir o comprovante da venda.");
+        }
     }
 
     private void carregarDados() {
@@ -116,7 +211,7 @@ public class VendaHistoricoController {
     }
 
     // =====================================================
-    // EDIÇÃO E MODAIS (MANTIDOS)
+    // EDIÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O E MODAIS (MANTIDOS)
     // =====================================================
 
     @FXML

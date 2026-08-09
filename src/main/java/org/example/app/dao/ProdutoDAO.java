@@ -1,12 +1,20 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
+import org.example.app.database.ConnectionManager;
 import org.example.app.model.Produto;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de Produtos.
+ *
+ * Consome o {@link ConnectionManager} de forma TRANSPARENTE: o mÃƒÆ’Ã‚Â©todo
+ * {@code ConnectionManager.getConnection()} decide automaticamente se a
+ * operaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o irÃƒÆ’Ã‚Â¡ para o banco PRINCIPAL (PostgreSQL / online) ou para o banco
+ * de CONTINGÃƒÆ’Ã…Â NCIA (loja.db / SQLite), conforme o estado da rede.
+ */
 public class ProdutoDAO {
 
     public void salvar(Produto produto) {
@@ -15,13 +23,13 @@ public class ProdutoDAO {
             VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, produto.getNome());
             ps.setDouble(2, produto.getPreco());
             ps.setInt(3, produto.getEstoque());
-            ps.setInt(4, produto.getStatus()); // ativo por padrão
+            ps.setInt(4, produto.getStatus()); // ativo por padrÃƒÆ’Ã‚Â£o
             ps.executeUpdate();
 
         } catch (Exception e) {
@@ -29,11 +37,33 @@ public class ProdutoDAO {
         }
     }
 
+public Produto buscarPorId(Long id) {
+        String sql = "SELECT * FROM produto WHERE id = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Produto p = new Produto();
+                    p.setId(rs.getLong("id"));
+                    p.setNome(rs.getString("nome"));
+                    p.setPreco(rs.getDouble("preco"));
+                    p.setEstoque(rs.getInt("estoque"));
+                    p.setStatus(rs.getInt("status"));
+                    return p;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar produto por id", e);
+        }
+        return null;
+    }
+
     public List<Produto> listar() {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE status = 1" ;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
@@ -59,7 +89,7 @@ public class ProdutoDAO {
         List<Produto> lista = new ArrayList<>();
         String sql = "SELECT * FROM produto WHERE status = 2";
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
@@ -86,7 +116,7 @@ public class ProdutoDAO {
             WHERE id = ?
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, produto.getNome());
@@ -104,7 +134,7 @@ public class ProdutoDAO {
     public void alterarStatus(Long id, int status) {
         String sql = "UPDATE produto SET status = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, status); // 1 = ativo, 2 = inativo
@@ -119,7 +149,7 @@ public class ProdutoDAO {
     public void reativar(List<Long> ids) {
         String sql = "UPDATE produto SET status = 1 WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             for (Long id : ids) {
@@ -135,11 +165,11 @@ public class ProdutoDAO {
     }
 
     //=======================================
-    // METHODO PARA VALIDAR A UTILIZAÇÃO DO NOME;
+    // METHODO PARA VALIDAR A UTILIZAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O DO NOME;
     //=======================================
     public boolean buscarNome(String nome){
         String sql = "SELECT * FROM produto WHERE nome = ? LIMIT 1";
-         try(Connection conn = ConexaoSQLite.conectar();
+         try(Connection conn = ConnectionManager.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)){
 
              ps.setString(1,nome);
@@ -149,7 +179,7 @@ public class ProdutoDAO {
              }
 
          }catch (SQLException e){
-             throw new IllegalArgumentException("Erro imprevisto na execução da query", e);
+             throw new IllegalArgumentException("Erro imprevisto na execuÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o da query", e);
          }
     }
 

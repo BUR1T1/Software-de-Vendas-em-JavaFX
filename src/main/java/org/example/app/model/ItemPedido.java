@@ -1,7 +1,5 @@
 package org.example.app.model;
 
-import org.example.app.BaseEntity;
-
 public class ItemPedido extends BaseEntity {
 
     private Produto produto;

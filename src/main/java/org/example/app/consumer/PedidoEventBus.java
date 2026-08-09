@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  */
 public class PedidoEventBus {
 
-    // Fila de pedidos pendentes ainda não representados na tela de venda
+    // Fila de pedidos pendentes ainda nÃƒÆ’Ã‚Â£o representados na tela de venda
     private static final List<Pedido> pedidosPendentes = new ArrayList<>();
 
     private static final List<Consumer<Pedido>> listeners = new ArrayList<>();

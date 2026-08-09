@@ -1,13 +1,15 @@
-package org.example.app.controller.Venda;
+package org.example.app.controller.venda.pedido;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.app.dao.PedidosDAO;
 import org.example.app.model.Pedido;
@@ -17,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 
 public class PedidoHistoricoController {
 
-    @FXML private TableView<Pedido> tblPedidos;
+@FXML private TableView<Pedido> tblPedidos;
     @FXML private TableColumn<Pedido, Long> colId;
     @FXML private TableColumn<Pedido, String> colData;
     @FXML private TableColumn<Pedido, String> colCliente;
@@ -25,15 +27,56 @@ public class PedidoHistoricoController {
     @FXML private TableColumn<Pedido, Double> colTotal;
     @FXML private TableColumn<Pedido, String> colStatus;
 
+    @FXML private ComboBox<String> cmbFiltro;
+    @FXML private TextField txtBusca;
+
     private final PedidosDAO pedidosDAO = new PedidosDAO();
     private final ObservableList<Pedido> listaPedidos = FXCollections.observableArrayList();
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    @FXML
+@FXML
     public void initialize() {
         configurarColunas();
+        configurarBusca();
         carregarDados();
+    }
+
+    private void configurarBusca() {
+        cmbFiltro.getItems().addAll("ID", "NOME");
+        cmbFiltro.setValue("ID");
+    }
+
+    @FXML
+    private void buscar() {
+        String filtro = cmbFiltro.getValue();
+        String termo = txtBusca.getText() == null ? "" : txtBusca.getText().trim();
+
+        if (termo.isEmpty()) {
+            carregarDados();
+            return;
+        }
+
+        java.util.List<Pedido> todas = pedidosDAO.listarHistorico();
+        java.util.List<Pedido> resultado = new java.util.ArrayList<>();
+
+        for (Pedido p : todas) {
+            boolean ok;
+            if ("NOME".equals(filtro)) {
+                String cliente = p.getCliente() != null && p.getCliente().getNome() != null ? p.getCliente().getNome() : "";
+                String vendedor = p.getVendedor() != null && p.getVendedor().getNome() != null ? p.getVendedor().getNome() : "";
+                ok = cliente.toLowerCase().contains(termo.toLowerCase())
+                        || vendedor.toLowerCase().contains(termo.toLowerCase());
+            } else {
+                ok = String.valueOf(p.getId()).equals(termo);
+            }
+            if (ok) {
+                resultado.add(p);
+            }
+        }
+
+        listaPedidos.setAll(resultado);
+        tblPedidos.setItems(listaPedidos);
     }
 
     private void configurarColunas() {
@@ -76,7 +119,7 @@ public class PedidoHistoricoController {
         colStatus.setCellValueFactory(fila -> {
             int status = fila.getValue().getStatus();
             String texto = status == 1 ? "PENDENTE"
-                         : status == 3 ? "CONCLUÍDO"
+                         : status == 3 ? "CONCLUÃƒÆ’Ã‚ÂDO"
                          : "CANCELADO";
             return new SimpleStringProperty(texto);
         });
@@ -93,7 +136,7 @@ public class PedidoHistoricoController {
                     setText(item);
                     switch (item) {
                         case "PENDENTE" -> setStyle("-fx-text-fill: #d97706; -fx-font-weight: bold;");
-                        case "CONCLUÍDO" -> setStyle("-fx-text-fill: #16a34a; -fx-font-weight: bold;");
+                        case "CONCLUÃƒÆ’Ã‚ÂDO" -> setStyle("-fx-text-fill: #16a34a; -fx-font-weight: bold;");
                         default -> setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold;");
                     }
                 }
@@ -148,7 +191,7 @@ public class PedidoHistoricoController {
         }
 
         if (selecionado.getStatus() == 3) {
-            alerta("Este pedido já foi concluído.");
+            alerta("Este pedido já foi cancelado.");
             return;
         }
 

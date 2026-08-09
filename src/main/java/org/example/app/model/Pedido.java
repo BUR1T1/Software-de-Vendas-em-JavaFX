@@ -1,7 +1,5 @@
 package org.example.app.model;
 
-import org.example.app.BaseEntity;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;

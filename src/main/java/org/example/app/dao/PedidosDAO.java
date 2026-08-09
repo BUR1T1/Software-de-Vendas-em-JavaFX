@@ -1,6 +1,6 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
+import org.example.app.database.ConnectionManager;
 import org.example.app.model.Cliente;
 import org.example.app.model.ItemPedido;
 import org.example.app.model.Pedido;
@@ -13,10 +13,18 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO de Pedidos.
+ *
+ * Consome o {@link ConnectionManager} de forma TRANSPARENTE: o mÃƒÆ’Ã‚Â©todo
+ * {@code ConnectionManager.getConnection()} decide automaticamente se a
+ * operaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o irÃƒÆ’Ã‚Â¡ para o banco PRINCIPAL (PostgreSQL / online) ou para o banco
+ * de CONTINGÃƒÆ’Ã…Â NCIA (loja.db / SQLite), conforme o estado da rede.
+ */
 public class PedidosDAO {
 
     // =========================================================
-    // SALVAR PEDIDO (COM ITENS, EM TRANSAÇÃO)
+    // SALVAR PEDIDO (COM ITENS, EM TRANSAÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã†â€™O)
     // =========================================================
     public void salvar(Pedido pedido) {
 
@@ -32,7 +40,7 @@ public class PedidosDAO {
             VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar()) {
+        try (Connection conn = ConnectionManager.getConnection()) {
 
             conn.setAutoCommit(false);
 
@@ -81,7 +89,7 @@ public class PedidosDAO {
     }
 
     // =========================================================
-    // LISTAR HISTÓRICO DE PEDIDOS
+    // LISTAR HISTÃƒÆ’Ã¢â‚¬Å“RICO DE PEDIDOS
     // =========================================================
     public List<Pedido> listarHistorico() {
         List<Pedido> lista = new ArrayList<>();
@@ -94,7 +102,7 @@ public class PedidosDAO {
             ORDER BY p.id DESC
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -120,14 +128,14 @@ public class PedidosDAO {
             }
 
         } catch (Exception e) {
-            System.err.println("Erro ao listar histórico de pedidos:");
+            System.err.println("Erro ao listar histÃƒÆ’Ã‚Â³rico de pedidos:");
             e.printStackTrace();
         }
         return lista;
     }
 
     // =========================================================
-    // LISTAR PENDENTES (STATUS = 1 -> AINDA NÃO PROCESSADO)
+    // LISTAR PENDENTES (STATUS = 1 -> AINDA NÃƒÆ’Ã†â€™O PROCESSADO)
     // =========================================================
     public List<Pedido> listarPendentes() {
         List<Pedido> lista = new ArrayList<>();
@@ -141,7 +149,7 @@ public class PedidosDAO {
             ORDER BY p.id
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -188,7 +196,7 @@ public class PedidosDAO {
             WHERE ip.pedido_id = ?
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, pedidoId);
@@ -213,12 +221,12 @@ public class PedidosDAO {
     }
 
     // =========================================================
-    // MARCAR PEDIDO COMO PROCESSADO / CONCLUÍDO (STATUS = 3)
+    // MARCAR PEDIDO COMO PROCESSADO / CONCLUÃƒÆ’Ã‚ÂDO (STATUS = 3)
     // =========================================================
     public void marcarConcluido(Long pedidoId) {
         String sql = "UPDATE pedido SET status = 3, updated_at = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setTimestamp(1, Timestamp.valueOf(java.time.LocalDateTime.now()));
@@ -236,7 +244,7 @@ public class PedidosDAO {
     public void cancelarPedido(Long pedidoId) {
         String sql = "UPDATE pedido SET status = 2, updated_at = ? WHERE id = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
+        try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setTimestamp(1, Timestamp.valueOf(java.time.LocalDateTime.now()));
@@ -244,8 +252,7 @@ public class PedidosDAO {
             ps.executeUpdate();
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao cancelar pedido", e);
+throw new RuntimeException("Erro ao cancelar pedido", e);
         }
     }
 }
-

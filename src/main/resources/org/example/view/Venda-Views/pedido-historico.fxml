@@ -6,8 +6,8 @@
 <?import javafx.scene.text.Font?>
 
 <VBox spacing="20" style="-fx-background-color: #0f172a;"
-      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.app.controller.Venda.PedidoHistoricoController">
+    xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="org.example.app.controller.venda.PedidoHistoricoController">
 
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
@@ -23,7 +23,8 @@
                                 <Font name="System Bold" size="28.0" />
                             </font>
                         </Label>
-                        <Label text="Consulte e gerencie os pedidos recebidos pela fila." textFill="#94a3b8">
+                        <Label text="Consulte e gerencie os pedidos recebidos pela fila."
+                            textFill="#94a3b8">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -33,23 +34,38 @@
 
                 <HBox spacing="10">
                     <Button onAction="#atualizarTela" text="⟳ Atualizar"
-                            style="-fx-background-color: #1e293b; -fx-text-fill: #fb923c; -fx-border-color: #334155; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10 20;" />
+                        style="-fx-background-color: #1e293b; -fx-text-fill: #fb923c; -fx-border-color: #334155; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10 20;" />
                     <Button onAction="#visualizarItens" text="📋 Ver Itens"
-                            style="-fx-background-color: #1e293b; -fx-text-fill: #38bdf8; -fx-border-color: #334155; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10 20;" />
+                        style="-fx-background-color: #1e293b; -fx-text-fill: #38bdf8; -fx-border-color: #334155; -fx-border-radius: 10; -fx-background-radius: 10; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 10 20;" />
                     <Button onAction="#concluirPedido" text="✔ Concluir"
-                            style="-fx-background-color: #143d2a; -fx-text-fill: #4ade80; -fx-font-weight: bold; -fx-border-color: #166534; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 20;" />
+                        style="-fx-background-color: #143d2a; -fx-text-fill: #4ade80; -fx-font-weight: bold; -fx-border-color: #166534; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 20;" />
                     <Button onAction="#cancelarPedido" text="✖ Cancelar"
-                            style="-fx-background-color: #3f1d1d; -fx-text-fill: #f87171; -fx-font-weight: bold; -fx-border-color: #7f1d1d; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 20;" />
+                        style="-fx-background-color: #3f1d1d; -fx-text-fill: #f87171; -fx-font-weight: bold; -fx-border-color: #7f1d1d; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 10 20;" />
                 </HBox>
             </children>
         </HBox>
 
-        <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: #1e293b; -fx-background-radius: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.1), 20, 0, 0, 10);">
+        <HBox alignment="CENTER_LEFT" spacing="10"
+            style="-fx-background-color: #1e293b; -fx-padding: 12; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1;">
+            <children>
+                <ComboBox fx:id="cmbFiltro" prefWidth="180" prefHeight="38"
+                    style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-border-color: #334155; -fx-background-radius: 5;" />
+                <TextField fx:id="txtBusca" promptText="Digite o termo de busca..."
+                    HBox.hgrow="ALWAYS" prefHeight="38"
+                    style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-background-radius: 5; -fx-focus-color: #f97316;" />
+                <Button text="🔍 Buscar" onAction="#buscar" prefHeight="38" prefWidth="120"
+                    style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" />
+            </children>
+        </HBox>
+
+        <VBox VBox.vgrow="ALWAYS"
+            style="-fx-background-color: #1e293b; -fx-background-radius: 20; -fx-border-color: #334155; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(249,115,22,0.1), 20, 0, 0, 10);">
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
             <children>
-                <TableView fx:id="tblPedidos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
+                <TableView fx:id="tblPedidos" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
                     <columns>
                         <TableColumn fx:id="colId" prefWidth="80.0" text="ID" />
                         <TableColumn fx:id="colData" prefWidth="180.0" text="Data e Hora" />

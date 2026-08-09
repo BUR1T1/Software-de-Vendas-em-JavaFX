@@ -17,13 +17,14 @@ module org.example.app {
     // Se o MainApp estiver nesse pacote
     opens org.example.app to javafx.fxml;
 
-    // Exporta apenas o que for necessário
-    opens org.example.app.controller.Cliente to javafx.fxml;
-    opens org.example.app.controller.Produto to javafx.fxml;
-    opens org.example.app.controller.Vendedor to javafx.fxml;
-    opens org.example.app.controller.Venda to javafx.fxml;
+    // Exporta apenas o que for necessÃƒÆ’Ã‚Â¡rio
+    opens org.example.app.controller.cliente to javafx.fxml;
+    opens org.example.app.controller.produto to javafx.fxml;
+    opens org.example.app.controller.vendedor to javafx.fxml;
+    opens org.example.app.controller.venda to javafx.fxml;
     opens org.example.app.util to javafx.fxml;
-    opens org.example.app.controller.Login to javafx.fxml;
-    opens org.example.app.controller.Usuario to javafx.fxml;
+    opens org.example.app.controller.login to javafx.fxml;
+    opens org.example.app.controller.usuario to javafx.fxml;
+    opens org.example.app.service to javafx.fxml;
     exports org.example.app.model;
 }

@@ -40,7 +40,7 @@ public class MainController {
     );
 
 
-    // Função que faz o menu abrir e fechar (Animação)
+    // FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o que faz o menu abrir e fechar (AnimaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o)
     @FXML
     public void toggleMenu() {
         double larguraAlvo = menuAberto ? 60 : 220;
@@ -59,14 +59,14 @@ public class MainController {
         if (page == null) {
             String caminho = rotas.get(chave);
             if (caminho == null) {
-                System.err.println("Rota não encontrada: " + chave);
+                System.err.println("Rota nÃƒÆ’Ã‚Â£o encontrada: " + chave);
                 return;
             }
             try {
                 page = FXMLLoader.load(getClass().getResource(caminho));
                 paginasCarregadas.put(chave, page);
             } catch (IOException e) {
-                System.err.println("Erro ao carregar a página: " + chave);
+                System.err.println("Erro ao carregar a pÃƒÆ’Ã‚Â¡gina: " + chave);
                 e.printStackTrace();
                 return;
             }
@@ -77,7 +77,7 @@ public class MainController {
         paginasCarregadas.remove(chave);
     }
 
-    // Estas são as funções que os botões do FXML chamam:
+    // Estas sÃƒÆ’Ã‚Â£o as funÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Âµes que os botÃƒÆ’Ã‚Âµes do FXML chamam:
     @FXML public void showVendas() { carregarPagina("vendas"); }
     @FXML public void showProdutos() { carregarPagina("produtos"); }
     @FXML public void showClientes() { carregarPagina("clientes"); }

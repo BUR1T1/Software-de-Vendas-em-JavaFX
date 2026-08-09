@@ -1,11 +1,14 @@
 package org.example.app.dao;
 
-import org.example.app.database.ConexaoSQLite;
-import org.example.app.model.Usuario;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.app.database.ConnectionManager;
+import org.example.app.model.Usuario;
 
 public class UsuarioDAO {
 
@@ -15,8 +18,7 @@ public class UsuarioDAO {
             VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, usuario.getNome());
             ps.setString(2, usuario.getLogin());
@@ -40,8 +42,7 @@ public class UsuarioDAO {
             WHERE login = ? AND senha = ? AND status = 1
         """;
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, login);
             ps.setString(2, senha);
@@ -69,8 +70,7 @@ public class UsuarioDAO {
     public Usuario buscarPorLogin(String login) {
         String sql = "SELECT * FROM usuario WHERE login = ?";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
@@ -98,9 +98,7 @@ public class UsuarioDAO {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuario ORDER BY id";
 
-        try (Connection conn = ConexaoSQLite.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = ConnectionManager.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Usuario u = new Usuario(

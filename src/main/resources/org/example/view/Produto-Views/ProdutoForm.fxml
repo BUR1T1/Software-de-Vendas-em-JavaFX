@@ -7,7 +7,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.app.controller.Produto.ProdutoFormController"
+fx:controller="org.example.app.controller.produto.ProdutoFormController"
             prefWidth="420" prefHeight="320"
             style="-fx-background-color: #0f172a;">
 

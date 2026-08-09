@@ -1,8 +1,8 @@
-package org.example.app.controller.Venda;
+package org.example.app.controller.venda;
+
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory; // Adicionado
+import javafx.scene.control.cell.PropertyValueFactory; 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.app.consumer.PedidoEventBus;
@@ -21,44 +21,63 @@ import org.example.app.util.Alerta;
 import org.example.app.util.BuscaModalController;
 import org.example.app.dao.ClienteDAO;
 import org.example.app.dao.ProdutoDAO;
-import org.example.app.dao.VendedorDAO; // Adicionado
+import org.example.app.dao.VendedorDAO; 
+import org.example.app.dao.offline.OfflineCatalogoDAO;
+import org.example.app.dao.offline.OfflineVendaDAO;
+import org.example.app.dao.postgres.PostgresVendaDAO;
+import org.example.app.service.ConnectivityService;
 import org.example.app.model.*;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 import java.util.List;
+
+
 
 public class VendaController {
 
     /* =========================================================
        FXML - COMPONENTES
        ========================================================= */
+    @FXML
+    private TextField txtBuscaProduto;
+    @FXML
+    private TextField txtQuantidade;
 
-    @FXML private TextField txtBuscaProduto;
-    @FXML private TextField txtQuantidade;
+    @FXML
+    private TableView<ItemVenda> tblItens;
+    @FXML
+    private TableColumn<ItemVenda, String> colProduto;
+    @FXML
+    private TableColumn<ItemVenda, Integer> colQtd;
+    @FXML
+    private TableColumn<ItemVenda, Double> colPreco;
+    @FXML
+    private TableColumn<ItemVenda, Double> colTotal;
 
-    @FXML private TableView<ItemVenda> tblItens;
-    @FXML private TableColumn<ItemVenda, String> colProduto;
-    @FXML private TableColumn<ItemVenda, Integer> colQtd;
-    @FXML private TableColumn<ItemVenda, Double> colPreco;
-    @FXML private TableColumn<ItemVenda, Double> colTotal;
+    @FXML
+    private Label lblValorTotal;
 
-    @FXML private Label lblValorTotal;
+    @FXML
+    private TextField txtBuscaRapidaCliente;
+    @FXML
+    private Label lblClienteSelecionado;
 
-    @FXML private TextField txtBuscaRapidaCliente;
-    @FXML private Label lblClienteSelecionado;
+    @FXML
+    private TextField txtBuscaRapidaVendedor;
+    @FXML
+    private Label lblVendedorSelecionado;
 
-    @FXML private TextField txtBuscaRapidaVendedor;
-    @FXML private Label lblVendedorSelecionado;
+    @FXML
+    private ComboBox<String> cbFormaPagamento;
+    @FXML
+    private Spinner<Integer> spParcelas;
+    @FXML
+    private Label lblValorParcela;
 
-    @FXML private ComboBox<String> cbFormaPagamento;
-    @FXML private Spinner<Integer> spParcelas;
-    @FXML private Label lblValorParcela;
-
-    @FXML private Button btnPedidos;
-    @FXML private Label lblBadgePedidos;
+    @FXML
+    private Button btnPedidos;
+    @FXML
+    private Label lblBadgePedidos;
 
     private final PedidosDAO pedidosDAO = new PedidosDAO();
     private Pedido pedidoSelecionado;
@@ -66,31 +85,32 @@ public class VendaController {
     /* =========================================================
        ESTADO DA TELA
        ========================================================= */
-
     private Cliente clienteSelecionado;
     private Vendedor vendedorSelecionado;
 
-    private final ObservableList<ItemVenda> itensVenda =
-            FXCollections.observableArrayList();
+    private final ObservableList<ItemVenda> itensVenda
+            = FXCollections.observableArrayList();
 
-    private final ObservableList<Produto> produtos =
-            FXCollections.observableArrayList();
+    private final ObservableList<Produto> produtos
+            = FXCollections.observableArrayList();
 
 
     /* =========================================================
        DAOs
        ========================================================= */
-
     private final ProdutoDAO produtoDAO = new ProdutoDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private final VendedorDAO vendedorDAO = new VendedorDAO();
     private final VendaDAO vendaDAO = new VendaDAO();
 
+    private final OfflineCatalogoDAO offlineCatalogoDAO = new OfflineCatalogoDAO();
+    private final OfflineVendaDAO offlineVendaDAO = new OfflineVendaDAO();
+    private final PostgresVendaDAO postgresVendaDAO = new PostgresVendaDAO();
+
 
     /* =========================================================
        INITIALIZE
        ========================================================= */
-
     @FXML
     public void initialize() {
 
@@ -102,8 +122,8 @@ public class VendaController {
         cbFormaPagamento.getItems().addAll(
                 "DINHEIRO",
                 "PIX",
-                "DÉBITO",
-                "CRÉDITO"
+                "DÃƒâ€°BITO",
+                "CRÃƒâ€°DITO"
         );
 
         spParcelas.setValueFactory(
@@ -112,8 +132,8 @@ public class VendaController {
 
         spParcelas.setDisable(true);
 
-        spParcelas.valueProperty().addListener((obs, oldVal, newVal) ->
-                atualizarParcelas()
+        spParcelas.valueProperty().addListener((obs, oldVal, newVal)
+                -> atualizarParcelas()
         );
 
         atualizarTotal();
@@ -121,9 +141,8 @@ public class VendaController {
     }
 
     /* =========================================================
-       PEDIDOS (INTEGRAÇÃO COM FILA / RABBITMQ)
+       PEDIDOS (INTEGRAÃƒâ€¡ÃƒÆ’O COM FILA / RABBITMQ)
        ========================================================= */
-
     private void configurarPedidos() {
         if (btnPedidos != null) {
             btnPedidos.setVisible(true);
@@ -136,13 +155,16 @@ public class VendaController {
     }
 
     private void atualizarBadgePedidos() {
-        if (lblBadgePedidos == null) return;
+        if (lblBadgePedidos == null) {
+            return;
+        }
 
-        // Considera pedidos pendentes em memória + pendentes no banco
+        // Considera pedidos pendentes em memÃƒÂ³ria + pendentes no banco
         int pendentes = PedidoEventBus.getPedidosPendentes().size();
         try {
             pendentes += pedidosDAO.listarPendentes().size();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         int total = pendentes;
         lblBadgePedidos.setText(String.valueOf(total));
@@ -233,7 +255,15 @@ public class VendaController {
         itensVenda.clear();
         for (ItemPedido item : pedido.getItens()) {
             Produto produto = item.getProduto();
-            itensVenda.add(new ItemVenda(produto, item.getQuantidade()));
+            if (produto == null) {
+                continue;
+            }
+            ItemVenda iv = new ItemVenda(produto, item.getQuantidade());
+            // Usa o preço unitário do item do pedido para preservar o valor original
+            if (item.getPrecoUnitario() > 0) {
+                iv.getProduto().setPreco(item.getPrecoUnitario());
+            }
+            itensVenda.add(iv);
         }
 
         atualizarTotal();
@@ -244,7 +274,7 @@ public class VendaController {
         try {
             pedidosDAO.marcarConcluido(pedido.getId());
         } catch (Exception ex) {
-            // se não tem id ainda, segue sem marcar
+            // se nÃƒÂ£o tem id ainda, segue sem marcar
         }
 
         atualizarBadgePedidos();
@@ -256,7 +286,6 @@ public class VendaController {
     /* =========================================================
        CLIENTE
        ========================================================= */
-
     @FXML
     private void pesquisarClienteEnter() {
         abrirGridBuscaCliente();
@@ -276,16 +305,20 @@ public class VendaController {
             Parent root = loader.load();
             BuscaModalController<Cliente> controller = loader.getController();
 
-            TableColumn<Cliente, String> colNome =
-                    new TableColumn<>("Nome");
+            TableColumn<Cliente, String> colNome
+                    = new TableColumn<>("Nome");
 
             colNome.setCellValueFactory(
                     new PropertyValueFactory<>("nome")
             );
 
+            List<Cliente> clientes = ConnectivityService.estaOnline()
+                    ? clienteDAO.listar()
+                    : offlineCatalogoDAO.listarClientes();
+
             controller.configurar(
                     "BUSCAR CLIENTE",
-                    clienteDAO.listar(),
+                    clientes,
                     List.of(colNome),
                     this::setClienteSelecionado
             );
@@ -307,7 +340,6 @@ public class VendaController {
     /* =========================================================
        VENDEDOR
        ========================================================= */
-
     @FXML
     private void pesquisarVendedorEnter() {
         abrirGridBuscaVendedor();
@@ -327,16 +359,20 @@ public class VendaController {
             Parent root = loader.load();
             BuscaModalController<Vendedor> controller = loader.getController();
 
-            TableColumn<Vendedor, String> colNome =
-                    new TableColumn<>("Nome");
+            TableColumn<Vendedor, String> colNome
+                    = new TableColumn<>("Nome");
 
             colNome.setCellValueFactory(
                     new PropertyValueFactory<>("nome")
             );
 
+            List<Vendedor> vendedores = ConnectivityService.estaOnline()
+                    ? vendedorDAO.listar()
+                    : offlineCatalogoDAO.listarVendedores();
+
             controller.configurar(
                     "BUSCAR VENDEDOR",
-                    vendedorDAO.listar(),
+                    vendedores,
                     List.of(colNome),
                     this::setVendedorSelecionado
             );
@@ -367,49 +403,60 @@ public class VendaController {
             );
 
             Parent root = loader.load();
-            BuscaModalController<Produto> controller =
-                    loader.getController();
+            BuscaModalController<Produto> controller
+                    = loader.getController();
 
-            TableColumn<Produto, String> colNome =
-                    new TableColumn<>("Produto");
+            TableColumn<Produto, String> colNome
+                    = new TableColumn<>("Produto");
 
             colNome.setCellValueFactory(
                     new PropertyValueFactory<>("nome")
             );
 
+            TableColumn<Produto, Integer> colEstoque
+                    = new TableColumn<>("Estoque");
+
+            colEstoque.setCellValueFactory(
+                    new PropertyValueFactory<>("estoque")
+            );
+
+            TableColumn<Produto, Double> colPreco
+                    = new TableColumn<>("Valor");
+            colPreco.setCellValueFactory(
+                    new PropertyValueFactory<>("preco")
+            );
+
             controller.configurar(
                     "SELECIONAR PRODUTO",
                     produtoDAO.listar(),
-                    List.of(colNome),
+                    List.of(colNome, colEstoque, colPreco),
                     produto -> selecionarProduto(produto)
             );
 
-            abrirModal(root, "Seleção de Produto");
+            // PrÃƒÂ©-filtra o modal com o termo digitado no campo de busca da tela de venda
+            String termo = txtBuscaProduto.getText();
+            if (termo != null && !termo.trim().isEmpty()) {
+                controller.setFiltroInicial(termo.trim());
+            }
+
+            abrirModal(root, "SeleÃƒÂ§ÃƒÂ£o de Produto");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-
-    @FXML
+@FXML
     private void pesquisarProdutoEnter() {
 
-        String busca = txtBuscaProduto.getText().trim();
-        if (busca.isEmpty()) return;
-
-        List<Produto> encontrados = produtos.stream()
-                .filter(p -> p.getNome().toLowerCase().contains(busca.toLowerCase())
-                        || String.valueOf(p.getId()).equals(busca))
-                .toList();
-
-        if (encontrados.size() == 1) {
-            selecionarProduto(encontrados.get(0));
-        } else {
-            Alerta.info("Não encontrado",
-                    "Produto não localizado.");
+        String busca = txtBuscaProduto.getText();
+        if (busca == null || busca.trim().isEmpty()) {
+            return;
         }
+
+        // Sempre abre a tela de seleÃƒÂ§ÃƒÂ£o de produtos para garantir que
+        // o usuÃƒÂ¡rio visualize e escolha o produto (mesmo com 1 resultado).
+        abrirBuscaProduto();
     }
 
     private void selecionarProduto(Produto p) {
@@ -421,15 +468,19 @@ public class VendaController {
     private void adicionarItem() {
 
         Produto produto = (Produto) txtBuscaProduto.getUserData();
-        if (produto == null) return;
+        if (produto == null) {
+            return;
+        }
 
         int quantidade;
 
         try {
             quantidade = Integer.parseInt(txtQuantidade.getText());
-            if (quantidade <= 0) throw new Exception();
+            if (quantidade <= 0) {
+                throw new Exception();
+            }
         } catch (Exception e) {
-            Alerta.error("Erro", "Quantidade inválida.");
+            Alerta.error("Erro", "Quantidade invÃƒÂ¡lida.");
             return;
         }
 
@@ -443,11 +494,10 @@ public class VendaController {
     /* =========================================================
        PAGAMENTO
        ========================================================= */
-
     @FXML
     private void alterarFormaPagamento() {
 
-        if ("CRÉDITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
+        if ("CRÃƒâ€°DITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
             spParcelas.setDisable(false);
         } else {
             spParcelas.getValueFactory().setValue(1);
@@ -461,7 +511,7 @@ public class VendaController {
 
         double total = calcularTotal();
 
-        if ("CRÉDITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
+        if ("CRÃƒâ€°DITO".equalsIgnoreCase(cbFormaPagamento.getValue())) {
 
             int parcelas = spParcelas.getValue();
             double valorParcela = total / parcelas;
@@ -482,12 +532,11 @@ public class VendaController {
     /* =========================================================
        FINALIZAR VENDA
        ========================================================= */
-
     @FXML
     private void finalizarVenda() {
 
-        if (clienteSelecionado == null ||
-                vendedorSelecionado == null) {
+        if (clienteSelecionado == null
+                || vendedorSelecionado == null) {
 
             Alerta.info("Venda incompleta",
                     "Selecione cliente e vendedor.");
@@ -506,18 +555,39 @@ public class VendaController {
         venda.setItens(new ArrayList<>(itensVenda));
         venda.setFormaPagamento(cbFormaPagamento.getValue());
 
-        vendaDAO.salvarCompleta(venda);
+        // Verifica conexÃƒÂ£o: ONLINE -> Postgres | OFFLINE -> SQLite offline
+        boolean online = ConnectivityService.estaOnline();
 
-        Alerta.info("Sucesso",
-                "Venda finalizada com sucesso!");
+        if (online) {
+            try {
+                postgresVendaDAO.salvarCompleta(venda);
+                Alerta.info("Sucesso",
+                        "Venda finalizada e registrada no servidor (online)!");
+            } catch (Exception e) {
+                Alerta.error("Erro",
+                        "NÃƒÂ£o foi possÃƒÂ­vel registrar a venda no servidor. Verifique a conexÃƒÂ£o.");
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            try {
+                offlineVendaDAO.salvarCompleta(venda);
+                Alerta.info("Venda offline",
+                        "Venda registrada localmente e aguardando sincronizaÃƒÂ§ÃƒÂ£o!");
+            } catch (Exception e) {
+                Alerta.error("Erro",
+                        "NÃƒÂ£o foi possÃƒÂ­vel salvar a venda offline.");
+                e.printStackTrace();
+                return;
+            }
+        }
 
         limparVenda();
     }
 
     /* =========================================================
-       MÉTODOS AUXILIARES
+       MÃƒâ€°TODOS AUXILIARES
        ========================================================= */
-
     private void configurarTabela() {
 
         colProduto.setCellValueFactory(
@@ -546,7 +616,11 @@ public class VendaController {
     }
 
     private void carregarProdutos() {
-        produtos.setAll(produtoDAO.listar());
+        if (ConnectivityService.estaOnline()) {
+            produtos.setAll(produtoDAO.listar());
+        } else {
+            produtos.setAll(offlineCatalogoDAO.listarProdutos());
+        }
     }
 
     private double calcularTotal() {
@@ -590,6 +664,6 @@ public class VendaController {
         stage.setScene(new Scene(root));
         stage.setTitle(titulo);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
+        stage.showAndWait();
     }
 }

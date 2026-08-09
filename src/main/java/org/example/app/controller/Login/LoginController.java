@@ -1,16 +1,17 @@
-package org.example.app.controller.Login;
+package org.example.app.controller.login;
+
+import org.example.app.dao.UsuarioDAO;
+import org.example.app.model.Usuario;
+import org.example.app.util.Alerta;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
-import org.example.app.dao.UsuarioDAO;
-import org.example.app.model.Usuario;
-import org.example.app.util.Alerta;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController {
 
@@ -29,7 +30,7 @@ public class LoginController {
     private void entrar() {
         if (txtUsuario.getText().isEmpty() || txtSenha.getText().isEmpty()) {
             if (lblMensagem != null) {
-                lblMensagem.setText("Preencha usuário e senha.");
+                lblMensagem.setText("Preencha usuÃƒÆ’Ã‚Â¡rio e senha.");
             }
             return;
         }
@@ -43,9 +44,9 @@ public class LoginController {
             abrirTelaPrincipal();
         } else {
             if (lblMensagem != null) {
-                lblMensagem.setText("Login ou senha inválidos");
+                lblMensagem.setText("Login ou senha invÃƒÆ’Ã‚Â¡lidos");
             }
-            Alerta.warning("Falha no acesso", "Login ou senha inválidos");
+            Alerta.warning("Falha no acesso", "Login ou senha invÃƒÆ’Ã‚Â¡lidos");
         }
     }
 

@@ -1,7 +1,5 @@
 package org.example.app.model;
 
-import org.example.app.BaseEntity;
-
 public class Produto extends BaseEntity {
 
     private String nome;
@@ -27,4 +25,9 @@ public class Produto extends BaseEntity {
 
     public int getEstoque() { return estoque; }
     public void setEstoque(int estoque) { this.estoque = estoque; }
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

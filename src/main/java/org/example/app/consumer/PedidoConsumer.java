@@ -32,9 +32,11 @@ public class PedidoConsumer {
             Channel channel = RabbitMQConnection.abrirCanal();
             channel.queueDeclare(FILA, true, false, false, null);
 
+            System.out.println("[CONSUMER] Aguardando pedidos na fila '" + FILA + "'...");
+
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String mensagem = new String(delivery.getBody(), "UTF-8");
-                System.out.println("Pedido recebido: " + mensagem);
+                System.out.println("[CONSUMER] Pedido recebido: " + mensagem);
 
                 try {
                     PedidoMessage msg = gson.fromJson(mensagem, PedidoMessage.class);
@@ -44,79 +46,79 @@ public class PedidoConsumer {
                         pedidosDAO.salvar(pedido);
                         // Define o id retornado para o evento (opcional)
                         PedidoEventBus.publicar(pedido);
-                        System.out.println("Pedido salvo com sucesso.");
+                        System.out.println("[CONSUMER] Pedido salvo com sucesso.");
                     } else {
-                        System.err.println("Pedido inválido (cliente, vendedor ou produto não localizado).");
+                        System.err.println("[CONSUMER] Pedido inválido (cliente, vendedor ou produto não localizado). " + mensagem);
                     }
                 } catch (Exception e) {
-                    System.err.println("Erro ao processar pedido:");
+                    System.err.println("[CONSUMER] Erro ao processar pedido:");
                     e.printStackTrace();
                 }
             };
 
-            channel.basicConsume(FILA, true, deliverCallback, consumerTag -> {});
+            String consumerTag = channel.basicConsume(FILA, true, deliverCallback, consumerTagX -> {
+            });
+            System.out.println("[CONSUMER] Consumer registrado na fila '" + FILA + "' com tag: " + consumerTag);
 
         } catch (Exception e) {
+            System.err.println("[CONSUMER] Falha ao conectar no RabbitMQ (localhost:5672). Verifique se o servidor RabbitMQ não está rodando.");
             e.printStackTrace();
         }
     }
 
     private static Pedido montarPedido(PedidoMessage msg) {
-        if (msg == null || msg.getItens() == null || msg.getItens().isEmpty()) {
-            return null;
-        }
-
-        Cliente cliente = buscarCliente(msg.getClienteId());
-        Vendedor vendedor = buscarVendedor(msg.getVendedorId());
-
-        if (cliente == null || vendedor == null) {
-            return null;
-        }
-
-        Pedido pedido = new Pedido();
-
-        if (msg.getData() != null && !msg.getData().isBlank()) {
-            pedido.setDataPedido(LocalDate.parse(msg.getData()));
-        }
-        if (msg.getHora() != null && !msg.getHora().isBlank()) {
-            pedido.setHoraPedido(LocalTime.parse(msg.getHora()));
-        }
-
-        pedido.setCliente(cliente);
-        pedido.setVendedor(vendedor);
-
-        for (PedidoMessage.ItemMessage itemMsg : msg.getItens()) {
-            Produto produto = buscarProduto(itemMsg.getProdutoId());
-            if (produto == null || itemMsg.getQuantidade() <= 0) {
-                return null; // pedido inválido se algum item não existir
-            }
-            pedido.getItens().add(new ItemPedido(produto, itemMsg.getQuantidade()));
-        }
-
-        return pedido;
+    if (msg == null || msg.getItens() == null || msg.getItens().isEmpty()) {
+        return null;
     }
 
+    Cliente cliente = buscarCliente(msg.getClienteId());
+    Vendedor vendedor = buscarVendedor(msg.getVendedorId());
+
+    if (cliente == null || vendedor == null) {
+        return null;
+    }
+
+    Pedido pedido = new Pedido();
+
+    if (msg.getData() != null && !msg.getData().isBlank()) {
+        pedido.setDataPedido(LocalDate.parse(msg.getData()));
+    }
+    if (msg.getHora() != null && !msg.getHora().isBlank()) {
+        pedido.setHoraPedido(LocalTime.parse(msg.getHora()));
+    }
+
+    pedido.setCliente(cliente);
+    pedido.setVendedor(vendedor);
+
+    for (PedidoMessage.ItemMessage itemMsg : msg.getItens()) {
+        Produto produto = buscarProduto(itemMsg.getProdutoId());
+        if (produto == null || itemMsg.getQuantidade() <= 0) {
+            return null; // pedido inválido se algum item não existir
+        }
+        pedido.getItens().add(new ItemPedido(produto, itemMsg.getQuantidade()));
+    }
+
+    return pedido;
+}
+
     private static Cliente buscarCliente(Long id) {
-        if (id == null) return null;
-        return clienteDAO.listar().stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        if (id == null) {
+            return null;
+        }
+        return clienteDAO.buscarPorId(id);
     }
 
     private static Vendedor buscarVendedor(Long id) {
-        if (id == null) return null;
-        return vendedorDAO.listar().stream()
-                .filter(v -> v.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        if (id == null) {
+            return null;
+        }
+        return vendedorDAO.buscarPorId(id);
     }
 
     private static Produto buscarProduto(Long id) {
-        if (id == null) return null;
-        return produtoDAO.listar().stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        if (id == null) {
+            return null;
+        }
+        return produtoDAO.buscarPorId(id);
     }
 }

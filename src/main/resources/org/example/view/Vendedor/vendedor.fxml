@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Line?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.app.controller.Vendedor.VendedorController"
+fx:controller="org.example.app.controller.vendedor.VendedorController"
             style="-fx-background-color: #0f172a;">
 
     <top>
@@ -52,11 +52,16 @@
                 <HBox spacing="15" alignment="CENTER_LEFT"
                       style="-fx-background-color: #1e293b; -fx-padding: 15; -fx-background-radius: 10; -fx-border-color: #334155; -fx-border-width: 1;">
                     <children>
+                        <ComboBox fx:id="cmbFiltro" prefWidth="140" prefHeight="40"
+                                  style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5;"/>
                         <TextField fx:id="txtPesquisar"
                                    prefWidth="350"
                                    prefHeight="40"
                                    promptText="🔍 Pesquisar por nome ou CPF..."
                                    style="-fx-background-color: #0f172a; -fx-text-fill: #f8fafc; -fx-prompt-text-fill: #64748b; -fx-border-color: #334155; -fx-border-radius: 5; -fx-background-radius: 5; -fx-focus-color: #f97316;"/>
+
+                        <Button text="🔍 BUSCAR" onAction="#buscarRelatorio" prefHeight="40" prefWidth="110"
+                                style="-fx-background-color: #f97316; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;"/>
 
                         <Region HBox.hgrow="ALWAYS"/>
 
@@ -83,7 +88,7 @@
                         <Tab text="  VENDEDORES ATIVOS  ">
                             <content>
                                 <VBox style="-fx-padding: 15;">
-                                    <TableView fx:id="tabelaVendedores" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
+<TableView fx:id="tabelaVendedores" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
                                         <columns>
                                             <TableColumn fx:id="colId" text="ID" prefWidth="80" style="-fx-alignment: CENTER;" />
                                             <TableColumn fx:id="colNome" text="NOME COMPLETO" prefWidth="300" />
@@ -108,7 +113,7 @@
                                                        -fx-border-color: #166534;
                                                        -fx-cursor: hand;"/>
                                     </HBox>
-                                    <TableView fx:id="tabelaInativos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155;">
+<TableView fx:id="tabelaInativos" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-control-inner-background: #1e293b; -fx-table-cell-border-color: #334155; -fx-selection-bar: #f97316; -fx-selection-bar-non-focused: #334155;">
                                         <columns>
                                             <TableColumn fx:id="colIdInativo" text="ID" prefWidth="80" style="-fx-alignment: CENTER;" />
                                             <TableColumn fx:id="colNomeInativo" text="NOME" prefWidth="300" />
