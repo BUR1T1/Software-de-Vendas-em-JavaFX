@@ -19,23 +19,32 @@ import java.time.format.DateTimeFormatter;
 
 public class PedidoHistoricoController {
 
-@FXML private TableView<Pedido> tblPedidos;
-    @FXML private TableColumn<Pedido, Long> colId;
-    @FXML private TableColumn<Pedido, String> colData;
-    @FXML private TableColumn<Pedido, String> colCliente;
-    @FXML private TableColumn<Pedido, String> colVendedor;
-    @FXML private TableColumn<Pedido, Double> colTotal;
-    @FXML private TableColumn<Pedido, String> colStatus;
+    @FXML
+    private TableView<Pedido> tblPedidos;
+    @FXML
+    private TableColumn<Pedido, Long> colId;
+    @FXML
+    private TableColumn<Pedido, String> colData;
+    @FXML
+    private TableColumn<Pedido, String> colCliente;
+    @FXML
+    private TableColumn<Pedido, String> colVendedor;
+    @FXML
+    private TableColumn<Pedido, Double> colTotal;
+    @FXML
+    private TableColumn<Pedido, String> colStatus;
 
-    @FXML private ComboBox<String> cmbFiltro;
-    @FXML private TextField txtBusca;
+    @FXML
+    private ComboBox<String> cmbFiltro;
+    @FXML
+    private TextField txtBusca;
 
     private final PedidosDAO pedidosDAO = new PedidosDAO();
     private final ObservableList<Pedido> listaPedidos = FXCollections.observableArrayList();
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-@FXML
+    @FXML
     public void initialize() {
         configurarColunas();
         configurarBusca();
@@ -91,16 +100,16 @@ public class PedidoHistoricoController {
             return new SimpleStringProperty("");
         });
 
-        colCliente.setCellValueFactory(fila ->
-                new SimpleStringProperty(fila.getValue().getCliente() != null
+        colCliente.setCellValueFactory(fila
+                -> new SimpleStringProperty(fila.getValue().getCliente() != null
                         ? fila.getValue().getCliente().getNome() : "N/A"));
 
-        colVendedor.setCellValueFactory(fila ->
-                new SimpleStringProperty(fila.getValue().getVendedor() != null
+        colVendedor.setCellValueFactory(fila
+                -> new SimpleStringProperty(fila.getValue().getVendedor() != null
                         ? fila.getValue().getVendedor().getNome() : "N/A"));
 
-        colTotal.setCellValueFactory(fila ->
-                new javafx.beans.property.SimpleObjectProperty<>(fila.getValue().getTotal()));
+        colTotal.setCellValueFactory(fila
+                -> new javafx.beans.property.SimpleObjectProperty<>(fila.getValue().getTotal()));
 
         colTotal.setCellFactory(tc -> new TableCell<Pedido, Double>() {
             @Override
@@ -119,8 +128,8 @@ public class PedidoHistoricoController {
         colStatus.setCellValueFactory(fila -> {
             int status = fila.getValue().getStatus();
             String texto = status == 1 ? "PENDENTE"
-                         : status == 3 ? "CONCLUÃƒÆ’Ã‚ÂDO"
-                         : "CANCELADO";
+                    : status == 3 ? "CONCLUIDO"
+                            : "CANCELADO";
             return new SimpleStringProperty(texto);
         });
 
@@ -135,9 +144,12 @@ public class PedidoHistoricoController {
                 } else {
                     setText(item);
                     switch (item) {
-                        case "PENDENTE" -> setStyle("-fx-text-fill: #d97706; -fx-font-weight: bold;");
-                        case "CONCLUÃƒÆ’Ã‚ÂDO" -> setStyle("-fx-text-fill: #16a34a; -fx-font-weight: bold;");
-                        default -> setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold;");
+                        case "PENDENTE" ->
+                            setStyle("-fx-text-fill: #d97706; -fx-font-weight: bold;");
+                        case "CONCLUIDO" ->
+                            setStyle("-fx-text-fill: #16a34a; -fx-font-weight: bold;");
+                        default ->
+                            setStyle("-fx-text-fill: #dc2626; -fx-font-weight: bold;");
                     }
                 }
             }
@@ -223,4 +235,3 @@ public class PedidoHistoricoController {
         alert.showAndWait();
     }
 }
-

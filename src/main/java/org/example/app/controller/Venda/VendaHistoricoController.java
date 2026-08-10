@@ -139,10 +139,10 @@ colTotal.setCellFactory(tc -> new TableCell<Venda, Double>() {
             });
 
             // =====================================================
-            // COLUNA DE IMPRESSÃƒÆ’Ã†â€™O (botÃƒÆ’Ã‚Â£o de impressora por linha)
+            // COLUNA DE IMPRESSÃƒÆ’Ã†â€™O (botão de impressora por linha)
             // =====================================================
             colImprimir.setCellFactory(col -> new TableCell<Venda, Void>() {
-                private final Button btnImprimir = new Button("ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¨");
+                private final Button btnImprimir = new Button("Gerar cupom¨");
                 {
                     btnImprimir.setStyle("-fx-background-color: #f97316; -fx-text-fill: white; " +
                             "-fx-font-size: 14; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 4 10;");
@@ -184,7 +184,7 @@ colTotal.setCellFactory(tc -> new TableCell<Venda, Double>() {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            alerta("NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel abrir o comprovante da venda.");
+            alerta("Não foi possível abrir o comprovante da venda #" + venda.getId());
         }
     }
 

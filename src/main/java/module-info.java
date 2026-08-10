@@ -18,6 +18,7 @@ module org.example.app {
     opens org.example.app to javafx.fxml;
 
     // Exporta apenas o que for necessÃƒÆ’Ã‚Â¡rio
+    opens org.example.app.controller.venda.pedido to javafx.fxml;
     opens org.example.app.controller.cliente to javafx.fxml;
     opens org.example.app.controller.produto to javafx.fxml;
     opens org.example.app.controller.vendedor to javafx.fxml;

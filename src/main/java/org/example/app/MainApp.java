@@ -26,7 +26,7 @@ public class MainApp extends Application {
             stage.getIcons().add(new Image(
                     MainApp.class.getResourceAsStream("/org/example/view/img/logo.png")));
         } catch (Exception e) {
-            System.err.println("NÃƒÆ’Ã‚Â£o foi possÃƒÆ’Ã‚Â­vel carregar o ÃƒÆ’Ã‚Â­cone da loja: " + e.getMessage());
+            System.err.println("Não foi possivel carregar " + e.getMessage());
         }
 
         DatabaseOfflineInit.inicializar();
@@ -34,7 +34,7 @@ public class MainApp extends Application {
         if (ConnectionManager.estaOnline()) {
             DatabaseInit.inicializar();
         } else {
-            System.out.println("AplicaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o iniciada em modo offline. Usando apenas o schema de contingÃƒÆ’Ã‚Âªncia SQLite.");
+            System.out.println("Aplicação foi iniciada em modo offline. Usando apenas o schema de contingÃƒÆ’Ã‚Âªncia SQLite.");
         }
 
         // Consumidor da fila de pedidos (RabbitMQ) iniciado automaticamente
