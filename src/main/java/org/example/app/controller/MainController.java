@@ -40,7 +40,7 @@ public class MainController {
     );
 
 
-    // FunÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o que faz o menu abrir e fechar (AnimaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o)
+    // Função de animação que faz o menu abrir e fecharr
     @FXML
     public void toggleMenu() {
         double larguraAlvo = menuAberto ? 60 : 220;
